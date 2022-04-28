@@ -47,15 +47,15 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
             },
             standbyTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             startTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             finishTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             distance: {
