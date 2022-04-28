@@ -22,7 +22,7 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(150),
                 allowNull: false,
             },
-            thumbnailUrl: {
+            thumbnailUrl1: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },
