@@ -29,7 +29,8 @@ const fileFilter = (req, file, callback) => {
         fileType === 'bmp' ||
         fileType === 'webp' ||
         fileType === 'heic' ||
-        fileType === 'heif'
+        fileType === 'heif' ||
+        fileType === 'jfif'
     ) {
         callback(null, true)
     } else {
