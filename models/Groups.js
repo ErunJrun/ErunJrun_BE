@@ -26,16 +26,16 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },
+            thumbnailUrl2: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            thumbnailUrl3: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
             title: {
                 type: DataTypes.STRING(150),
-                allowNull: false,
-            },
-            startDate: {
-                type: DataTypes.DATE,
-                allowNull: false,
-            },
-            finishDate: {
-                type: DataTypes.DATE,
                 allowNull: false,
             },
             maxPeople: {
