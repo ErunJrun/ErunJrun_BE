@@ -2,8 +2,8 @@
     "apps": [
         {
             "name": "project-name",
-            "script": "./node_modules/.bin/ts-node",
-            "args": "./src/index.ts",
+            "script": "node",
+            "args": "./server.js",
             "watch": true
         }
     ]
