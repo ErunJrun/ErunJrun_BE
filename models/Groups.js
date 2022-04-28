@@ -30,14 +30,6 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(150),
                 allowNull: false,
             },
-            startDate: {
-                type: DataTypes.DATE,
-                allowNull: false,
-            },
-            finishDate: {
-                type: DataTypes.DATE,
-                allowNull: false,
-            },
             maxPeople: {
                 type: DataTypes.INTEGER,
                 allowNull: false,

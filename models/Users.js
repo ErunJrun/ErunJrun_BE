@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
             },
             bio: {
                 type: DataTypes.STRING(255),
-                allowNull: false,
+                allowNull: true,
             },
             profileUrl: {
                 type: DataTypes.STRING(200),
