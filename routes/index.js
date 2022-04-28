@@ -1,3 +1,6 @@
-const router = require('express').Router();
+const router = require('express').Router()
 
-module.exports = router;
+const group = require('../groups')
+
+router.use('/group', group)
+module.exports = router
