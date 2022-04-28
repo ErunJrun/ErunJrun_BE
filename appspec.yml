@@ -4,13 +4,12 @@ files:
   - source: /
     destination: /home/ubuntu/ErunJrun_BE
 
-# hooks:
+hooks:
 #     ApplicationStop:
 #         - location: scripts/stop.sh
 #           runas: root
-#     AfterInstall:
-#         - location: scripts/initialize.sh
-#           runas: root
+    AfterInstall:
+        - location: scripts/after.deploy.sh
 #     ApplicationStart:
 #         - location: scripts/start.sh
 #           runas: root
