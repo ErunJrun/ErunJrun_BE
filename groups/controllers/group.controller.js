@@ -36,11 +36,25 @@ module.exports = {
             })
         } catch (error) {
             console.log(error)
-            return res.status(400).send({ error })
+            return res.status(400).send({
+                success: false,
+                meesage: '그룹러닝 게시물 등록을 실패하였습니다',
+                error,
+            })
         }
     },
+    /**
+     * TODO: 쿼리스트링을 통한 정렬 해야함
+     * TODO: mapLatLng 의 경우 배열로 들어옴 (값 저장형태 고민해봐야함)
+     *
+     * @param {*} req
+     * @param {*} res
+     * @returns
+     */
     getGroup: async (req, res) => {
         const { category } = req.params
+        // const { userId } = res.locals
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         let data
 
         try {
@@ -52,12 +66,22 @@ module.exports = {
                     data = await groupService.getGroupData(3)
                     break
                 case 'mypage':
-                    data = await groupService.getMyGroupData(userId)
+                    data = await groupService.getGroupData('', userId)
+                    break
+                default:
+                    return res.status(400).send({
+                        success: false,
+                        message: '불러오기 상태값이 올바르지 않습니다',
+                    })
             }
             res.status(200).send({ success: true, data })
         } catch (error) {
             console.log(error)
-            return res.send({ error })
+            return res.status(400).send({
+                success: false,
+                meesage: '그룹러닝 게시물 불러오기를 실패하였습니다',
+                error,
+            })
         }
     },
 }
