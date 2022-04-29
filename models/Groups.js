@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
                 },
             },
             mapLatLng: {
-                type: DataTypes.STRING(150),
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             thumbnailUrl1: {
