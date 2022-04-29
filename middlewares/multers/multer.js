@@ -60,4 +60,17 @@ const upload = multer({
     fileFilter: fileFilter,
 })
 
-module.exports = upload
+const deleteImg = (url) => {
+    if (url === 'https://www.snsboom.co.kr/common/img/default_profile.png')
+        return
+    const filename = url.split('/')[4]
+
+    s3.deleteObject(
+        {
+            Bucket: process.env.AWS_S3_BUCKET,
+            Key: filename,
+        },
+        function (err, data) {}
+    )
+}
+module.exports = { upload, deleteImg }
