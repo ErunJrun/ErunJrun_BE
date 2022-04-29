@@ -1,5 +1,6 @@
 const sequelize = require('sequelize')
-const { Groups, Appliers, Users } = require('../../models')
+const { Groups, Appliers, Users, Alarms } = require('../../models')
+const moment = require('moment')
 
 module.exports = {
     createPost: async (data) => {
@@ -23,7 +24,7 @@ module.exports = {
                 'distance',
                 'groupId',
                 'date',
-                'startTime',
+                'standbyTime',
                 'maxPeople',
                 ['thumbnailUrl1', 'thumbnailUrl'],
                 [
@@ -63,6 +64,9 @@ module.exports = {
                 } else {
                     result[i].dataValues.applyState = true
                 }
+                let date = moment().format('YYYY-MM-DD')
+                let endDate = result[i].date
+                console.log(moment(date).diff(endDate, 'days'))
             }
             return result
         })
@@ -131,5 +135,19 @@ module.exports = {
     },
     chkApplyUser: (groupId, userId) => {
         return Appliers.findOne({ where: { groupId, userId } })
+    },
+    addAlarm: async (groupId, groupTitle, category) => {
+        const user = await Appliers.findAll({
+            where: { groupId },
+        })
+
+        for (let i = 0; i < user.length; i++) {
+            Alarms.create({
+                category,
+                groupId,
+                groupTitle,
+                userId: user[i].userId,
+            })
+        }
     },
 }
