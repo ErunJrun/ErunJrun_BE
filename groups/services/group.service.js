@@ -37,7 +37,6 @@ module.exports = {
             ],
             group: ['groupId'],
             order: [['createdAt', 'DESC']],
-            // limit,
         }).then(async (result) => {
             for (let i = 0; i < result.length; i++) {
                 const user = await Users.findOne({
@@ -52,15 +51,18 @@ module.exports = {
             return result
         })
         if (limit) {
-            data = data.slice(0, 3)
+            data = data.slice(0, limit)
         }
         return data
     },
-    getMyGroupData: (userId) => {
-        const data = Groups.findAll({
-            where: { userId },
-            order: [['createdAt', 'DESC']],
+    getUserGroupData: (groupId) => {
+        const data = Groups.findOne({
+            where: { groupId },
         })
         return data
+    },
+    updatePost: (groupId, data) => {
+        Groups.update(data, { where: { groupId } })
+        return
     },
 }

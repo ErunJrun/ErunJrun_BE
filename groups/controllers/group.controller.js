@@ -84,4 +84,56 @@ module.exports = {
             })
         }
     },
+    /**
+     * TODO: 이미지 수정/삭제시 S3에서도 이미지 삭제하도록 로직 추가
+     * @param {*} req
+     * @param {*} res
+     * @returns
+     */
+    updatePost: async (req, res) => {
+        const { groupId } = req.params
+        // const {userId} = res.locals
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const data = {
+            title: req.body.title,
+            maxPeople: req.body.maxPeople,
+            date: req.body.date,
+            standbyTime: req.body.standbyTime,
+            startTime: req.body.startTime,
+            finishTime: req.body.finishTime,
+            speed: req.body.speed,
+            parking: req.body.parking,
+            baggage: req.body.baggage,
+            content: req.body.content,
+        }
+        try {
+            const chkGroup = await groupService.getUserGroupData(groupId)
+            if (chkGroup.userId !== userId) {
+                return res.status(400).send({
+                    success: false,
+                    message: '본인이 작성한 글만 수정할 수 있습니다',
+                })
+            }
+
+            if (req.files) {
+                for (let i = 0; i < req.files.length; i++) {
+                    data[`thumbnailUrl${i + 1}`] = req.files[i].location
+                }
+            }
+
+            groupService.updatePost(groupId, data)
+
+            res.status(200).send({
+                success: true,
+                message: '게시글이 수정되었습니다',
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({
+                success: false,
+                meesage: '그룹러닝 게시물 수정을 실패하였습니다',
+                error,
+            })
+        }
+    },
 }
