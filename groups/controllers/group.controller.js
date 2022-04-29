@@ -208,6 +208,27 @@ module.exports = {
         const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
 
         try {
+            const chkApply = await groupService.chkApplyUser(groupId, userId)
+            if (chkApply) {
+                const chkGroup = await groupService.getUserGroupData(groupId)
+                if (chkGroup.userId === userId) {
+                    return res.status(400).send({
+                        success: false,
+                        message: '개설자는 신청을 취소할 수 없습니다',
+                    })
+                }
+                groupService.cancelGroup(groupId, userId)
+                return res.status(200).send({
+                    success: true,
+                    message: '그룹러닝 신청이 취소되었습니다',
+                })
+            } else {
+                groupService.applyGroup(groupId, userId)
+                return res.status(200).send({
+                    success: true,
+                    message: '그룹러닝에 신청되었습니다',
+                })
+            }
         } catch (error) {
             console.log(error)
             return res.status(400).send({

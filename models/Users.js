@@ -27,11 +27,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             likeDistance: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.STRING(50),
                 allowNull: true,
             },
             likeSpeed: {
-                type: DataTypes.STRING(150),
+                type: DataTypes.STRING(50),
                 allowNull: true,
             },
             mannerPoint: {
