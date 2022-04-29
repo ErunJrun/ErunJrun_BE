@@ -6,9 +6,11 @@ module.exports = {
         await Groups.create(data)
         return
     },
-    getGroupData: async (limit, myUserId) => {
+    getGroupData: async (limit, myUserId, category) => {
         let condition = {}
-        if (myUserId) condition = { userId: myUserId }
+        if (myUserId && category === 'mypage') {
+            condition = { userId: myUserId }
+        }
 
         let data = await Groups.findAll({
             where: condition,
@@ -44,9 +46,20 @@ module.exports = {
                         userId: result[i].userId,
                     },
                 })
-
                 result[i].dataValues.nickname = user.nickname
                 result[i].dataValues.profileUrl = user.profileUrl
+
+                const apply = await Appliers.findOne({
+                    where: {
+                        groupId: result[i].dataValues.groupId,
+                        userId: myUserId,
+                    },
+                })
+                if (apply === null) {
+                    result[i].dataValues.applyState = false
+                } else {
+                    result[i].dataValues.applyState = true
+                }
             }
             return result
         })
@@ -68,5 +81,43 @@ module.exports = {
     deletePost: (groupId) => {
         Groups.destroy({ where: { groupId } })
         return
+    },
+    getGroupDetail: async (groupId, userId) => {
+        const data = await Groups.findOne({
+            where: { groupId },
+            attributes: {
+                include: [
+                    [
+                        sequelize.literal(
+                            `(select count(*) from Appliers where userId = '${userId}' and groupId = '${groupId}')`
+                        ),
+                        'applyState',
+                    ],
+                ],
+                exclude: ['updatedAt', 'groupId'],
+            },
+            include: [
+                {
+                    model: Appliers,
+                    as: 'Appliers',
+                    foreignKey: 'groupId',
+                    attributes: ['userId'],
+                },
+            ],
+        }).then(async (result) => {
+            if (result.dataValues.applyState === 0) {
+                result.dataValues.applyState = false
+            } else {
+                result.dataValues.applyState = true
+            }
+
+            const user = await Users.findOne({
+                where: { userId: result.dataValues.userId },
+            })
+            result.dataValues.nickname = user.nickname
+            result.dataValues.profileUrl = user.profileUrl
+            return result
+        })
+        return data
     },
 }
