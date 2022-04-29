@@ -61,13 +61,13 @@ module.exports = {
         try {
             switch (category) {
                 case 'all':
-                    data = await groupService.getGroupData()
+                    data = await groupService.getGroupData('', userId)
                     break
                 case 'main':
                     data = await groupService.getGroupData(3)
                     break
                 case 'mypage':
-                    data = await groupService.getGroupData('', userId)
+                    data = await groupService.getGroupData('', userId, 'mypage')
                     break
                 default:
                     return res.status(400).send({
@@ -166,7 +166,9 @@ module.exports = {
             for (let i = 1; i <= 3; i++) {
                 let url = chkGroup[`thumbnailUrl${i}`]
 
-                if (url !== '') multer.deleteImg(url)
+                if (url !== '') {
+                    multer.deleteImg(url)
+                }
             }
             groupService.deletePost(groupId)
 
@@ -179,6 +181,38 @@ module.exports = {
             return res.status(400).send({
                 success: false,
                 meesage: '그룹러닝 게시물 삭제를 실패하였습니다',
+                error,
+            })
+        }
+    },
+    getGroupDetail: async (req, res) => {
+        const { groupId } = req.params
+        // const {userId} = res.locals
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+
+        try {
+            const data = await groupService.getGroupDetail(groupId, userId)
+            res.status(200).send({ success: true, data })
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({
+                success: false,
+                meesage: '그룹러닝 게시물 불러오기를 실패하였습니다',
+                error,
+            })
+        }
+    },
+    applyGroup: async (req, res) => {
+        const { groupId } = req.params
+        // const {userId} = res.locals
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+
+        try {
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({
+                success: false,
+                meesage: '그룹러닝 신청에 실패하였습니다',
                 error,
             })
         }
