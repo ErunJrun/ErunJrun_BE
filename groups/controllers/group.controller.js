@@ -1,4 +1,5 @@
 const groupService = require('../services/group.service')
+const multer = require('../../middlewares/multers/multer')
 
 module.exports = {
     createPost: (req, res) => {
@@ -108,6 +109,12 @@ module.exports = {
         }
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
+            if (!chkGroup) {
+                return res.status(400).send({
+                    success: false,
+                    message: '해당 게시물이 존재하지 않습니다',
+                })
+            }
             if (chkGroup.userId !== userId) {
                 return res.status(400).send({
                     success: false,
@@ -132,6 +139,46 @@ module.exports = {
             return res.status(400).send({
                 success: false,
                 meesage: '그룹러닝 게시물 수정을 실패하였습니다',
+                error,
+            })
+        }
+    },
+    deletePost: async (req, res) => {
+        const { groupId } = req.params
+        // const {userId} = res.locals
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+
+        try {
+            const chkGroup = await groupService.getUserGroupData(groupId)
+            if (!chkGroup) {
+                return res.status(400).send({
+                    success: false,
+                    message: '해당 게시물이 존재하지 않습니다',
+                })
+            }
+            if (chkGroup.userId !== userId) {
+                return res.status(400).send({
+                    success: false,
+                    message: '본인이 작성한 글만 삭제할 수 있습니다',
+                })
+            }
+
+            for (let i = 1; i <= 3; i++) {
+                let url = chkGroup[`thumbnailUrl${i}`]
+
+                if (url !== '') multer.deleteImg(url)
+            }
+            groupService.deletePost(groupId)
+
+            res.status(200).send({
+                success: true,
+                message: '게시글이 삭제되었습니다',
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({
+                success: false,
+                meesage: '그룹러닝 게시물 삭제를 실패하였습니다',
                 error,
             })
         }

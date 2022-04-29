@@ -65,4 +65,8 @@ module.exports = {
         Groups.update(data, { where: { groupId } })
         return
     },
+    deletePost: (groupId) => {
+        Groups.destroy({ where: { groupId } })
+        return
+    },
 }
