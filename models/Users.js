@@ -31,7 +31,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             likeSpeed: {
-                type: DataTypes.INTEGER,
+                type: DataTypes.STRING(150),
                 allowNull: true,
             },
             mannerPoint: {

@@ -41,4 +41,39 @@ module.exports = {
             })
         }
     },
+    getComments: (req, res) => {
+        const { category, categoryId } = req.params
+        // 데이터 object 케이스별로 만들어주기
+        let input
+        try {
+            switch (category) {
+                case 'group':
+                    input = {
+                        Id: categoryId,
+                    }
+                    break
+                case 'course':
+                    input = {
+                        Id: categoryId,
+                    }
+                    break
+                default:
+                    return res.status(400).send({
+                        success: false,
+                        message: '불러오기 상태값이 올바르지 않습니다',
+                    })
+            }
+            const data = await commentService.getComments(category, input)
+            res.status(200).send({
+                success: true,
+                data
+            })
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '댓글 불러오기에 실패했습니다',
+                error,
+            })
+        }
+    }
 }
