@@ -120,4 +120,13 @@ module.exports = {
         })
         return data
     },
+    applyGroup: (groupId, userId) => {
+        Appliers.create({ groupId, userId })
+    },
+    cancelGroup: (groupId, userId) => {
+        Appliers.destroy({ where: { groupId, userId } })
+    },
+    chkApplyUser: (groupId, userId) => {
+        return Appliers.findOne({ where: { groupId, userId } })
+    },
 }

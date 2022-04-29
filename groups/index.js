@@ -8,6 +8,7 @@ router.post(
     multer.upload.array('thumbnail', 3),
     groupController.createPost
 )
+router.post('/:groupId/apply', groupController.applyGroup)
 router.get('/detail/:groupId', groupController.getGroupDetail)
 router.get('/:category', groupController.getGroup)
 router.patch(
