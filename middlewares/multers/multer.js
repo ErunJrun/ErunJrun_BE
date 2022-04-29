@@ -61,8 +61,6 @@ const upload = multer({
 })
 
 const deleteImg = (url) => {
-    if (url === 'https://www.snsboom.co.kr/common/img/default_profile.png')
-        return
     const filename = url.split('/')[4]
 
     s3.deleteObject(
