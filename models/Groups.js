@@ -63,7 +63,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
             },
             speed: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.STRING(50),
                 allowNull: false,
             },
             location: {
