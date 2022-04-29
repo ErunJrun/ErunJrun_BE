@@ -210,6 +210,13 @@ module.exports = {
         try {
             const chkApply = await groupService.chkApplyUser(groupId, userId)
             if (chkApply) {
+                const chkGroup = await groupService.getUserGroupData(groupId)
+                if (chkGroup.userId === userId) {
+                    return res.status(400).send({
+                        success: false,
+                        message: '개설자는 신청을 취소할 수 없습니다',
+                    })
+                }
                 groupService.cancelGroup(groupId, userId)
                 return res.status(200).send({
                     success: true,
