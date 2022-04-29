@@ -3,7 +3,10 @@ const { Groups, Appliers, Users } = require('../../models')
 
 module.exports = {
     createPost: async (data) => {
-        await Groups.create(data)
+        await Groups.create(data).then((result) => {
+            Appliers.create({ userId: result.userId, groupId: result.groupId })
+            return result
+        })
         return
     },
     getGroupData: async (limit, myUserId, category) => {
