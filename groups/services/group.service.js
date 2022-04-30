@@ -32,6 +32,13 @@ module.exports = {
                     'applyPeople',
                 ],
                 'userId',
+                [
+                    sequelize.literal(
+                        'timestampdiff(minute,standbyTime,finishTime)'
+                    ),
+                    'totalTime',
+                ],
+                [sequelize.literal('datediff(date,now())'), 'applyEndTime'],
             ],
             include: [
                 {
@@ -64,9 +71,20 @@ module.exports = {
                 } else {
                     result[i].dataValues.applyState = true
                 }
-                let date = moment().format('YYYY-MM-DD')
-                let endDate = result[i].date
-                console.log(moment(date).diff(endDate, 'days'))
+
+                if (result[i].dataValues.applyEndTime === 0) {
+                    let time = moment().format('YYYY-MM-DD HH:mm:ss')
+                    let startTime =
+                        result[i].dataValues.date +
+                        ' ' +
+                        result[i].dataValues.standbyTime
+                    let minus = moment(time).diff(startTime, 'hours')
+                    result[i].dataValues.applyEndTime =
+                        Math.abs(minus) + ' 시간'
+                } else {
+                    result[i].dataValues.applyEndTime =
+                        result[i].dataValues.applyEndTime + ' 일'
+                }
             }
             return result
         })
