@@ -6,7 +6,7 @@ const validation = require('./validators/post.validator')
 
 router.post(
     '/',
-    validation.postValidation,
+    // validation.postValidation,
     multer.upload.array('thumbnail', 3),
     groupController.createPost
 )
