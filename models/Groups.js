@@ -70,6 +70,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(200),
                 allowNull: false,
             },
+            region: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
             parking: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
