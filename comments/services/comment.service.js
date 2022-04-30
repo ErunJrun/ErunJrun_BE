@@ -31,6 +31,7 @@ module.exports = {
                             'profileUrl',
                             'userLevel',
                         ],
+
                     },
                 ],
                 order: [['createdAt', 'desc']],
@@ -72,6 +73,7 @@ module.exports = {
                             'profileUrl',
                             'userLevel',
                         ],
+
                     },
                 ],
                 order: [['createdAt', 'desc']],
@@ -89,9 +91,8 @@ module.exports = {
         return await Comments.findOne({
             attributes: ['userId'],
             where: { commentId },
-        }).then((value) => {
-            return value.dataValues.userId
-        })
+        }).then((value) => { return value.dataValues.userId })
+
     },
     updateComment: async (content, commentId) => {
         try {
@@ -108,5 +109,6 @@ module.exports = {
         } catch (error) {
             return error
         }
-    },
+
+    }
 }

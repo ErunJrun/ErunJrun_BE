@@ -91,7 +91,9 @@ module.exports = {
             })
         }
         // commentId로 commment 작성자 체크
+
         if ((await commentService.checkCommentUser(commentId)) !== userId) {
+
             return res.status(400).send({
                 success: false,
                 message: '본인이 작성한 댓글만 수정할 수 있습니다',
@@ -123,7 +125,9 @@ module.exports = {
             })
         }
         // commentId로 commment 작성자 체크
+
         if ((await commentService.checkCommentUser(commentId)) !== userId) {
+
             return res.status(400).send({
                 success: false,
                 message: '본인이 작성한 댓글만 삭제할 수 있습니다',
@@ -133,13 +137,17 @@ module.exports = {
             await commentService.deleteComment(commentId)
             return res.status(200).send({
                 success: true,
-                message: '댓글 삭제에 성공하였습니다',
+
+                message: '댓글 삭제에 성공하였습니다'
+
             })
         } catch (error) {
             return res.status(400).send({
                 succes: false,
-                message: '댓글 삭제에 실패하였습니다',
+
+                message: '댓글 삭제에 실패하였습니다'
             })
         }
-    },
+    }
+
 }
