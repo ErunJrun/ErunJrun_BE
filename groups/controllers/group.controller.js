@@ -4,7 +4,7 @@ const multer = require('../../middlewares/multers/multer')
 module.exports = {
     createPost: (req, res) => {
         //const {userId} = res.locals
-        const userId = '1111-2222-3333-4444'
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         const data = {
             userId,
             title: req.body.title,
@@ -127,7 +127,7 @@ module.exports = {
                     data[`thumbnailUrl${i + 1}`] = req.files[i].location
                 }
             }
-
+            await groupService.addAlarm(groupId, chkGroup.title, 'update')
             groupService.updatePost(groupId, data)
 
             res.status(200).send({
@@ -170,6 +170,7 @@ module.exports = {
                     multer.deleteImg(url)
                 }
             }
+            await groupService.addAlarm(groupId, chkGroup.title, 'delete')
             groupService.deletePost(groupId)
 
             res.status(200).send({
