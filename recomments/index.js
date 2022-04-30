@@ -5,7 +5,7 @@ const recommentController = require('./controllers/recomment.controller')
 
 router.post('/:commentId', recommentController.createRecomment)
 router.get('/:commentId', recommentController.getRecomment)
-router.patch('/:commentId')
-router.delete('/:commentId')
+router.patch('/:recommentId', recommentController.updateRecomment)
+router.delete('/:recommentId', recommentController.deleteRecomment)
 
 module.exports = router
