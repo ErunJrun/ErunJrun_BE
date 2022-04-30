@@ -44,30 +44,23 @@ module.exports = {
             })
         }
     },
-    /**
-     * TODO: 쿼리스트링을 통한 정렬 해야함
-     * TODO: mapLatLng 의 경우 배열로 들어옴 (값 저장형태 고민해봐야함)
-     *
-     * @param {*} req
-     * @param {*} res
-     * @returns
-     */
     getGroup: async (req, res) => {
         const { category } = req.params
         // const { userId } = res.locals
         const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const query = req.query
         let data
 
         try {
             switch (category) {
                 case 'all':
-                    data = await groupService.getGroupData('', userId)
+                    data = await groupService.getGroupData(userId, 'all', query)
                     break
                 case 'main':
-                    data = await groupService.getGroupData(3)
+                    data = await groupService.getGroupData(userId, 'main')
                     break
                 case 'mypage':
-                    data = await groupService.getGroupData('', userId, 'mypage')
+                    data = await groupService.getGroupData(userId, 'mypage')
                     break
                 default:
                     return res.status(400).send({

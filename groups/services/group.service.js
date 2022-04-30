@@ -1,19 +1,182 @@
 const sequelize = require('sequelize')
+const Op = sequelize.Op
 const { Groups, Appliers, Users, Alarms } = require('../../models')
 const moment = require('moment')
 
 module.exports = {
     createPost: async (data) => {
+        const regionText = data.location.split(' ')[0]
+        let region
+        switch (regionText) {
+            case '서울':
+                region = 1
+                break
+            case '경기':
+                region = 2
+                break
+            case '인천':
+                region = 3
+                break
+            case '강원':
+                region = 4
+                break
+            case '충남':
+            case '충북':
+            case '세종특별자치시':
+                region = 5
+                break
+            case '경북':
+            case '대구':
+                region = 6
+                break
+            case '경남':
+            case '부산':
+            case '울산':
+                region = 7
+                break
+            case '전남':
+            case '전북':
+            case '광주':
+                region = 8
+                break
+            case '제주특별자치도':
+                region = 9
+                break
+        }
+
+        let timeCode = data.startTime.split(':')[0]
+        timeCode = Math.ceil(timeCode / 4)
+
+        data.region = region
+        data.timecode = timeCode
+
         await Groups.create(data).then((result) => {
-            Appliers.create({ userId: result.userId, groupId: result.groupId })
+            Appliers.create({
+                userId: result.userId,
+                groupId: result.groupId,
+            })
             return result
         })
         return
     },
-    getGroupData: async (limit, myUserId, category) => {
+    getGroupData: async (myUserId, category, query) => {
         let condition = {}
-        if (myUserId && category === 'mypage') {
-            condition = { userId: myUserId }
+        let limit
+
+        switch (category) {
+            case 'mypage':
+                condition = { userId: myUserId }
+                break
+            case 'main':
+                limit = 3
+                break
+            case 'all':
+                //날짜필터는 필수값
+                let distanceCondition
+                let dateCondition
+                let timeCondition
+                if (query.date) {
+                    dateCondition = query.date
+                } else {
+                    dateCondition = { [Op.not]: null }
+                }
+                if (query.time) {
+                    const timequery = query.time.split('%')
+                    timeCondition = { [Op.in]: timequery }
+                } else {
+                    timeCondition = { [Op.not]: null }
+                }
+
+                if (Object.keys(query).length === 0) {
+                    const user = await Users.findOne({
+                        where: { userId: myUserId },
+                    })
+
+                    if (user.likeLocation === null) user.likeLocation = '0'
+                    if (user.likeDistance === null) user.likeDistance = '0'
+
+                    if (user.likeLocation === '0')
+                        user.likeLocation = { [Op.not]: null }
+
+                    switch (user.likeDistance) {
+                        case '0':
+                            distanceCondition = { [Op.gte]: 0 }
+                            break
+                        case '1':
+                            distanceCondition = { [Op.lt]: 5 }
+                            break
+                        case '2':
+                            distanceCondition = {
+                                [Op.and]: [{ [Op.lt]: 10 }, { [Op.gte]: 5 }],
+                            }
+                            break
+                        case '3':
+                            distanceCondition = {
+                                [Op.and]: [{ [Op.lt]: 15 }, { [Op.gte]: 10 }],
+                            }
+                            break
+                        case '4':
+                            distanceCondition = { [Op.gte]: 15 }
+                            break
+                    }
+
+                    condition = {
+                        date: dateCondition,
+                        region: user.likeLocation,
+                        distance: distanceCondition,
+                    }
+                } else {
+                    let regionCondition = {}
+                    let distanceConditionList = []
+
+                    //지역 필터
+                    if (query.region) {
+                        const regionQuery = query.region.split('%')
+                        regionCondition = { [Op.in]: regionQuery }
+                    } else {
+                        regionCondition = { [Op.not]: null }
+                    }
+
+                    //러닝거리 필터
+                    if (query.distance) {
+                        const distanceQuery = query.distance.split('%')
+                        for (let i = 0; i < distanceQuery.length; i++) {
+                            switch (distanceQuery[i]) {
+                                case '0':
+                                    distanceCondition = {}
+                                    break
+                                case '1':
+                                    distanceCondition = { [Op.lt]: 5 }
+                                    break
+                                case '2':
+                                    distanceCondition = {
+                                        [Op.between]: [5, 10],
+                                    }
+                                    break
+                                case '3':
+                                    distanceCondition = {
+                                        [Op.between]: [10, 15],
+                                    }
+                                    break
+                                case '4':
+                                    distanceCondition = { [Op.gte]: 15 }
+                                    break
+                            }
+                            distanceConditionList.push(distanceCondition)
+                        }
+                    } else {
+                        distanceConditionList.push({ [Op.not]: null })
+                    }
+
+                    condition = {
+                        [Op.and]: [
+                            { date: dateCondition },
+                            { region: regionCondition },
+                            { distance: { [Op.or]: distanceConditionList } },
+                            { timecode: timeCondition },
+                        ],
+                    }
+                }
         }
 
         let data = await Groups.findAll({
@@ -25,6 +188,7 @@ module.exports = {
                 'groupId',
                 'date',
                 'standbyTime',
+                'startTime',
                 'maxPeople',
                 ['thumbnailUrl1', 'thumbnailUrl'],
                 [
