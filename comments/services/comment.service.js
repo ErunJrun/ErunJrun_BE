@@ -11,7 +11,6 @@ module.exports = {
         } else {
             condition = { courseId: input.courseId }
         }
-        console.log('오나?')
         try {
             const data = await Comments.findAll({
                 where: condition,
@@ -27,12 +26,11 @@ module.exports = {
                         model: Users,
                         as: 'user',
                         foreignKey: 'userId',
-                        attributes: ['userId', 'nickname', 'profileUrl']
-                    }
+                        attributes: ['userId', 'nickname', 'profileUrl'],
+                    },
                 ],
-                order: [['createdAt', 'desc']]
+                order: [['createdAt', 'desc']],
             })
-            console.log('여긴?')
             return data
         } catch (error) {
             console.log(error)
@@ -64,10 +62,10 @@ module.exports = {
                         model: Users,
                         as: 'user',
                         foreignKey: 'userId',
-                        attributes: ['userId', 'nickname', 'profileUrl']
-                    }
+                        attributes: ['userId', 'nickname', 'profileUrl'],
+                    },
                 ],
-                order: [['createdAt', 'desc']]
+                order: [['createdAt', 'desc']],
             })
             console.log('여긴?')
             return data
@@ -76,4 +74,30 @@ module.exports = {
             return error
         }
     },
+    checkComment: async (commentId) => {
+        return await Comments.findOne({ where: { commentId } })
+
+    },
+    checkCommentUser: async (commentId) => {
+        return await Comments.findOne({
+            attributes: ['userId'],
+            where: { commentId },
+        }).then((value) => { return value.dataValues.userId })
+    },
+    updateComment: async (content, commentId) => {
+        try {
+            await Comments.update({ content }, { where: { commentId } })
+            return
+        } catch (error) {
+            return error
+        }
+    },
+    deleteComment: async (commentId) => {
+        try {
+            await Comments.destroy({ where: { commentId } })
+            return
+        } catch (error) {
+            return error
+        }
+    }
 }
