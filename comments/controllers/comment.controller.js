@@ -116,7 +116,7 @@ module.exports = {
 
     deleteComment: async (req, res) => {
         const { commentId } = req.params
-        const userId = 'f37d59f2-c0ce-4712-a7d8-043d14158a300'
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         if (!(await commentService.checkComment(commentId))) {
             return res.status(400).send({
                 success: false,
@@ -125,7 +125,7 @@ module.exports = {
         }
         // commentId로 commment 작성자 체크
 
-        if ((await commentService.checkCommentUser(recommentId)) !== userId) {
+        if ((await commentService.checkCommentUser(commentId)) !== userId) {
             return res.status(400).send({
                 success: false,
                 message: '본인이 작성한 댓글만 삭제할 수 있습니다',
