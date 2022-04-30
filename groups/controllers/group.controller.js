@@ -127,7 +127,7 @@ module.exports = {
                     data[`thumbnailUrl${i + 1}`] = req.files[i].location
                 }
             }
-
+            await groupService.addAlarm(groupId, chkGroup.title, 'update')
             groupService.updatePost(groupId, data)
 
             res.status(200).send({
@@ -170,6 +170,7 @@ module.exports = {
                     multer.deleteImg(url)
                 }
             }
+            await groupService.addAlarm(groupId, chkGroup.title, 'delete')
             groupService.deletePost(groupId)
 
             res.status(200).send({

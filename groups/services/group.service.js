@@ -1,5 +1,6 @@
 const sequelize = require('sequelize')
-const { Groups, Appliers, Users } = require('../../models')
+const { Groups, Appliers, Users, Alarms } = require('../../models')
+const moment = require('moment')
 
 module.exports = {
     createPost: async (data) => {
@@ -23,7 +24,7 @@ module.exports = {
                 'distance',
                 'groupId',
                 'date',
-                'startTime',
+                'standbyTime',
                 'maxPeople',
                 ['thumbnailUrl1', 'thumbnailUrl'],
                 [
@@ -31,6 +32,13 @@ module.exports = {
                     'applyPeople',
                 ],
                 'userId',
+                [
+                    sequelize.literal(
+                        'timestampdiff(minute,standbyTime,finishTime)'
+                    ),
+                    'totalTime',
+                ],
+                [sequelize.literal('datediff(date,now())'), 'applyEndTime'],
             ],
             include: [
                 {
@@ -62,6 +70,20 @@ module.exports = {
                     result[i].dataValues.applyState = false
                 } else {
                     result[i].dataValues.applyState = true
+                }
+
+                if (result[i].dataValues.applyEndTime === 0) {
+                    let time = moment().format('YYYY-MM-DD HH:mm:ss')
+                    let startTime =
+                        result[i].dataValues.date +
+                        ' ' +
+                        result[i].dataValues.standbyTime
+                    let minus = moment(time).diff(startTime, 'hours')
+                    result[i].dataValues.applyEndTime =
+                        Math.abs(minus) + ' 시간'
+                } else {
+                    result[i].dataValues.applyEndTime =
+                        result[i].dataValues.applyEndTime + ' 일'
                 }
             }
             return result
@@ -131,5 +153,19 @@ module.exports = {
     },
     chkApplyUser: (groupId, userId) => {
         return Appliers.findOne({ where: { groupId, userId } })
+    },
+    addAlarm: async (groupId, groupTitle, category) => {
+        const user = await Appliers.findAll({
+            where: { groupId },
+        })
+
+        for (let i = 0; i < user.length; i++) {
+            Alarms.create({
+                category,
+                groupId,
+                groupTitle,
+                userId: user[i].userId,
+            })
+        }
     },
 }
