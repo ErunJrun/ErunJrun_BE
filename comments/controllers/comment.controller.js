@@ -29,9 +29,10 @@ module.exports = {
                     })
             }
             const data = await commentService.createComment(input)
+            console.log(data)
             res.status(200).send({
                 success: true,
-                data
+                data,
             })
         } catch (error) {
             return res.status(400).send({
@@ -41,7 +42,7 @@ module.exports = {
             })
         }
     },
-    getComments: (req, res) => {
+    getComments: async (req, res) => {
         const { category, categoryId } = req.params
         // 데이터 object 케이스별로 만들어주기
         let input
@@ -49,12 +50,12 @@ module.exports = {
             switch (category) {
                 case 'group':
                     input = {
-                        Id: categoryId,
+                        groupId: categoryId,
                     }
                     break
                 case 'course':
                     input = {
-                        Id: categoryId,
+                        courseId: categoryId,
                     }
                     break
                 default:
@@ -66,7 +67,7 @@ module.exports = {
             const data = await commentService.getComments(category, input)
             res.status(200).send({
                 success: true,
-                data
+                data,
             })
         } catch (error) {
             return res.status(400).send({
@@ -75,5 +76,5 @@ module.exports = {
                 error,
             })
         }
-    }
+    },
 }

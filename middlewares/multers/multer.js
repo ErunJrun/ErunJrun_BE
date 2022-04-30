@@ -50,9 +50,9 @@ const upload = multer({
             cb(
                 null,
                 Math.floor(Math.random() * 1000).toString() +
-                Date.now() +
-                '.' +
-                file.originalname.split('.').pop()
+                    Date.now() +
+                    '.' +
+                    file.originalname.split('.').pop()
             )
         },
     }),
@@ -68,7 +68,7 @@ const deleteImg = (url) => {
             Bucket: process.env.AWS_S3_BUCKET,
             Key: filename,
         },
-        function (err, data) { }
+        function (err, data) {}
     )
 }
 module.exports = { upload, deleteImg }

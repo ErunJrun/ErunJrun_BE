@@ -1,30 +1,79 @@
 const sequelize = require('sequelize')
 const { Comments, Users, Groups, Courses } = require('../../models/index')
 
-
-// TODO: result에 모든 comment를 넣기
-
 module.exports = {
     createComment: async (input) => {
-        const data = await Comments.create(input).then(async (result) => {
-            const user = await Users.findOne({ where: { userId: result.dataValues.userId } })
-            result.dataValues.nickname = user.nickname
-            result.dataValues.profileUrl = user.profileUrl
-            return result
-        })
-        return data
+        await Comments.create(input)
+        let condition
+        // comment를 보여줄 특정 게시물 지정
+        if (input.groupId) {
+            condition = { groupId: input.groupId }
+        } else {
+            condition = { courseId: input.courseId }
+        }
+        console.log('오나?')
+        try {
+            const data = await Comments.findAll({
+                where: condition,
+                attributes: [
+                    'commentId',
+                    'groupId',
+                    'courseId',
+                    'content',
+                    'createdAt',
+                ],
+                include: [
+                    {
+                        model: Users,
+                        as: 'user',
+                        foreignKey: 'userId',
+                        attributes: ['userId', 'nickname', 'profileUrl']
+                    }
+                ],
+                order: [['createdAt', 'desc']]
+            })
+            console.log('여긴?')
+            return data
+        } catch (error) {
+            console.log(error)
+            return error
+        }
     },
 
     // TODO: getComment 마저 완성하기
     getComments: async (category, input) => {
-        if (category === 'group') {
-            const data = await Comments.find({ where: input })
+        let condition
+        // comment를 보여줄 특정 게시물 지정
+        if (input.groupId) {
+            condition = { groupId: input.groupId }
+        } else {
+            condition = { courseId: input.courseId }
         }
-        if (category === 'course') {
-
+        try {
+            const data = await Comments.findAll({
+                where: condition,
+                attributes: [
+                    'commentId',
+                    'groupId',
+                    'courseId',
+                    'content',
+                    'createdAt',
+                ],
+                include: [
+                    {
+                        model: Users,
+                        as: 'user',
+                        foreignKey: 'userId',
+                        attributes: ['userId', 'nickname', 'profileUrl']
+                    }
+                ],
+                order: [['createdAt', 'desc']]
+            })
+            console.log('여긴?')
+            return data
+        } catch (error) {
+            console.log(error)
+            return error
         }
-
-
-    }
-
+    },
 }
