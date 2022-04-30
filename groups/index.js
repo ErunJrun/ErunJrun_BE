@@ -6,7 +6,7 @@ const validation = require('./validators/post.validator')
 
 router.post(
     '/',
-    // validation.postValidation,
+    validation.postValidation,
     multer.upload.array('thumbnail', 3),
     groupController.createPost
 )
@@ -15,6 +15,7 @@ router.get('/detail/:groupId', groupController.getGroupDetail)
 router.get('/:category', groupController.getGroup)
 router.patch(
     '/:groupId',
+    validation.updateValidation,
     multer.upload.array('thumbnail', 3),
     groupController.updatePost
 )
