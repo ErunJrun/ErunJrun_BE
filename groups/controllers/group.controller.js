@@ -5,8 +5,6 @@ module.exports = {
     createPost: (req, res) => {
         //const {userId} = res.locals
         const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
-        if (!req.body)
-            return res.status(400).send({ message: 'body data가 없어요' })
         const data = {
             userId,
             title: req.body.title,
