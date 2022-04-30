@@ -26,7 +26,13 @@ module.exports = {
                         model: Users,
                         as: 'user',
                         foreignKey: 'userId',
-                        attributes: ['userId', 'nickname', 'profileUrl'],
+                        attributes: [
+                            'userId',
+                            'nickname',
+                            'profileUrl',
+                            'userLevel',
+                        ],
+
                     },
                 ],
                 order: [['createdAt', 'desc']],
@@ -62,12 +68,17 @@ module.exports = {
                         model: Users,
                         as: 'user',
                         foreignKey: 'userId',
-                        attributes: ['userId', 'nickname', 'profileUrl'],
+                        attributes: [
+                            'userId',
+                            'nickname',
+                            'profileUrl',
+                            'userLevel',
+                        ],
+
                     },
                 ],
                 order: [['createdAt', 'desc']],
             })
-            console.log('여긴?')
             return data
         } catch (error) {
             console.log(error)
@@ -76,13 +87,13 @@ module.exports = {
     },
     checkComment: async (commentId) => {
         return await Comments.findOne({ where: { commentId } })
-
     },
     checkCommentUser: async (commentId) => {
         return await Comments.findOne({
             attributes: ['userId'],
             where: { commentId },
         }).then((value) => { return value.dataValues.userId })
+
     },
     updateComment: async (content, commentId) => {
         try {
@@ -99,5 +110,6 @@ module.exports = {
         } catch (error) {
             return error
         }
+
     }
 }
