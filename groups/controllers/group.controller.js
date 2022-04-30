@@ -21,6 +21,7 @@ module.exports = {
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
         }
+        console.log(JSON.stringify(req.body.mapLatLng))
 
         try {
             if (req.files) {
