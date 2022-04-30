@@ -76,13 +76,14 @@ module.exports = {
     },
     checkComment: async (commentId) => {
         return await Comments.findOne({ where: { commentId } })
-
     },
     checkCommentUser: async (commentId) => {
         return await Comments.findOne({
             attributes: ['userId'],
             where: { commentId },
-        }).then((value) => { return value.dataValues.userId })
+        }).then((value) => {
+            return value.dataValues.userId
+        })
     },
     updateComment: async (content, commentId) => {
         try {
@@ -99,5 +100,5 @@ module.exports = {
         } catch (error) {
             return error
         }
-    }
+    },
 }
