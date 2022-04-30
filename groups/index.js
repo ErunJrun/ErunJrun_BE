@@ -2,11 +2,11 @@ const express = require('express')
 const router = express.Router()
 const groupController = require('./controllers/group.controller')
 const multer = require('../middlewares/multers/multer')
-const postValidation = require('./validators/post.validator')
+const validation = require('./validators/post.validator')
 
 router.post(
     '/',
-    postValidation,
+    // validation.postValidation,
     multer.upload.array('thumbnail', 3),
     groupController.createPost
 )
