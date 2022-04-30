@@ -15,8 +15,8 @@ router.get('/detail/:groupId', groupController.getGroupDetail)
 router.get('/:category', groupController.getGroup)
 router.patch(
     '/:groupId',
-    validation.updateValidation,
     multer.upload.array('thumbnail', 3),
+    validation.updateValidation,
     groupController.updatePost
 )
 router.delete('/:groupId', groupController.deletePost)

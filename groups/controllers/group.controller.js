@@ -21,7 +21,6 @@ module.exports = {
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
         }
-        console.log(JSON.stringify(req.body.mapLatLng[0]))
 
         try {
             if (req.files) {
@@ -35,7 +34,6 @@ module.exports = {
             res.status(200).send({
                 success: true,
                 message: '게시물이 등록되었습니다',
-                data,
             })
         } catch (error) {
             console.log(error)
