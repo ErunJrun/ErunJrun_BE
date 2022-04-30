@@ -1,0 +1,10 @@
+{
+    "apps": [
+        {
+            "name": "erunjrun",
+            "script": "node",
+            "args": "./server.js",
+            "watch": true
+        }
+    ]
+}

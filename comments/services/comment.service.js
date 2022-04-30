@@ -1,5 +1,4 @@
-const sequelize = require('sequelize')
-const { Comments, Users, Groups, Courses } = require('../../models/index')
+const { Comments, Users } = require('../../models/index')
 
 module.exports = {
     createComment: async (input) => {
