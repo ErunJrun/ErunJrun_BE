@@ -14,8 +14,5 @@ router.patch(
     commentController.updateComment
 )
 router.delete('/:commentId', commentController.deleteComment)
-router.post('/recomment/:commentId')
-router.get('/recomment/:commentId')
-router.patch('/recomment/:commentId')
-router.delete('/recomment/:commentId')
+
 module.exports = router

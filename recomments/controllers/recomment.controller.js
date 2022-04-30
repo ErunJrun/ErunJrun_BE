@@ -1,5 +1,5 @@
 const recommentService = require('../services/recomment.service')
-
+const commentService = require('../../comments/services/comment.service')
 module.exports = {
     createRecomment: async (req, res) => {
         const { commentId } = req.params
@@ -15,20 +15,41 @@ module.exports = {
         const input = {
             commentId,
             userId,
-            content
+            content,
         }
         try {
             const data = await recommentService.createRecomment(input)
             res.status(200).send({
                 success: true,
-                data
+                data,
             })
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                message: '대댓글 등록에 실패했습니다'
+                message: '대댓글 등록에 실패했습니다',
+            })
+        }
+    },
+    getRecomment: async (req, res) => {
+        const { commentId } = req.params
+        const input = { commentId }
+        if (!(await commentService.checkComment(commentId))) {
+            return res.status(400).send({
+                success: false,
+                message: '해당 댓글이 존재하지 않습니다',
+            })
+        }
+        try {
+            const data = await recommentService.getRecomment(input)
+            res.status(200).send({
+                success: true,
+                data,
+            })
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '대댓글 불러오기에 실패했습니다'
             })
         }
     }
-
 }
