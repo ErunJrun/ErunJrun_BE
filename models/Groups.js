@@ -50,6 +50,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.DATE,
                 allowNull: false,
             },
+            timecode: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+            },
             distance: {
                 type: DataTypes.FLOAT,
                 allowNull: false,
