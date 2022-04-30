@@ -11,7 +11,7 @@ const error = (req, res, next) => {
 
 const commentValidation = [
     body('content').notEmpty().withMessage('댓글은 반드시 입력해주셔야 합니다'),
-    error
+    error,
 ]
 
 module.exports = { commentValidation }

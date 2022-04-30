@@ -26,7 +26,12 @@ module.exports = {
                         model: Users,
                         as: 'user',
                         foreignKey: 'userId',
-                        attributes: ['userId', 'nickname', 'profileUrl'],
+                        attributes: [
+                            'userId',
+                            'nickname',
+                            'profileUrl',
+                            'userLevel',
+                        ],
                     },
                 ],
                 order: [['createdAt', 'desc']],
@@ -62,12 +67,16 @@ module.exports = {
                         model: Users,
                         as: 'user',
                         foreignKey: 'userId',
-                        attributes: ['userId', 'nickname', 'profileUrl'],
+                        attributes: [
+                            'userId',
+                            'nickname',
+                            'profileUrl',
+                            'userLevel',
+                        ],
                     },
                 ],
                 order: [['createdAt', 'desc']],
             })
-            console.log('여긴?')
             return data
         } catch (error) {
             console.log(error)
