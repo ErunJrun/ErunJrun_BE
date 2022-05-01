@@ -1,16 +1,16 @@
 const express = require('express')
 const router = express.Router()
 const commentController = require('./controllers/comment.controller')
-const validator = require('./validators/comment.validator')
+const commentvalidator = require('./validators/comment.validator')
 router.post(
     '/:category/:categoryId',
-    validator.commentValidation,
+    commentvalidator.commentValidation,
     commentController.createComment
 )
 router.get('/:category/:categoryId', commentController.getComments)
 router.patch(
     '/:commentId',
-    validator.commentValidation,
+    commentvalidator.commentValidation,
     commentController.updateComment
 )
 router.delete('/:commentId', commentController.deleteComment)

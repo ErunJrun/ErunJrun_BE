@@ -10,7 +10,9 @@ const error = (req, res, next) => {
 }
 
 const recommentValidation = [
-    body('content').notEmpty().withMessage('대댓글은 반드시 입력해주셔야 합니다'),
+    body('content')
+        .notEmpty()
+        .withMessage('대댓글은 반드시 입력해주셔야 합니다'),
     error,
 ]
 
