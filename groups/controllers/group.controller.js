@@ -185,6 +185,13 @@ module.exports = {
         const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
 
         try {
+            const chkGroup = await groupService.getUserGroupData(groupId)
+            if (!chkGroup) {
+                return res.status(400).send({
+                    success: false,
+                    message: '해당 게시물이 존재하지 않습니다',
+                })
+            }
             const data = await groupService.getGroupDetail(groupId, userId)
             res.status(200).send({ success: true, data })
         } catch (error) {
