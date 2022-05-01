@@ -348,6 +348,18 @@ module.exports = {
             })
             result.dataValues.nickname = user.nickname
             result.dataValues.profileUrl = user.profileUrl
+
+            for (let i = 0; i < result.Appliers.length; i++) {
+                const applyUser = await Users.findOne({
+                    where: { userId: result.Appliers[i].userId },
+                })
+
+                result.dataValues.Appliers[i].dataValues.nickname =
+                    applyUser.nickname
+                result.dataValues.Appliers[i].dataValues.profileUrl =
+                    applyUser.profileUrl
+            }
+            console.log(result)
             return result
         })
         return data
