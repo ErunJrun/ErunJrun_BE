@@ -19,7 +19,7 @@ module.exports = function (sequelize, DataTypes) {
                 },
             },
             mapLatLng: {
-                type: DataTypes.STRING(150),
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             thumbnailUrl1: {
@@ -47,19 +47,19 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
             },
             standbyTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             startTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             finishTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             timecode: {
-                type: DataTypes.STRING(20),
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             distance: {
