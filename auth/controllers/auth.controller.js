@@ -10,7 +10,7 @@ module.exports = {
             const data = await authService.getUserInfo(input)
             res.status(200).send({
                 success: true,
-                data,
+                data
             })
         } catch (error) {
             res.status(400).send({
