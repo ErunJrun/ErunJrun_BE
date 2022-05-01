@@ -359,7 +359,6 @@ module.exports = {
                 result.dataValues.Appliers[i].dataValues.profileUrl =
                     applyUser.profileUrl
             }
-            console.log(result)
             return result
         })
         return data
