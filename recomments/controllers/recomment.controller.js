@@ -113,5 +113,5 @@ module.exports = {
                 message: '대댓글 삭제에 실패하였습니다',
             })
         }
-    }
+    },
 }

@@ -81,5 +81,5 @@ module.exports = {
         } catch (error) {
             return error
         }
-    }
+    },
 }
