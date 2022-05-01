@@ -166,7 +166,6 @@ module.exports = {
                     } else {
                         distanceConditionList.push({ [Op.not]: null })
                     }
-
                     condition = {
                         [Op.and]: [
                             { date: dateCondition },
