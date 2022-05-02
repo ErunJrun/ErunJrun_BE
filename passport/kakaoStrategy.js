@@ -34,7 +34,7 @@ module.exports = () => {
                             nickname: profile._json.properties.nickname,
                             profileUrl: profile._json.properties.profile_image,
                         })
-                        console.log(newUser)
+                        // console.log(newUser)
                         done(null, newUser) // 회원가입하고 로그인 인증 완료
                     }
                 } catch (error) {
