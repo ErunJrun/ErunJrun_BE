@@ -74,16 +74,19 @@ module.exports = {
                 let distanceCondition
                 let dateCondition
                 let timeCondition
+                let finishCondition = '0'
                 if (query.date) {
                     dateCondition = query.date
                 } else {
                     dateCondition = { [Op.not]: null }
                 }
-                if (query.time) {
+                if (query.time && query.time !== '0') {
                     const timequery = query.time.split('%')
                     timeCondition = { [Op.in]: timequery }
                 } else {
                     timeCondition = { [Op.not]: null }
+                }
+                if (query.finish === '0') {
                 }
 
                 if (Object.keys(query).length === 0) {
@@ -142,7 +145,7 @@ module.exports = {
                         for (let i = 0; i < distanceQuery.length; i++) {
                             switch (distanceQuery[i]) {
                                 case '0':
-                                    distanceCondition = {}
+                                    distanceCondition = { [Op.gte]: 0 }
                                     break
                                 case '1':
                                     distanceCondition = { [Op.lt]: 5 }
