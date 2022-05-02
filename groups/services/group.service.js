@@ -234,19 +234,30 @@ module.exports = {
                     result[i].dataValues.applyState = true
                 }
 
+                let startDateTime =
+                    result[i].dataValues.date +
+                    ' ' +
+                    result[i].dataValues.standbyTime
                 if (result[i].dataValues.applyEndTime === 0) {
                     let time = moment().format('YYYY-MM-DD HH:mm:ss')
-                    let startTime =
-                        result[i].dataValues.date +
-                        ' ' +
-                        result[i].dataValues.standbyTime
-                    let minus = moment(time).diff(startTime, 'hours')
+
+                    let minus = moment(time).diff(startDateTime, 'hours')
                     result[i].dataValues.applyEndTime =
                         Math.abs(minus) + ' 시간'
                 } else {
                     result[i].dataValues.applyEndTime =
                         result[i].dataValues.applyEndTime + ' 일'
                 }
+
+                result[i].dataValues.totalTime = `${parseInt(
+                    result[i].dataValues.totalTime / 60
+                )}h ${result[i].dataValues.totalTime % 60}min`
+
+                startDateTime = moment
+                    .utc(startDateTime)
+                    .lang('ko')
+                    .format('YYYY.MM.DD (dd) HH:mm')
+                result[i].dataValues.date = startDateTime
             }
             return result
         })
