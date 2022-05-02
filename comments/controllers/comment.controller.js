@@ -29,10 +29,7 @@ module.exports = {
                         message: '불러오기 상태값이 올바르지 않습니다',
                     })
             }
-            const data = await commentService.createComment(input).then(async (value) => {
-                await commentService.addAlarm(input, 'comment')
-                return value
-            }).catch((error) => { console.log(error) })
+            const data = await commentService.createComment(input)
             res.status(200).send({
                 success: true,
                 data,
@@ -149,5 +146,4 @@ module.exports = {
             })
         }
     },
-
 }
