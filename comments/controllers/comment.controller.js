@@ -4,7 +4,7 @@ module.exports = {
     // TODO: CONTENT가 비어있지 않은지 확인
     createComment: async (req, res) => {
         const { category, categoryId } = req.params
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const userId = '2fc1e54e-dd6b-49e9-96ae-61284ceaae09'
         // 데이터 object 케이스별로 만들어주기
         let input
         try {
@@ -29,7 +29,10 @@ module.exports = {
                         message: '불러오기 상태값이 올바르지 않습니다',
                     })
             }
-            const data = await commentService.createComment(input)
+            const data = await commentService.createComment(input).then(async (value) => {
+                await commentService.addAlarm(input, 'comment')
+                return value
+            }).catch((error) => { console.log(error) })
             res.status(200).send({
                 success: true,
                 data,
@@ -146,4 +149,5 @@ module.exports = {
             })
         }
     },
+
 }

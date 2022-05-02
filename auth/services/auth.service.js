@@ -1,6 +1,7 @@
 const { Users, Groups, Appliers } = require('../../models/index')
 const sequelize = require('sequelize')
 const Op = sequelize.Op
+
 module.exports = {
     getUserInfo: async (input) => {
         try {
@@ -16,22 +17,30 @@ module.exports = {
                     'likeDistance',
                     'userLevel',
                     'mannerPoint',
-                ]
+                ],
             })
             const appliedGroupId = await Appliers.findAll({
-                where: input
-            }).then((value) => { return value.map((item) => item.groupId) })
-            console.log(appliedGroupId)
-
+                where: input,
+            }).then((value) => {
+                return value.map((item) => item.groupId)
+            })
             // applier 숫자 세서 보여주기( applier에서 groupId의 개수 세면 됨)
             const waitingGroup = await Groups.findAll({
                 where: {
                     groupId: { [Op.or]: appliedGroupId },
-                    date: { [Op.gte]: sequelize.literal('now()') }
+                    date: { [Op.gte]: sequelize.literal('now()') },
                 },
                 attributes: [
                     [sequelize.literal('datediff(date, now())'), 'dDay'],
-                    [sequelize.fn('CONCAT', sequelize.col('date'), ' ', sequelize.col('standbyTime')), 'dDayTime'],
+                    [
+                        sequelize.fn(
+                            'CONCAT',
+                            sequelize.col('date'),
+                            ' ',
+                            sequelize.col('standbyTime')
+                        ),
+                        'dDayTime',
+                    ],
                     'date',
                     'title',
                     'location',
@@ -41,18 +50,18 @@ module.exports = {
                     'standbyTime',
                     'maxPeople',
                 ],
-                include: [{
-                    model: Appliers,
-                    as: 'Appliers',
-                    foreignKey: 'groupId',
-                    attributes: [
-                        'groupId',
-                        'userId',
-                    ]
-                }]
+                include: [
+                    {
+                        model: Appliers,
+                        as: 'Appliers',
+                        foreignKey: 'groupId',
+                        attributes: ['groupId', 'userId'],
+                    },
+                ],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
-                    value[i].dataValues.appliedPeople = value[i].dataValues.Appliers.length
+                    value[i].dataValues.appliedPeople =
+                        value[i].dataValues.Appliers.length
                     delete value[i].dataValues.Appliers
                 }
                 return value
