@@ -266,8 +266,7 @@ module.exports = {
                 const dateNow = moment()
                     .add(4, 'hours')
                     .format('YYYY-MM-DD HH:mm:ss')
-                console.log(dateNow)
-                if (dateNow >= startDateTime) {
+                if (finishCondition === '1' && dateNow >= startDateTime) {
                     delete result[i].dataValues
                 }
             }
