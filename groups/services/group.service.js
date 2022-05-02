@@ -128,7 +128,7 @@ module.exports = {
                     let regionCondition = {}
                     let distanceConditionList = []
 
-                    //지역 필터
+                    //지역 필터입니다
                     if (query.region) {
                         const regionQuery = query.region.split('%')
                         regionCondition = { [Op.in]: regionQuery }
