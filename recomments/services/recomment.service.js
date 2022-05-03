@@ -87,7 +87,6 @@ module.exports = {
     },
     getRecomment: async (input) => {
         try {
-            console.log('hi')
             const data = await Recomments.findAll({
                 where: { commentId: input.commentId },
                 attributes: ['recommentId', 'commentId', 'userId', 'content'],
