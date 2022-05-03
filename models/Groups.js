@@ -90,6 +90,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.TEXT,
                 allowNull: true,
             },
+            thema: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+            },
         },
         {
             sequelize,
