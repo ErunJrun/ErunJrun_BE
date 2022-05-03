@@ -266,10 +266,13 @@ module.exports = {
                 const dateNow = moment()
                     .add(4, 'hours')
                     .format('YYYY-MM-DD HH:mm:ss')
-                if (finishCondition === '1' && dateNow >= startDateTime) {
-                    delete result[i].dataValues
+                if (finishCondition === '0' && dateNow >= startDateTime) {
+                    delete result[i]
                 }
             }
+            result = result.filter((element) => {
+                return element !== null
+            })
             return result
         })
         if (limit) {
