@@ -6,7 +6,7 @@ module.exports = {
         // 유저의 정보 가져오기
         //  유저가 참여 예정인 그룹러닝 게시물 정보(호스트) 가져와야함
         try {
-            const data = await alarmService.getAlarm(userId)
+            const data = await alarmService.createDdayAlarm(userId)
             res.status(200).send({
                 success: true,
                 data,
