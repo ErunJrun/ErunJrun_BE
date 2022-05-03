@@ -17,6 +17,8 @@
 		"express-session": "^1.17.2",
 		"helmet": "^5.0.2",
 		"jsonwebtoken": "^8.5.1",
+		"express-validator": "^6.14.0",
+		"moment": "^2.29.3",
 		"morgan": "^1.10.0",
 		"multer": "^1.4.4",
 		"multer-s3": "^2.10.0",
@@ -26,7 +28,9 @@
 		"passport-naver-v2": "^2.0.8",
 		"redis": "^4.0.6",
 		"redis-server": "^1.2.2",
-		"sequelize": "^6.19.0"
+		"sequelize": "^6.19.0",
+		"winston": "^3.7.2",
+		"winston-daily-rotate-file": "^4.6.1"
 	},
 	"devDependencies": {
 		"nodemon": "^2.0.15",
