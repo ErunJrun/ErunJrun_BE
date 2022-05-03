@@ -32,12 +32,9 @@ module.exports = {
                 const dbRefresh = await redis.get(key)
 
                 if (req.cookies.refreshToken !== dbRefresh)
-                    return res
-                        .status(401)
-                        .json({
-                            message:
-                                'database에 저장된 refreshToken과 다릅니다.',
-                        })
+                    return res.status(401).json({
+                        message: 'database에 저장된 refreshToken과 다릅니다.',
+                    })
 
                 const newToken = jwt.sign(
                     { userId: userId },

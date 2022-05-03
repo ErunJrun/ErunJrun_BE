@@ -8,12 +8,15 @@ const passport = require('passport')
 const session = require('express-session')
 var cookieParser = require('cookie-parser')
 const passportConfig = require('./passport')
+const moment = require('moment')
+require('moment-timezone')
+moment.tz.setDefault('Asia/Seoul')
 
 require('dotenv').config()
 require('express-async-errors')
 
 const corsOptions = {
-    origin: "*", // 허락하고자 하는 요청 주소
+    origin: '*', // 허락하고자 하는 요청 주소
     credentials: true, // true로 하면 설정한 내용을 response 헤더에 추가 해줍니다.
 }
 
