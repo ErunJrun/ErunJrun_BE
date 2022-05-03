@@ -61,18 +61,18 @@ const naverCallback = (req, res, next) => {
             const key = userId + agent
             await redis.set(key, refreshToken)
 
-            res.cookie('token', token, {
-                sameSite: 'None',
-                secure: true,
-                httpOnly: true,
-            })
-            res.cookie('refreshToken', refreshToken, {
-                sameSite: 'None',
-                secure: true,
-                httpOnly: true,
-            })
+            // res.cookie('token', token, {
+            //     sameSite: 'None',
+            //     secure: true,
+            //     httpOnly: true,
+            // })
+            // res.cookie('refreshToken', refreshToken, {
+            //     sameSite: 'None',
+            //     secure: true,
+            //     httpOnly: true,
+            // })
 
-            return res.json({ succcss: true })
+            return res.json({ succcss: true, token, refreshToken })
         }
     )(req, res, next)
 }
