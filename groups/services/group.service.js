@@ -76,7 +76,14 @@ module.exports = {
                 let timeCondition
 
                 if (query.date) {
-                    dateCondition = query.date
+                    let startDate = query.date.split('%%')[0]
+                    let endDate = query.date.split('%%')[1]
+                    dateCondition = {
+                        [Op.and]: [
+                            { [Op.gte]: startDate },
+                            { [Op.lte]: endDate },
+                        ],
+                    }
                 } else {
                     dateCondition = { [Op.not]: null }
                 }
