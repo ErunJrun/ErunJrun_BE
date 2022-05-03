@@ -12,7 +12,7 @@ module.exports = () => {
             {
                 clientID: process.env.NAVER_ID,
                 clientSecret: process.env.NAVER_SECRET,
-                callbackURL: '/user/naver/callback',
+                callbackURL: 'http://localhost:3000/naver',
             },
             async (accessToken, refreshToken, profile, done) => {
                 // console.log('naver profile : ', profile)
