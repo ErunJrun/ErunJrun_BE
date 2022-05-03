@@ -62,7 +62,7 @@ module.exports = {
     getGroupData: async (myUserId, category, query) => {
         let condition = {}
         let limit
-
+        let finishCondition = '0'
         switch (category) {
             case 'mypage':
                 condition = { userId: myUserId }
@@ -74,7 +74,7 @@ module.exports = {
                 let distanceCondition
                 let dateCondition
                 let timeCondition
-                let finishCondition = '0'
+
                 if (query.date) {
                     dateCondition = query.date
                 } else {
@@ -86,8 +86,8 @@ module.exports = {
                 } else {
                     timeCondition = { [Op.not]: null }
                 }
-                if (query.finish === '0') {
-                }
+
+                if (query.finish === '1') finishCondition = '1'
 
                 if (Object.keys(query).length === 0) {
                     const user = await Users.findOne({
@@ -241,6 +241,7 @@ module.exports = {
                     result[i].dataValues.date +
                     ' ' +
                     result[i].dataValues.standbyTime
+
                 if (result[i].dataValues.applyEndTime === 0) {
                     let time = moment().format('YYYY-MM-DD HH:mm:ss')
 
@@ -256,11 +257,18 @@ module.exports = {
                     result[i].dataValues.totalTime / 60
                 )}h ${result[i].dataValues.totalTime % 60}min`
 
-                startDateTime = moment
+                const DateTime = moment
                     .utc(startDateTime)
                     .lang('ko')
                     .format('YYYY.MM.DD (dd) HH:mm')
-                result[i].dataValues.date = startDateTime
+                result[i].dataValues.date = DateTime
+
+                const dateNow = moment()
+                    .add(4, 'hours')
+                    .format('YYYY-MM-DD HH:mm:ss')
+                if (finishCondition === '1' && dateNow >= startDateTime) {
+                    delete result[i].dataValues
+                }
             }
             return result
         })
