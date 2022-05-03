@@ -8,7 +8,7 @@ module.exports = () => {
         new KakaoStrategy(
             {
                 clientID: process.env.KAKAO_ID, // 카카오 로그인에서 발급받은 REST API 키
-                callbackURL: 'http://localhost:3000/login/kakao', // 카카오 로그인 Redirect URI 경로
+                callbackURL: 'http://localhost:3000/kakao', // 카카오 로그인 Redirect URI 경로
             },
             /*
              * clientID에 카카오 앱 아이디 추가
@@ -17,7 +17,7 @@ module.exports = () => {
              * profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
              */
             async (accessToken, refreshToken, profile, done) => {
-                // console.log('kakao profile', profile)
+                console.log('kakao profile', profile)
                 try {
                     const exUser = await Users.findOne({
                         // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
