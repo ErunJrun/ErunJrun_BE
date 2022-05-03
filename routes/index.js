@@ -4,7 +4,7 @@ const group = require('../groups')
 const comment = require('../comments')
 const recomment = require('../recomments')
 const auth = require('../auth')
-const user = require('./user')
+const user = require('../user')
 
 router.use('/group', group)
 router.use('/comment', comment)

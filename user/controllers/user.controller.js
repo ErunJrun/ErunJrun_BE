@@ -1,8 +1,8 @@
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
-const redis = require('../config/redis')
-const { Users } = require('../models/index')
-const { verifyToken } = require('../helpers/authHelper')
+const redis = require('../../config/redis')
+const { Users } = require('../../models/index')
+const { verifyToken } = require('../../helpers/authHelper')
 require('dotenv').config()
 
 const kakaoCallback = (req, res, next) => {
