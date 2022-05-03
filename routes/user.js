@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const passport = require('passport')
-const { checkTokens } = require("../middlewares/user")
+const { checkTokens } = require('../middlewares/user')
 
 const userController = require('../controller/user')
 

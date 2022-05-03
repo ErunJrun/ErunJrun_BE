@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 function verifyToken(token) {
     try {
-        const result = jwt.verify(token, process.env.TOKENKEY);
+        const result = jwt.verify(token, process.env.TOKENKEY)
         return result
     } catch (e) {
         if (e.name === 'TokenExpiredError') {
@@ -14,7 +14,7 @@ function verifyToken(token) {
 
 function verifyRefreshToken(refreshToken) {
     try {
-        const resultr = jwt.verify(refreshToken, process.env.TOKENKEY);
+        const resultr = jwt.verify(refreshToken, process.env.TOKENKEY)
         return resultr
     } catch (e) {
         if (e.name === 'TokenExpiredError') {
@@ -22,6 +22,5 @@ function verifyRefreshToken(refreshToken) {
         }
     }
 }
-
 
 module.exports = { verifyToken, verifyRefreshToken }
