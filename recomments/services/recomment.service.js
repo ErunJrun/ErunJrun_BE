@@ -1,38 +1,52 @@
-const { Comments, Users, Recomments, Groups, Courses, Alarms } = require('../../models/index')
+const {
+    Comments,
+    Users,
+    Recomments,
+    Groups,
+    Courses,
+    Alarms,
+} = require('../../models/index')
 
 module.exports = {
     createRecomment: async (input) => {
         await Recomments.create(input).then(async (value) => {
-            await Comments.findOne({ where: { commentId: value.dataValues.commentId } }).then(async (value) => {
+            await Comments.findOne({
+                where: { commentId: value.dataValues.commentId },
+            }).then(async (value) => {
                 if (value.dataValues.courseId === null) {
                     console.log(value.dataValues)
                     await Groups.findOne({
                         where: { groupId: value.dataValues.groupId },
-                    }).then(async (value) => {
-                        console.log(value)
-                        // 닉네임 가져오기
-                        const nickname = await Users.findOne({
-                            where: { userId: value.dataValues.userId },
-                        })
-                            .then((value) => {
-                                return value.dataValues.nickname
+                    })
+                        .then(async (value) => {
+                            console.log(value)
+                            // 닉네임 가져오기
+                            const nickname = await Users.findOne({
+                                where: { userId: value.dataValues.userId },
                             })
-                            .catch((error) => {
+                                .then((value) => {
+                                    return value.dataValues.nickname
+                                })
+                                .catch((error) => {
+                                    console.log(error)
+                                })
+                            // 알람 생성
+                            console.log(value.dataValues)
+                            await Alarms.create({
+                                userId: value.dataValues.userId,
+                                groupId: value.dataValues.groupId,
+                                groupTitle: value.dataValues.title,
+                                category: 'recomment',
+                                nickname,
+                            }).catch((error) => {
                                 console.log(error)
                             })
-                        // 알람 생성
-                        console.log(value.dataValues)
-                        await Alarms.create({
-                            userId: value.dataValues.userId,
-                            groupId: value.dataValues.groupId,
-                            groupTitle: value.dataValues.title,
-                            category: 'recomment',
-                            nickname,
-                        }).catch((error) => {
+                        })
+                        .catch((error) => {
                             console.log(error)
                         })
-                    }).catch((error) => { console.log(error) })
-                } if (value.dataValues.groupId === null) {
+                }
+                if (value.dataValues.groupId === null) {
                     await Courses.findOne({
                         where: { courseId: value.dataValues.courseId },
                     }).then(async (value) => {
