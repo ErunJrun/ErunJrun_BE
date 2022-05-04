@@ -23,4 +23,5 @@ router.delete('/:groupId', groupController.deletePost)
 // About 출석체크, 호스트평가 API
 router.get('/attendance/:groupId', groupController.getAttendance)
 router.patch('/attendance/:groupId', groupController.updateAttendance)
+router.get('/evaluation/:groupId', groupController.getEvaluation)
 module.exports = router

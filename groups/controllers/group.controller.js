@@ -279,13 +279,9 @@ module.exports = {
         const { groupId } = req.params
         const { attendance } = req.body
         try {
-            const value = await groupService.updateAttendance(
-                groupId,
-                attendance
-            )
+            await groupService.updateAttendance(groupId, attendance)
             res.status(200).send({
                 success: true,
-                value,
                 message: '출석체크가 완료되었습니다.',
             })
         } catch (error) {
@@ -293,6 +289,21 @@ module.exports = {
             res.status(400).send({
                 success: false,
                 message: '출석체크가 완료되지 않았습니다.',
+            })
+        }
+    },
+    getEvaluation: async (req, res) => {
+        const { groupId } = req.params
+        try {
+            const hostUser = await groupService.getEvaluation(groupId)
+            res.status(200).send({
+                success: true,
+                hostUser,
+            })
+        } catch (error) {
+            res.status(400).send({
+                success: false,
+                message: '호스트 평가 페이지 불러오기에 실패하였습니다',
             })
         }
     },

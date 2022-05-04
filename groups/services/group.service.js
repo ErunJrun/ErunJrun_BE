@@ -423,8 +423,13 @@ module.exports = {
             return value.dataValues.date + ' ' + value.dataValues.standbyTime
         })
         // standbytime을 지난 경우, 출석체크 진입 못하게 하기.
-        if (moment().format('YYYY-MM-DD HH:mm:ss') < attendanceTime) {
-            return
+        try {
+            if (moment().format('YYYY-MM-DD HH:mm:ss') < attendanceTime) {
+                return
+            }
+        } catch (error) {
+            console.log(error)
+            return error
         }
     },
     checkAttendanceDone: async (groupId) => {
@@ -489,6 +494,27 @@ module.exports = {
             })
         } catch (error) {
             console.log(error)
+            return error
+        }
+    },
+    getEvaluation: async (groupId, attendance) => {
+        try {
+            const hostUser = await Groups.findOne({
+                where: { groupId },
+                attributes: ['groupId', 'title', 'date', 'standbyTime'],
+                include: [
+                    {
+                        model: Users,
+                        as: 'user',
+                        foreignKey: 'userId',
+                        attributes: ['userId', 'nickname', 'profileUrl'],
+                    },
+                ],
+            })
+            return hostUser
+        } catch (error) {
+            console.log(error)
+            return error
         }
     },
 }
