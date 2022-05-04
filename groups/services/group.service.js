@@ -74,6 +74,7 @@ module.exports = {
                 let distanceCondition
                 let dateCondition
                 let timeCondition
+                let themaCondition
 
                 if (query.date) {
                     let startDate = query.date.split('%%')[0]
@@ -87,6 +88,7 @@ module.exports = {
                 } else {
                     dateCondition = { [Op.not]: null }
                 }
+
                 if (query.time && query.time !== '0') {
                     const timequery = query.time.split('%')
                     timeCondition = { [Op.in]: timequery }
@@ -95,6 +97,12 @@ module.exports = {
                 }
 
                 if (query.finish === '1') finishCondition = '1'
+                if (query.thema) {
+                    const themaquery = query.thema.split('%')
+                    themaCondition = { [Op.in]: themaquery }
+                } else {
+                    themaCondition = { [Op.not]: null }
+                }
 
                 if (Object.keys(query).length === 0) {
                     const user = await Users.findOne({
@@ -182,6 +190,7 @@ module.exports = {
                             { region: regionCondition },
                             { distance: { [Op.or]: distanceConditionList } },
                             { timecode: timeCondition },
+                            { thema: themaCondition },
                         ],
                     }
                 }
