@@ -148,4 +148,3 @@ config/
 .idea/
 orm.js
 appspec.yml
-scripts/

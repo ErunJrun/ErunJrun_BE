@@ -78,16 +78,13 @@ const naverCallback = (req, res, next) => {
 }
 
 async function checkMyInfo(req, res) {
-    const token = verifyToken(req.cookies.token)
-    const { userId } = token
-
-    const myInfo = await Users.findOne({ where: { userId } })
+    userId = res.locals.userId
+    nickname = res.locals.nickname
+    profileUrl = res.locals.profileUrl
 
     res.send({
         success: true,
-        userId: myInfo.userId,
-        nickname: myInfo.nickname,
-        profileUrl: myInfo.profileUrl,
+        userId, nickname, profileUrl
     })
 }
 
