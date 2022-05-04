@@ -407,7 +407,6 @@ module.exports = {
         const user = await Appliers.findAll({
             where: { groupId },
         })
-
         for (let i = 0; i < user.length; i++) {
             Alarms.create({
                 category,
