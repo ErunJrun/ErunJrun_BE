@@ -240,4 +240,37 @@ module.exports = {
             })
         }
     },
+    getAttendance: async (req, res) => {
+        const { groupId } = req.params
+        try {
+            const applyUser = await groupService.getAttendance(groupId)
+            res.status(200).send({
+                success: true,
+                applyUser,
+            })
+        } catch (error) {
+            console.log(error)
+            return res.status(400).send({
+                success: false,
+                message: '출석체크 명단 불러오기에 실패하였습니다',
+            })
+        }
+    },
+    updateAttendance: async (req, res) => {
+        const { groupId } = req.params
+        const { attendance } = req.body
+        try {
+            await groupService.updateAttendance(groupId, attendance)
+            res.status(200).send({
+                success: true,
+                message: '출석체크가 완료되었습니다.'
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(400).send({
+                success: false,
+                message: '출석체크가 완료되지 않았습니다.'
+            })
+        }
+    }
 }

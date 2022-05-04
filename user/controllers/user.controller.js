@@ -83,7 +83,9 @@ async function checkMyInfo(req, res) {
 
     res.send({
         success: true,
-        userId, nickname, profileUrl
+        userId,
+        nickname,
+        profileUrl,
     })
 }
 

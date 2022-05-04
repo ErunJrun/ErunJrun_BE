@@ -416,4 +416,28 @@ module.exports = {
             })
         }
     },
+    // TODO: 이미 Attendence 처리를 한 경우에는 페이지 진입 불가하게 해야함.
+    getAttendance: async (groupId) => {
+        const applyUser = await Appliers.findAll({
+            where: {
+                groupId,
+            },
+            attributes: [
+                'applyId',
+                'groupId',
+                'userId',
+                'attendance'
+            ],
+            include: [{
+                model: Users,
+                as: 'user',
+                foreignKey: 'userId',
+                attributes: [
+                    'nickname',
+                    'profileUrl',
+                ]
+            }]
+        })
+        return applyUser
+    },
 }
