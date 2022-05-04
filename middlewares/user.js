@@ -44,6 +44,7 @@ module.exports = {
             try {
                 if (error.name === 'TokenExpiredError'){ // case 2 token 만료, refreshToken 유효
                     const { reAuthorization } = req.headers
+                    console.log(reAuthorization)
 
                     if (!reAuthorization)
                         return res.status(401).json({
