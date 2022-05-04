@@ -14,6 +14,6 @@ router.get('/naver/callback', userController.naverCallback)
 
 router.get('/auth', checkTokens, userController.checkMyInfo)
 
-// router.get('/logout', userController.logout)
+router.delete('/logout', checkTokens, userController.logout)
 
 module.exports = router

@@ -87,8 +87,22 @@ async function checkMyInfo(req, res) {
     })
 }
 
+async function logout(req, res) {
+    userId = res.locals.userId
+    const agent = req.headers['user-agent']
+    const key = userId + agent
+
+    await redis.del(key)
+
+    res.send({
+        success: true,
+        message: '로그아웃 되었습니다.'
+    })
+}
+
 module.exports = {
     kakaoCallback,
     naverCallback,
     checkMyInfo,
+    logout
 }
