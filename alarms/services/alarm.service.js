@@ -4,6 +4,7 @@ const Op = sequelize.Op
 const moment = require('moment')
 const schedule = require('node-schedule')
 module.exports = {
+    // 유저에게 생성되어있는 알람을 최신순으로 조회
     getAlarm: async (userId) => {
         try {
             const data = await Alarms.findAll({
@@ -27,9 +28,7 @@ module.exports = {
             return error
         }
     },
-    // TODO: 스케줄러로 매일 아침 8시에 함수 실행시키기
     createDdayAlarm: async (req, res) => {
-        //  당일 날짜
         const nowDate = moment().format('YYYY-MM-DD')
         const data = await Groups.findAll({
             where: { date: nowDate },
@@ -42,9 +41,6 @@ module.exports = {
                 },
             ],
         })
-            .catch((error) => {
-                console.log(error)
-            })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
                     // 호스트 닉네임 추출
@@ -103,30 +99,19 @@ module.exports = {
                 console.log(error)
             })
         return data
-        // 서버 실행 중일 떄, 매일 아침 8시에 Group - Applier DB를 뒤지기(column date를 기준으로)
-        // 작성자 user, Appliers userId를 이용해서, GroupId와 함께 Alarm DB에 넣기
     },
+    // 5분마다 현재시간 기준 30분 안에 시작할 그룹러닝에 대하여 시작 알람 생성
     createStartAlarm: async (req, res) => {
         const nowDate = moment().format('YYYY-MM-DD')
         const nowTime = moment().format('HH:mm:ss')
-        console.log(nowDate, nowTime)
+        const after30MinuteTime = moment().add('30', 'm').format('HH:mm:ss')
         await Groups.findAll({
-            // TODO: 5분단위로 돌려서, 5분 사이에 있는 내용들은 모두 alarm에 넣기
-            // 예제(현재 시간 이상, 현재 시간 5분 미만만 찾기)
-            // data.group = await Groups.findAll({
-            //     where: {
-            //         standbyTime: {
-            //             [Op.and]: [
-            //                 { [Op.gt]: '19:00:00' },
-            //                 { [Op.lt]: '19:41:00' },
-            //             ],
-            //         },
-            //     },
-            // })
-            // 예제2(현재 시간 + 5분하기)
-            //  console.log(moment().format('HH:mm:ss'))
-            // console.log(moment().add('5', 'm').format('HH:mm:ss'))
-            where: { date: nowDate, standbyTime: nowTime() },
+            where: {
+                [Op.and]: [
+                    { date: nowDate },
+                    { standbyTime: after30MinuteTime },
+                ],
+            },
             attributes: ['userId', 'title', 'groupId'],
             include: [
                 {
@@ -136,9 +121,6 @@ module.exports = {
                 },
             ],
         })
-            .catch((error) => {
-                console.log(error)
-            })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
                     // 호스트 닉네임 추출
@@ -195,16 +177,23 @@ module.exports = {
             })
             .catch((error) => {
                 console.log(error)
+                return
             })
-        return data
+        return
         // date가 일치한 Group 찾아서 host, attendence에게 각각 알람 생성하기
     },
+    // 5분마다 현재시간 기준 30분 전에 끝난 그룹러닝에 대하여 종료 알람 생성
     createEndAlarm: async (req, res) => {
         const nowDate = moment().format('YYYY-MM-DD')
         const nowTime = moment().format('HH:mm:ss')
-        console.log(nowDate, nowTime)
+        const before30MinuteTime = moment().add('-30', 'm').format('HH:mm:ss')
         await Groups.findAll({
-            where: { date: nowDate, finishTime: nowTime() },
+            where: {
+                [Op.and]: [
+                    { date: nowDate },
+                    { finishTime: before30MinuteTime },
+                ],
+            },
             attributes: ['userId', 'title', 'groupId'],
             include: [
                 {
@@ -273,9 +262,9 @@ module.exports = {
             })
             .catch((error) => {
                 console.log(error)
+                return
             })
-        return data
-        // date가 일치한 Group 찾아서 host, attendence에게 각각 알람 생성하기
+        return
     },
 }
 // 스케줄러로 만들어야 하는 로직들
