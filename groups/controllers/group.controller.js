@@ -20,6 +20,7 @@ module.exports = {
             baggage: req.body.baggage,
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
+            thema: req.body.thema,
         }
 
         try {

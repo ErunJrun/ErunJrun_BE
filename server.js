@@ -4,6 +4,13 @@ const port = process.env.PORT || 3000
 const fs = require('fs')
 const https = require('https')
 
+const alarmController = require('./alarms/controllers/alarm.controller')
+
+// 알람 생성 자동화
+alarmController.createDdayAlarm()
+alarmController.createStartAlarm()
+alarmController.createEndAlarm()
+
 if (process.env.PORT) {
     // Certificate 인증서 경로
     const privateKey = fs.readFileSync(process.env.SSL_PRIVATEKEY, 'utf8')
