@@ -1,7 +1,6 @@
 const passport = require('passport')
 const jwt = require('jsonwebtoken')
-const redis = require('../../config/redis')
-const { Users } = require('../../models/index')
+const userService = require('../services/user.service')
 require('dotenv').config()
 
 const kakaoCallback = (req, res, next) => {
@@ -22,18 +21,7 @@ const kakaoCallback = (req, res, next) => {
             )
 
             const key = userId + agent
-            await redis.set(key, refreshToken)
-
-            // res.cookie('token', token, {
-            //     sameSite: 'None',
-            //     secure: true,
-            //     httpOnly: true,
-            // })
-            // res.cookie('refreshToken', refreshToken, {
-            //     sameSite: 'None',
-            //     secure: true,
-            //     httpOnly: true,
-            // })
+            await userService.login(key, refreshToken)
 
             return res.json({ succcss: true, token, refreshToken })
         }
@@ -58,18 +46,7 @@ const naverCallback = (req, res, next) => {
             )
 
             const key = userId + agent
-            await redis.set(key, refreshToken)
-
-            // res.cookie('token', token, {
-            //     sameSite: 'None',
-            //     secure: true,
-            //     httpOnly: true,
-            // })
-            // res.cookie('refreshToken', refreshToken, {
-            //     sameSite: 'None',
-            //     secure: true,
-            //     httpOnly: true,
-            // })
+            await userService.login(key, refreshToken)
 
             return res.json({ succcss: true, token, refreshToken })
         }
@@ -77,9 +54,9 @@ const naverCallback = (req, res, next) => {
 }
 
 async function checkMyInfo(req, res) {
-    userId = res.locals.userId
-    nickname = res.locals.nickname
-    profileUrl = res.locals.profileUrl
+    const userId = res.locals.userId
+    const nickname = res.locals.nickname
+    const profileUrl = res.locals.profileUrl
 
     res.send({
         success: true,
@@ -89,8 +66,43 @@ async function checkMyInfo(req, res) {
     })
 }
 
+async function logout(req, res) {
+    const userId = res.locals.userId
+    const agent = req.headers['user-agent']
+    const key = userId + agent
+
+    await userService.logout(key)
+
+    res.send({
+        success: true,
+        message: '로그아웃 되었습니다.'
+    })
+}
+
+async function deleteUser(req, res) {
+    const userId = res.locals.userId
+    const agent = req.headers['user-agent']
+    const key = userId + agent
+
+    try {
+        await userService.logout(key)
+        await userService.deleteUser(userId)
+        res.status(200).send({
+            success: true,
+            message : '회원탈퇴에 성공하였습니다.'
+        })
+    } catch (error) {
+        return res.status(400).send({
+            success: false,
+            message : '회원탈퇴에 실패하였습니다.'
+        })
+    }
+}
+
 module.exports = {
     kakaoCallback,
     naverCallback,
     checkMyInfo,
+    logout,
+    deleteUser
 }
