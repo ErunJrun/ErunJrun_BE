@@ -8,7 +8,7 @@ module.exports = {
         try { // case 1 token 유효
             // const { authorization, reAuthorization } = req.headers
             const { authorization } = req.headers
-            console.log(authorization)
+            console.log(req.headers)
             
             if (!authorization)
                 return res.status(401).json({
@@ -44,23 +44,23 @@ module.exports = {
         } catch (error) {
             try {
                 if (error.name === 'TokenExpiredError'){ // case 2 token 만료, refreshToken 유효
-                    const { reAuthorization } = req.headers
-                    console.log(reAuthorization)
+                    const { reauthorization } = req.headers
+                    console.log(reauthorization)
 
-                    if (!reAuthorization)
+                    if (!reauthorization)
                         return res.status(401).json({
                             succcss: false,
                             message: '로그인 후 사용하세요',
                             reason: "reAuthorization 값이 존재하지 않습니다.",
                         })
-                    if (reAuthorization.split(" ").length !== 2)
+                    if (reauthorization.split(" ").length !== 2)
                         return res.status(401).json({
                             succcss: false,
                             message: '다시 로그인해주세요',
                             reason: "reAuthorization 값이 올바르지 않습니다.",
                         })
 
-                    const [tokenType, tokenValue] = reAuthorization.split(' ')
+                    const [tokenType, tokenValue] = reauthorization.split(' ')
 
                     if (tokenType !== "Bearer")
                         return res.status(401).json({
