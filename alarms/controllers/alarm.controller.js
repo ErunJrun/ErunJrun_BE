@@ -20,13 +20,13 @@ module.exports = {
     },
     // 매일 8시마다 createDdayAlarm
     createDdayAlarm: () => {
-        schedule.scheduleJob('* * 8 * * *', alarmService.createDdayAlarm)
+        schedule.scheduleJob('8 * * *', alarmService.createDdayAlarm)
     },
-    // 매 30분마다 createEndAlarm(실제시간 기준 30분, 00분)
+    // 매 1분마다 createEndAlarm(실제시간 기준 30분, 00분)
     createStartAlarm: () => {
         schedule.scheduleJob(' */1 * * * *', alarmService.createStartAlarm)
     },
-    // 매 5분 마다 createEndAlarm 실행
+    // 매 1분 마다 createEndAlarm 실행
     createEndAlarm: () => {
         schedule.scheduleJob(' */1 * * * *', alarmService.createEndAlarm)
     },

@@ -43,33 +43,8 @@ module.exports = {
         })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
-                    // 호스트 닉네임 추출
-                    const nickname = await Users.findOne({
-                        where: { userId: value[i].dataValues.userId },
-                    })
-                        .then((value) => {
-                            return value.dataValues.nickname
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        })
-                    // 호스트 알람 생성
-                    await Alarms.create({
-                        category: 'Dday',
-                        userId: value[i].dataValues.userId,
-                        groupId: value[i].dataValues.groupId,
-                        groupTitle: value[i].dataValues.title,
-                        nickname,
-                        role: 'host',
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Appliers.length;
-                        z++
-                    ) {
-                        // 게스트 닉네임 추출
+                    for (let z = 0; z < value[i].dataValues.Appliers.length; z++) {
+                        // 닉네임 추출
                         const nickname = await Users.findOne({
                             where: {
                                 userId: value[i].dataValues.Appliers[z].userId,
@@ -81,14 +56,20 @@ module.exports = {
                             .catch((error) => {
                                 console.log(error)
                             })
-                        // 게스트 알람 생성
+                        let role = ''
+                        if (value[i].dataValues.userId === value[i].dataValues.Appliers[z].userId) {
+                            role = 'host'
+                        } else {
+                            role = 'attendence'
+                        }
+                        // 호스트, 게스트 알람 생성
                         await Alarms.create({
                             category: 'Dday',
                             userId: value[i].dataValues.Appliers[z].userId,
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
                             nickname,
-                            role: 'attendence',
+                            role
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -123,33 +104,8 @@ module.exports = {
         })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
-                    // 호스트 닉네임 추출
-                    const nickname = await Users.findOne({
-                        where: { userId: value[i].dataValues.userId },
-                    })
-                        .then((value) => {
-                            return value.dataValues.nickname
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        })
-                    // 호스트 알람 생성
-                    await Alarms.create({
-                        category: 'start',
-                        userId: value[i].dataValues.userId,
-                        groupId: value[i].dataValues.groupId,
-                        groupTitle: value[i].dataValues.title,
-                        nickname,
-                        role: 'host',
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Appliers.length;
-                        z++
-                    ) {
-                        // 게스트 닉네임 추출
+                    for (let z = 0; z < value[i].dataValues.Appliers.length; z++) {
+                        // 닉네임 추출
                         const nickname = await Users.findOne({
                             where: {
                                 userId: value[i].dataValues.Appliers[z].userId,
@@ -161,14 +117,20 @@ module.exports = {
                             .catch((error) => {
                                 console.log(error)
                             })
-                        // 게스트 알람 생성
+                        let role = ''
+                        if (value[i].dataValues.userId === value[i].dataValues.Appliers[z].userId) {
+                            role = 'host'
+                        } else {
+                            role = 'attendence'
+                        }
+                        // 호스트, 게스트 알람 생성
                         await Alarms.create({
                             category: 'start',
                             userId: value[i].dataValues.Appliers[z].userId,
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
                             nickname,
-                            role: 'attendence',
+                            role
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -180,7 +142,6 @@ module.exports = {
                 return
             })
         return
-        // date가 일치한 Group 찾아서 host, attendence에게 각각 알람 생성하기
     },
     // 5분마다 현재시간 기준 30분 전에 끝난 그룹러닝에 대하여 종료 알람 생성
     createEndAlarm: async (req, res) => {
@@ -208,33 +169,9 @@ module.exports = {
             })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
-                    // 호스트 닉네임 추출
-                    const nickname = await Users.findOne({
-                        where: { userId: value[i].dataValues.userId },
-                    })
-                        .then((value) => {
-                            return value.dataValues.nickname
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                        })
-                    // 호스트 알람 생성
-                    await Alarms.create({
-                        category: 'end',
-                        userId: value[i].dataValues.userId,
-                        groupId: value[i].dataValues.groupId,
-                        groupTitle: value[i].dataValues.title,
-                        nickname,
-                        role: 'host',
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Appliers.length;
-                        z++
-                    ) {
-                        // 게스트 닉네임 추출
+                    console.log(value[i].dataValues)
+                    for (let z = 0; z < value[i].dataValues.Appliers.length; z++) {
+                        // 닉네임 추출
                         const nickname = await Users.findOne({
                             where: {
                                 userId: value[i].dataValues.Appliers[z].userId,
@@ -246,14 +183,20 @@ module.exports = {
                             .catch((error) => {
                                 console.log(error)
                             })
-                        // 게스트 알람 생성
+                        let role = ''
+                        if (value[i].dataValues.userId === value[i].dataValues.Appliers[z].userId) {
+                            role = 'host'
+                        } else {
+                            role = 'attendence'
+                        }
+                        // 호스트, 게스트 알람 생성
                         await Alarms.create({
                             category: 'end',
                             userId: value[i].dataValues.Appliers[z].userId,
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
                             nickname,
-                            role: 'attendence',
+                            role
                         }).catch((error) => {
                             console.log(error)
                         })
