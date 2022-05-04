@@ -82,4 +82,8 @@ module.exports = {
             return error
         }
     },
+
+    applyUserLike: async(userId, data) => {
+        Users.update(data, { where: { userId } })
+    }
 }
