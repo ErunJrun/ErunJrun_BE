@@ -242,6 +242,25 @@ module.exports = {
     },
     getAttendance: async (req, res) => {
         const { groupId } = req.params
+        // 모임 시간이 넘었을 경우, 출석체크 진입 불가
+        try {
+            await groupService.checkAttendanceTime(groupId)
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '출석체크 시간이 지났습니다',
+            })
+        }
+        // 출석체크 제출한 경우, 출석체크 재진입 불가
+        try {
+            await groupService.checkAttendanceDone(groupId)
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '이미 제출이 완료된 출석명단입니다',
+            })
+        }
+        // 출석체크
         try {
             const applyUser = await groupService.getAttendance(groupId)
             res.status(200).send({
@@ -260,17 +279,21 @@ module.exports = {
         const { groupId } = req.params
         const { attendance } = req.body
         try {
-            await groupService.updateAttendance(groupId, attendance)
+            const value = await groupService.updateAttendance(
+                groupId,
+                attendance
+            )
             res.status(200).send({
                 success: true,
-                message: '출석체크가 완료되었습니다.'
+                value,
+                message: '출석체크가 완료되었습니다.',
             })
         } catch (error) {
             console.log(error)
             res.status(400).send({
                 success: false,
-                message: '출석체크가 완료되지 않았습니다.'
+                message: '출석체크가 완료되지 않았습니다.',
             })
         }
-    }
+    },
 }

@@ -83,7 +83,7 @@ module.exports = {
         }
     },
 
-    applyUserLike: async(userId, data) => {
+    applyUserLike: async (userId, data) => {
         Users.update(data, { where: { userId } })
-    }
+    },
 }
