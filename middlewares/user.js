@@ -8,6 +8,7 @@ module.exports = {
         try { // case 1 token 유효
             // const { authorization, reAuthorization } = req.headers
             const { authorization } = req.headers
+            console.log(authorization)
             
             if (!authorization)
                 return res.status(401).json({
