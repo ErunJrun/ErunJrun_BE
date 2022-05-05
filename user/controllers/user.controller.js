@@ -11,6 +11,7 @@ const kakaoCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
+            const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
             })
@@ -23,7 +24,7 @@ const kakaoCallback = (req, res, next) => {
             const key = userId + agent
             await userService.login(key, refreshToken)
 
-            return res.json({ succcss: true, token, refreshToken })
+            return res.json({ succcss: true, token, refreshToken, userId, nickname: currentUser.nickname, profileUrl: currentUser.profileUrl })
         }
     )(req, res, next)
 }
@@ -36,6 +37,7 @@ const naverCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
+            const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
             })
@@ -48,7 +50,7 @@ const naverCallback = (req, res, next) => {
             const key = userId + agent
             await userService.login(key, refreshToken)
 
-            return res.json({ succcss: true, token, refreshToken })
+            return res.json({ succcss: true, token, refreshToken, userId, nickname: currentUser.nickname, profileUrl: currentUser.profileUrl })
         }
     )(req, res, next)
 }

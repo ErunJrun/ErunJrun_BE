@@ -83,7 +83,11 @@ module.exports = {
         }
     },
 
-    applyUserLike: async (userId, data) => {
+    updateUserInfo: async(userId, data) => {
         Users.update(data, { where: { userId } })
     },
+
+    getUserUrl: async(userId) => {
+        return Users.findOne( { where: { userId } } )
+    }
 }

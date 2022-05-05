@@ -60,6 +60,25 @@ const upload = multer({
     fileFilter: fileFilter,
 })
 
+const uploadProfile = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: process.env.AWS_S3_BUCKET2,
+        acl: 'public-read',
+        key: function (req, file, cb) {
+            cb(
+                null,
+                Math.floor(Math.random() * 1000).toString() +
+                    Date.now() +
+                    '.' +
+                    file.originalname.split('.').pop()
+            )
+        },
+    }),
+    limits: limits,
+    fileFilter: fileFilter,
+})
+
 const deleteImg = (url) => {
     const filename = url.split('/')[4]
 
@@ -71,4 +90,18 @@ const deleteImg = (url) => {
         function (err, data) {}
     )
 }
-module.exports = { upload, deleteImg }
+
+const deleteProfile = (url) => {
+    console.log(url)
+    const filename = url.split('/')[4]
+
+    s3.deleteObject(
+        {
+            Bucket: process.env.AWS_S3_BUCKET2,
+            Key: filename,
+        },
+        function (err, data) {}
+    )
+}
+
+module.exports = { upload, uploadProfile, deleteImg, deleteProfile }
