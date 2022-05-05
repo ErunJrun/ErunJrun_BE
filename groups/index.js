@@ -55,4 +55,10 @@ router.get(
     authmiddleware.checkTokens,
     evaluationController.getEvaluation
 )
+router.patch(
+    '/evaluation/:groupId',
+    authmiddleware.checkTokens,
+    evaluationController.updateEvaluation
+)
+
 module.exports = router
