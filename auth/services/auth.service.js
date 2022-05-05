@@ -1,5 +1,6 @@
 const { Users, Groups, Appliers } = require('../../models/index')
 const sequelize = require('sequelize')
+const { updateUserInfo } = require('../controllers/auth.controller')
 const Op = sequelize.Op
 
 module.exports = {
@@ -85,5 +86,9 @@ module.exports = {
 
     applyUserLike: async(userId, data) => {
         Users.update(data, { where: { userId } })
+    },
+
+    updateUserInfo: async() => {
+        
     }
 }

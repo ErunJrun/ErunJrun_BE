@@ -1,4 +1,5 @@
 const authService = require('../services/auth.service')
+const multer = require('../../middlewares/multers/multer')
 
 module.exports = {
     getUserInfo: async (req, res) => {
@@ -41,6 +42,14 @@ module.exports = {
                 success: false,
                 message : '프로필 수정에 실패하였습니다.'
             })
+        }
+    },
+
+    updateUserInfo: async (req, res) => {
+        const data = {
+            nickname: req.body.nickname,
+            profileImage: req.body.profileImage,
+            bio: req.body.bio
         }
     }
 }
