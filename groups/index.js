@@ -26,4 +26,6 @@ router.delete('/:groupId', groupController.deletePost)
 router.get('/attendance/:groupId', attendanceController.getAttendance)
 router.patch('/attendance/:groupId', attendanceController.updateAttendance)
 router.get('/evaluation/:groupId', evaluationController.getEvaluation)
+router.patch('/evaluation/:groupId', evaluationController.updateEvaluation)
+
 module.exports = router

@@ -3,7 +3,7 @@ const evaluationService = require('../services/evaluation.service')
 module.exports = {
     getEvaluation: async (req, res) => {
         const { groupId } = req.params
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const userId = 'f8d16fee-e4b5-4406-8a68-33284318e5bd'
         // 호스트는 자기 호스트 평가 페이지에 들어와서는 안된다.
         try {
             await evaluationService.checkHost(groupId, userId)
@@ -48,7 +48,7 @@ module.exports = {
     },
     updateEvaluation: async (req, res) => {
         const { groupId } = req.params
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const userId = 'f8d16fee-e4b5-4406-8a68-33284318e5bd'
         const hostId = req.body.userId
         const { point } = req.body
         try {
