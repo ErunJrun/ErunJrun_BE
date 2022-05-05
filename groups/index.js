@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const groupController = require('./controllers/group.controller')
+const attendanceController = require('./controllers/attendance.controller')
+const evaluationController = require('./controllers/evaluation.controller')
 const multer = require('../middlewares/multers/multer')
 const validation = require('./validators/post.validator')
 
@@ -20,5 +22,8 @@ router.patch(
     groupController.updatePost
 )
 router.delete('/:groupId', groupController.deletePost)
-
+// About 출석체크, 호스트평가 API
+router.get('/attendance/:groupId', attendanceController.getAttendance)
+router.patch('/attendance/:groupId', attendanceController.updateAttendance)
+router.get('/evaluation/:groupId', evaluationController.getEvaluation)
 module.exports = router

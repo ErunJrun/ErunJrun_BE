@@ -27,20 +27,20 @@ module.exports = {
         const data = {
             likeLocation: req.body.likeLocation,
             likeDistance: req.body.likeDistance,
-            userLevel: req.body.userLevel
+            userLevel: req.body.userLevel,
         }
 
         try {
             await authService.applyUserLike(userId, data)
             res.status(200).send({
                 success: true,
-                message : '프로필 수정에 성공하였습니다.'
+                message: '프로필 수정에 성공하였습니다.',
             })
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                message : '프로필 수정에 실패하였습니다.'
+                message: '프로필 수정에 실패하였습니다.',
             })
         }
-    }
+    },
 }

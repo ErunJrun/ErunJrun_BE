@@ -3,15 +3,15 @@ const redis = require('../../config/redis')
 const sequelize = require('sequelize')
 
 module.exports = {
-    login: async(key, refreshToken) => {
+    login: async (key, refreshToken) => {
         redis.set(key, refreshToken)
     },
 
-    logout: async(key) => {
+    logout: async (key) => {
         redis.del(key)
     },
 
     deleteUser: async (userId) => {
         Users.destroy({ where: { userId } })
-    }
+    },
 }

@@ -18,6 +18,7 @@ module.exports = {
                     'courseTitle',
                     'groupId',
                     'groupTitle',
+                    'role',
                 ],
                 order: [['createdAt', 'desc']],
             })
@@ -43,7 +44,11 @@ module.exports = {
         })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
-                    for (let z = 0; z < value[i].dataValues.Appliers.length; z++) {
+                    for (
+                        let z = 0;
+                        z < value[i].dataValues.Appliers.length;
+                        z++
+                    ) {
                         // 닉네임 추출
                         const nickname = await Users.findOne({
                             where: {
@@ -57,7 +62,10 @@ module.exports = {
                                 console.log(error)
                             })
                         let role = ''
-                        if (value[i].dataValues.userId === value[i].dataValues.Appliers[z].userId) {
+                        if (
+                            value[i].dataValues.userId ===
+                            value[i].dataValues.Appliers[z].userId
+                        ) {
                             role = 'host'
                         } else {
                             role = 'attendence'
@@ -69,7 +77,7 @@ module.exports = {
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
                             nickname,
-                            role
+                            role,
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -104,7 +112,11 @@ module.exports = {
         })
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
-                    for (let z = 0; z < value[i].dataValues.Appliers.length; z++) {
+                    for (
+                        let z = 0;
+                        z < value[i].dataValues.Appliers.length;
+                        z++
+                    ) {
                         // 닉네임 추출
                         const nickname = await Users.findOne({
                             where: {
@@ -118,7 +130,10 @@ module.exports = {
                                 console.log(error)
                             })
                         let role = ''
-                        if (value[i].dataValues.userId === value[i].dataValues.Appliers[z].userId) {
+                        if (
+                            value[i].dataValues.userId ===
+                            value[i].dataValues.Appliers[z].userId
+                        ) {
                             role = 'host'
                         } else {
                             role = 'attendence'
@@ -130,7 +145,7 @@ module.exports = {
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
                             nickname,
-                            role
+                            role,
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -170,7 +185,11 @@ module.exports = {
             .then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
                     console.log(value[i].dataValues)
-                    for (let z = 0; z < value[i].dataValues.Appliers.length; z++) {
+                    for (
+                        let z = 0;
+                        z < value[i].dataValues.Appliers.length;
+                        z++
+                    ) {
                         // 닉네임 추출
                         const nickname = await Users.findOne({
                             where: {
@@ -184,7 +203,10 @@ module.exports = {
                                 console.log(error)
                             })
                         let role = ''
-                        if (value[i].dataValues.userId === value[i].dataValues.Appliers[z].userId) {
+                        if (
+                            value[i].dataValues.userId ===
+                            value[i].dataValues.Appliers[z].userId
+                        ) {
                             role = 'host'
                         } else {
                             role = 'attendence'
@@ -196,7 +218,7 @@ module.exports = {
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
                             nickname,
-                            role
+                            role,
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -210,6 +232,3 @@ module.exports = {
         return
     },
 }
-// 스케줄러로 만들어야 하는 로직들
-
-// 4) 그룹러닝을 취소한 사람의 경우, 알람에서 제외하는 로직
