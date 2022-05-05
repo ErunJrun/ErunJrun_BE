@@ -4,7 +4,17 @@ const { Groups, Appliers, Users, Alarms } = require('../../models')
 const moment = require('moment')
 
 module.exports = {
-    // TODO: 유저가 Applier인지도 체크..?
+    checkHost: async (groupId, userId) => {
+        const host = await Groups.findOne({
+            where: {
+                [Op.and]: [{ groupId }, { userId }]
+            }
+        })
+        if (host === null) {
+            throw new Error('그룹러닝 호스트가 아닙니다')
+        }
+        return
+    },
     checkAttendanceTime: async (groupId) => {
         const attendanceTime = await Groups.findOne({
             where: { groupId },
@@ -19,7 +29,6 @@ module.exports = {
         } else {
             throw new Error('출석체크 시간이 지났습니다')
         }
-
     },
     checkAttendanceDone: async (groupId) => {
         let count = 0
@@ -40,7 +49,6 @@ module.exports = {
             }
         })
     },
-    // TODO: 이미 Attendence 처리를 한 경우에는 페이지 진입 불가하게 해야함.
     getAttendance: async (groupId) => {
         const applyUser = await Appliers.findAll({
             where: {

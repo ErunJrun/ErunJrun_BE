@@ -3,6 +3,19 @@ const attendanceService = require('../services/attendance.service')
 module.exports = {
     getAttendance: async (req, res) => {
         const { groupId } = req.params
+        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        // TODO: 유저가 호스트인지 체크
+        try {
+            await attendanceService.checkHost(groupId, userId)
+
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '그룹러닝 호스트가 아닙니다'
+            })
+        }
+
+
         // 모임 시간이 넘었을 경우, 출석체크 진입 불가
         try {
             await attendanceService.checkAttendanceTime(groupId)
