@@ -3,8 +3,7 @@ const multer = require('../../middlewares/multers/multer')
 
 module.exports = {
     createPost: (req, res) => {
-        //const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
         const data = {
             userId,
             title: req.body.title,
@@ -55,8 +54,7 @@ module.exports = {
     },
     getGroup: async (req, res) => {
         const { category } = req.params
-        // const { userId } = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
         const query = req.query
         let data
 
@@ -95,8 +93,7 @@ module.exports = {
      */
     updatePost: async (req, res) => {
         const { groupId } = req.params
-        // const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
         const data = {
             title: req.body.title,
             maxPeople: req.body.maxPeople,
@@ -147,8 +144,7 @@ module.exports = {
     },
     deletePost: async (req, res) => {
         const { groupId } = req.params
-        // const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
 
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
@@ -190,8 +186,7 @@ module.exports = {
     },
     getGroupDetail: async (req, res) => {
         const { groupId } = req.params
-        // const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
 
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
