@@ -4,7 +4,8 @@ module.exports = {
     createRecomment: async (req, res) => {
         const { commentId } = req.params
         const { content } = req.body
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
+        // const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         // comment가 실제하는 comment인지 검토
         if (!(await commentService.checkComment(commentId))) {
             return res.status(400).send({
@@ -55,7 +56,8 @@ module.exports = {
     updateRecomment: async (req, res) => {
         const { recommentId } = req.params
         const { content } = req.body
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
+        // const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         // recomment 존재여부 확인하기
         if (!(await recommentService.checkRecomment(recommentId))) {
             return res.status(400).send({
@@ -86,7 +88,8 @@ module.exports = {
     },
     deleteRecomment: async (req, res) => {
         const { recommentId } = req.params
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
+        // const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         if (!(await recommentService.checkRecomment(recommentId))) {
             return res.status(400).send({
                 success: false,

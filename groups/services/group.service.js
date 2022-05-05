@@ -413,6 +413,7 @@ module.exports = {
 
             result.dataValues.mapLatLng = JSON.parse(result.mapLatLng)
 
+
             for (let i = 0; i < result.Appliers.length; i++) {
                 const applyUser = await Users.findOne({
                     where: { userId: result.Appliers[i].userId },
