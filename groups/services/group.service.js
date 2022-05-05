@@ -74,10 +74,11 @@ module.exports = {
                 let distanceCondition
                 let dateCondition
                 let timeCondition
+                let themaCondition
 
                 if (query.date) {
-                    let startDate = query.date.split('%%')[0]
-                    let endDate = query.date.split('%%')[1]
+                    let startDate = query.date.split('/')[0]
+                    let endDate = query.date.split('/')[1]
                     dateCondition = {
                         [Op.and]: [
                             { [Op.gte]: startDate },
@@ -87,14 +88,23 @@ module.exports = {
                 } else {
                     dateCondition = { [Op.not]: null }
                 }
+
                 if (query.time && query.time !== '0') {
-                    const timequery = query.time.split('%')
+                    const timequery = query.time.split('/')
                     timeCondition = { [Op.in]: timequery }
                 } else {
                     timeCondition = { [Op.not]: null }
                 }
 
                 if (query.finish === '1') finishCondition = '1'
+                if (query.thema) {
+                    const themaquery = decodeURIComponent(query.thema).split(
+                        '/'
+                    )
+                    themaCondition = { [Op.in]: themaquery }
+                } else {
+                    themaCondition = { [Op.not]: null }
+                }
 
                 if (Object.keys(query).length === 0) {
                     const user = await Users.findOne({
@@ -140,7 +150,7 @@ module.exports = {
 
                     //지역 필터입니다
                     if (query.region) {
-                        const regionQuery = query.region.split('%')
+                        const regionQuery = query.region.split('/')
                         regionCondition = { [Op.in]: regionQuery }
                     } else {
                         regionCondition = { [Op.not]: null }
@@ -148,7 +158,7 @@ module.exports = {
 
                     //러닝거리 필터
                     if (query.distance) {
-                        const distanceQuery = query.distance.split('%')
+                        const distanceQuery = query.distance.split('/')
                         for (let i = 0; i < distanceQuery.length; i++) {
                             switch (distanceQuery[i]) {
                                 case '0':
@@ -182,6 +192,7 @@ module.exports = {
                             { region: regionCondition },
                             { distance: { [Op.or]: distanceConditionList } },
                             { timecode: timeCondition },
+                            { thema: themaCondition },
                         ],
                     }
                 }
@@ -211,6 +222,7 @@ module.exports = {
                     'totalTime',
                 ],
                 [sequelize.literal('datediff(date,now())'), 'applyEndTime'],
+                'thema',
             ],
             include: [
                 {
