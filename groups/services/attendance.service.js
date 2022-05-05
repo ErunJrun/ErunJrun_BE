@@ -4,6 +4,7 @@ const { Groups, Appliers, Users, Alarms } = require('../../models')
 const moment = require('moment')
 
 module.exports = {
+    // TODO: 유저가 Applier인지도 체크..?
     checkAttendanceTime: async (groupId) => {
         const attendanceTime = await Groups.findOne({
             where: { groupId },
@@ -11,14 +12,14 @@ module.exports = {
             return value.dataValues.date + ' ' + value.dataValues.standbyTime
         })
         // standbytime을 지난 경우, 출석체크 진입 못하게 하기.
-        try {
-            if (moment().format('YYYY-MM-DD HH:mm:ss') < attendanceTime) {
-                return
-            }
-        } catch (error) {
-            console.log(error)
-            return error
+        console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
+        console.log(attendanceTime)
+        if (moment().format('YYYY-MM-DD HH:mm:ss') > attendanceTime) {
+            return
+        } else {
+            throw new Error('출석체크 시간이 지났습니다')
         }
+
     },
     checkAttendanceDone: async (groupId) => {
         let count = 0
@@ -32,13 +33,10 @@ module.exports = {
                 }
             }
             console.log(count)
-            try {
-                if (count === value.length) {
-                    return
-                }
-            } catch (error) {
-                console.log(error)
-                return error
+            if (count === value.length) {
+                return
+            } else {
+                throw new Error('이미 제출된 출석명단입니다')
             }
         })
     },
