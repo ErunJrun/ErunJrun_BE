@@ -208,6 +208,7 @@ function timeForToday(createdAt) {
     if (betweenTimeDay < 365)
         return `${timeValue.getMonth() + 1}월 ${timeValue.getDate()}일` // 365일 미만이면 년을 제외하고 월 일만
 
-    return `${timeValue.getFullYear()}년 ${timeValue.getMonth() + 1
-        }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
+    return `${timeValue.getFullYear()}년 ${
+        timeValue.getMonth() + 1
+    }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
 }

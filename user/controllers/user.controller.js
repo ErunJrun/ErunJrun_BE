@@ -24,7 +24,14 @@ const kakaoCallback = (req, res, next) => {
             const key = userId + agent
             await userService.login(key, refreshToken)
 
-            return res.json({ succcss: true, token, refreshToken, userId, nickname: currentUser.nickname, profileUrl: currentUser.profileUrl })
+            return res.json({
+                succcss: true,
+                token,
+                refreshToken,
+                userId,
+                nickname: currentUser.nickname,
+                profileUrl: currentUser.profileUrl,
+            })
         }
     )(req, res, next)
 }
@@ -50,7 +57,14 @@ const naverCallback = (req, res, next) => {
             const key = userId + agent
             await userService.login(key, refreshToken)
 
-            return res.json({ succcss: true, token, refreshToken, userId, nickname: currentUser.nickname, profileUrl: currentUser.profileUrl })
+            return res.json({
+                succcss: true,
+                token,
+                refreshToken,
+                userId,
+                nickname: currentUser.nickname,
+                profileUrl: currentUser.profileUrl,
+            })
         }
     )(req, res, next)
 }
