@@ -11,6 +11,10 @@ module.exports = {
         redis.del(key)
     },
 
+    getUser: async (userId) => {
+        return Users.findOne({ where: { userId } })
+    },
+
     deleteUser: async (userId) => {
         Users.destroy({ where: { userId } })
     },
