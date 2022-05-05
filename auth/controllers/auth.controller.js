@@ -50,13 +50,16 @@ module.exports = {
         const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         const data = {
             nickname: req.body.nickname,
-            bio: req.body.bio
+            bio: req.body.bio,
         }
 
         try {
             const currentUrl = await authService.getUserUrl(userId)
 
-            if (currentUrl.profileUrl.split('/')[2] !== 'ssl.pstatic.net' || 'k.kakaocdn.net')
+            if (
+                currentUrl.profileUrl.split('/')[2] !== 'ssl.pstatic.net' ||
+                'k.kakaocdn.net'
+            )
                 multer.deleteProfile(currentUrl.profileUrl)
 
             data.profileUrl = req.file.location
@@ -73,5 +76,5 @@ module.exports = {
                 message: '프로필 수정에 실패하였습니다.',
             })
         }
-    }
+    },
 }
