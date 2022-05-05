@@ -63,6 +63,7 @@ module.exports = {
         let condition = {}
         let limit
         let finishCondition = '0'
+
         switch (category) {
             case 'mypage':
                 condition = { userId: myUserId }
@@ -106,7 +107,7 @@ module.exports = {
                     themaCondition = { [Op.not]: null }
                 }
 
-                if (Object.keys(query).length === 0) {
+                if (Object.keys(query).length === 0 && myUserId !== '') {
                     const user = await Users.findOne({
                         where: { userId: myUserId },
                     })
@@ -244,16 +245,20 @@ module.exports = {
                 result[i].dataValues.nickname = user.nickname
                 result[i].dataValues.profileUrl = user.profileUrl
 
-                const apply = await Appliers.findOne({
-                    where: {
-                        groupId: result[i].dataValues.groupId,
-                        userId: myUserId,
-                    },
-                })
-                if (apply === null) {
-                    result[i].dataValues.applyState = false
+                if (myUserId !== '') {
+                    const apply = await Appliers.findOne({
+                        where: {
+                            groupId: result[i].dataValues.groupId,
+                            userId: myUserId,
+                        },
+                    })
+                    if (apply === null) {
+                        result[i].dataValues.applyState = false
+                    } else {
+                        result[i].dataValues.applyState = true
+                    }
                 } else {
-                    result[i].dataValues.applyState = true
+                    result[i].dataValues.applyState = false
                 }
 
                 let startDateTime =
