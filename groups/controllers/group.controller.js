@@ -30,6 +30,14 @@ module.exports = {
                 }
             }
 
+            if (req.body.data <= Date.now()) {
+                res.status(400).send({
+                    success: false,
+                    message:
+                        '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다',
+                })
+            }
+
             groupService.createPost(data)
 
             res.status(200).send({
