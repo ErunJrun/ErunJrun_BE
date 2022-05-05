@@ -276,6 +276,10 @@ module.exports = {
                     result[i].dataValues.totalTime / 60
                 )}h ${result[i].dataValues.totalTime % 60}min`
 
+                if (result[i].dataValues.applyEndTime <= 0) {
+                    result[i].dataValues.applyEndTime = 0
+                }
+
                 const DateTime = moment
                     .utc(startDateTime)
                     .lang('ko')
@@ -368,6 +372,7 @@ module.exports = {
                         ),
                         'applyState',
                     ],
+                    [sequelize.literal('datediff(date,now())'), 'applyEndTime'],
                 ],
                 exclude: ['updatedAt', 'groupId'],
             },
@@ -391,6 +396,20 @@ module.exports = {
             })
             result.dataValues.nickname = user.nickname
             result.dataValues.profileUrl = user.profileUrl
+            result.dataValues.userLevel = user.userLevel
+
+            if (result.dataValues.applyEndTime <= 0) {
+                result.dataValues.applyEndTime = 0
+            }
+
+            let startDateTime =
+                result.dataValues.date + ' ' + result.dataValues.standbyTime
+
+            const DateTime = moment
+                .utc(startDateTime)
+                .lang('ko')
+                .format('YYYY년 MM월 DD일 dddd HH시 mm분')
+            result.dataValues.datetime = DateTime
 
             for (let i = 0; i < result.Appliers.length; i++) {
                 const applyUser = await Users.findOne({
