@@ -54,9 +54,15 @@ module.exports = {
     },
     getGroup: async (req, res) => {
         const { category } = req.params
-        const { userId } = res.locals
         const query = req.query
         let data
+        let userId = ''
+
+        if (category === 'mypage' && query.userId) {
+            userId = query.userId
+        } else if (res.locals.userId) {
+            userId = res.locals.userId
+        }
 
         try {
             switch (category) {

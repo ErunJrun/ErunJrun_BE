@@ -69,20 +69,25 @@ module.exports = {
                     where: {
                         [Op.and]: [{ groupId }, { userId }],
                     },
-                }).then(async (value) => {
-                    await Users.findOne({ where: { userId: hostId } }).then(
-                        async (value) => {
-                            const newPoint = value.dataValues.mannerPoint + point
-                            await Users.update(
-                                { mannerPoint: newPoint },
-                                { where: { userId: hostId } }
-                            ).catch((error) => { console.log(error) })
-                        }
-                    ).catch((error) => { console.log(error) })
-                })
+                }
+            ).then(async (value) => {
+                await Users.findOne({ where: { userId: hostId } })
+                    .then(async (value) => {
+                        const newPoint = value.dataValues.mannerPoint + point
+                        await Users.update(
+                            { mannerPoint: newPoint },
+                            { where: { userId: hostId } }
+                        ).catch((error) => {
+                            console.log(error)
+                        })
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
+            })
         } catch (error) {
             console.log(error)
-            throw new error
+            throw new error()
         }
     },
 }
