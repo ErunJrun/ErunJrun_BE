@@ -411,6 +411,8 @@ module.exports = {
                 .format('YYYY년 MM월 DD일 dddd HH시 mm분')
             result.dataValues.datetime = DateTime
 
+            result.dataValues.mapLatLng = JSON.parse(result.mapLatLng)
+
             for (let i = 0; i < result.Appliers.length; i++) {
                 const applyUser = await Users.findOne({
                     where: { userId: result.Appliers[i].userId },
