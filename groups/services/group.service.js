@@ -272,18 +272,16 @@ module.exports = {
                     let minus = moment(time).diff(startDateTime, 'hours')
                     result[i].dataValues.applyEndTime =
                         Math.abs(minus) + ' 시간'
-                } else {
+                } else if (result[i].dataValues.applyEndTime > 0) {
                     result[i].dataValues.applyEndTime =
                         result[i].dataValues.applyEndTime + ' 일'
+                } else {
+                    result[i].dataValues.applyEndTime = '0 일'
                 }
 
                 result[i].dataValues.totalTime = `${parseInt(
                     result[i].dataValues.totalTime / 60
                 )}h ${result[i].dataValues.totalTime % 60}min`
-
-                if (result[i].dataValues.applyEndTime <= 0) {
-                    result[i].dataValues.applyEndTime = 0
-                }
 
                 const DateTime = moment
                     .utc(startDateTime)
@@ -403,8 +401,16 @@ module.exports = {
             result.dataValues.profileUrl = user.profileUrl
             result.dataValues.userLevel = user.userLevel
 
-            if (result.dataValues.applyEndTime <= 0) {
-                result.dataValues.applyEndTime = 0
+            if (result.dataValues.applyEndTime === 0) {
+                let time = moment().format('YYYY-MM-DD HH:mm:ss')
+
+                let minus = moment(time).diff(startDateTime, 'hours')
+                result.dataValues.applyEndTime = Math.abs(minus) + ' 시간'
+            } else if (result.dataValues.applyEndTime > 0) {
+                result.dataValues.applyEndTime =
+                    result.dataValues.applyEndTime + ' 일'
+            } else {
+                result.dataValues.applyEndTime = '0 일'
             }
 
             let startDateTime =
@@ -417,7 +423,6 @@ module.exports = {
             result.dataValues.datetime = DateTime
 
             result.dataValues.mapLatLng = JSON.parse(result.mapLatLng)
-
 
             for (let i = 0; i < result.Appliers.length; i++) {
                 const applyUser = await Users.findOne({
