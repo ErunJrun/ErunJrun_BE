@@ -30,6 +30,14 @@ module.exports = {
                 }
             }
 
+            if (req.body.data <= Date.now()) {
+                res.status(400).send({
+                    success: false,
+                    message:
+                        '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다',
+                })
+            }
+
             groupService.createPost(data)
 
             res.status(200).send({
@@ -237,6 +245,22 @@ module.exports = {
                 success: false,
                 meesage: '그룹러닝 신청에 실패하였습니다',
                 error,
+            })
+        }
+    },
+
+    getEvaluation: async (req, res) => {
+        const { groupId } = req.params
+        try {
+            const hostUser = await groupService.getEvaluation(groupId)
+            res.status(200).send({
+                success: true,
+                hostUser,
+            })
+        } catch (error) {
+            res.status(400).send({
+                success: false,
+                message: '호스트 평가 페이지 불러오기에 실패하였습니다',
             })
         }
     },

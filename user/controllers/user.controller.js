@@ -60,7 +60,9 @@ async function checkMyInfo(req, res) {
 
     res.send({
         success: true,
-        userId, nickname, profileUrl
+        userId,
+        nickname,
+        profileUrl,
     })
 }
 
@@ -73,7 +75,7 @@ async function logout(req, res) {
 
     res.send({
         success: true,
-        message: '로그아웃 되었습니다.'
+        message: '로그아웃 되었습니다.',
     })
 }
 
@@ -87,12 +89,12 @@ async function deleteUser(req, res) {
         await userService.deleteUser(userId)
         res.status(200).send({
             success: true,
-            message : '회원탈퇴에 성공하였습니다.'
+            message: '회원탈퇴에 성공하였습니다.',
         })
     } catch (error) {
         return res.status(400).send({
             success: false,
-            message : '회원탈퇴에 실패하였습니다.'
+            message: '회원탈퇴에 실패하였습니다.',
         })
     }
 }
@@ -102,5 +104,5 @@ module.exports = {
     naverCallback,
     checkMyInfo,
     logout,
-    deleteUser
+    deleteUser,
 }
