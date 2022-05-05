@@ -52,18 +52,22 @@ module.exports = {
         const hostId = req.body.userId
         const { point } = req.body
         try {
-            await evaluationService.updateEvaluation(groupId, userId, hostId, point)
+            await evaluationService.updateEvaluation(
+                groupId,
+                userId,
+                hostId,
+                point
+            )
             res.status(200).send({
                 success: true,
-                message: '호스트 평가가 완료되었습니다'
+                message: '호스트 평가가 완료되었습니다',
             })
         } catch (error) {
             console.log(error)
             res.status(400).send({
                 success: false,
-                message: '호스트 평가가 완료되지 않았습니다'
+                message: '호스트 평가가 완료되지 않았습니다',
             })
         }
-
-    }
+    },
 }

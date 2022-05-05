@@ -7,8 +7,8 @@ module.exports = {
     checkHost: async (groupId, userId) => {
         const host = await Groups.findOne({
             where: {
-                [Op.and]: [{ groupId }, { userId }]
-            }
+                [Op.and]: [{ groupId }, { userId }],
+            },
         })
         if (host === null) {
             throw new Error('그룹러닝 호스트가 아닙니다')

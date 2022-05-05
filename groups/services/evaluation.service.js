@@ -67,23 +67,23 @@ module.exports = {
                 { evaluation: true },
                 {
                     where: {
-                        [Op.and]: [
-                            { groupId }, { userId }
-                        ]
-                    }
+                        [Op.and]: [{ groupId }, { userId }],
+                    },
                 }.then(async (value) => {
-                    await Users.findOne({ where: { userId: hostId } }).then(async (value) => {
-                        const newPoint = value.dataValues.mannperPoint + 1
-                        await Users.update(
-                            { mannperPoint: newPoint },
-                            { where: { userId: hostId } }
-                        )
-                    })
+                    await Users.findOne({ where: { userId: hostId } }).then(
+                        async (value) => {
+                            const newPoint = value.dataValues.mannperPoint + 1
+                            await Users.update(
+                                { mannperPoint: newPoint },
+                                { where: { userId: hostId } }
+                            )
+                        }
+                    )
                 })
             )
         } catch (error) {
             console.log(error)
             return error
         }
-    }
+    },
 }
