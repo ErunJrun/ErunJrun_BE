@@ -74,15 +74,9 @@ module.exports = {
             case 'main':
                 limit = 3
                 break
+            case 'prefer':
             case 'all':
-                if (
-                    !query.date &&
-                    !query.time &&
-                    !query.thema &&
-                    !query.region &&
-                    !query.distance &&
-                    myUserId !== ''
-                ) {
+                if (category === 'prefer') {
                     const user = await Users.findOne({
                         where: { userId: myUserId },
                     })
@@ -200,7 +194,6 @@ module.exports = {
                 },
             ],
             group: ['groupId'],
-            order: [['createdAt', 'DESC']],
         }).then(async (result) => {
             for (let i = 0; i < result.length; i++) {
                 const user = await Users.findOne({
@@ -270,6 +263,11 @@ module.exports = {
         if (limit) {
             data = data.slice(0, limit)
         }
+        data.sort((a, b) => {
+            const aTime = a.dataValues.applyEndTime.split(' ')[0]
+            const bTime = b.dataValues.applyEndTime.split(' ')[0]
+            return aTime - bTime
+        })
         return data
     },
     getUserGroupData: (groupId) => {

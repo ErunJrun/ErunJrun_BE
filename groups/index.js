@@ -25,7 +25,11 @@ router.post(
     authmiddleware.checkTokens,
     groupController.applyGroup
 )
-router.get('/detail/:groupId', authmiddleware.checkUsers, groupController.getGroupDetail)
+router.get(
+    '/detail/:groupId',
+    authmiddleware.checkUsers,
+    groupController.getGroupDetail
+)
 router.get('/:category', authmiddleware.checkUsers, groupController.getGroup)
 router.patch(
     '/:groupId',

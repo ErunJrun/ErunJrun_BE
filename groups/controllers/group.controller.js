@@ -54,7 +54,7 @@ module.exports = {
         }
     },
     getGroup: async (req, res) => {
-        const { category } = req.params
+        let { category } = req.params
         const query = req.query
         let data
         let userId = ''
@@ -63,6 +63,17 @@ module.exports = {
             userId = query.userId
         } else if (res.locals.userId) {
             userId = res.locals.userId
+        }
+
+        if (
+            !query.date &&
+            !query.time &&
+            !query.thema &&
+            !query.region &&
+            !query.distance &&
+            userId !== ''
+        ) {
+            category = 'prefer'
         }
 
         try {
@@ -76,12 +87,23 @@ module.exports = {
                 case 'mypage':
                     data = await groupService.getGroupData(userId, 'mypage')
                     break
+                case 'prefer':
+                    data = await groupService.getGroupData(
+                        userId,
+                        'prefer',
+                        query
+                    )
+                    break
                 default:
                     return res.status(400).send({
                         success: false,
                         message: '불러오기 상태값이 올바르지 않습니다',
                     })
             }
+            if (data == '' && category === 'prefer') {
+                data = await groupService.getGroupData(userId, 'all', query)
+            }
+
             res.status(200).send({ success: true, data })
         } catch (error) {
             console.log(error)
