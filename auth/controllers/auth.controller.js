@@ -22,8 +22,7 @@ module.exports = {
     },
 
     applyUserLike: async (req, res) => {
-        //const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
 
         const data = {
             likeLocation: req.body.likeLocation,
@@ -46,8 +45,8 @@ module.exports = {
     },
 
     updateUserInfo: async (req, res) => {
-        //const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
+
         const data = {
             nickname: req.body.nickname,
             bio: req.body.bio,
