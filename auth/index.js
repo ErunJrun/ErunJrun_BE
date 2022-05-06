@@ -4,8 +4,16 @@ const authController = require('./controllers/auth.controller')
 const multer = require('../middlewares/multers/multer')
 const authmiddleware = require('../middlewares/user')
 
-router.get('/info/:userId', authmiddleware.checkUsers, authController.getUserInfo)
-router.patch('/userLike', authmiddleware.checkTokens, authController.applyUserLike)
+router.get(
+    '/info/:userId',
+    authmiddleware.checkUsers,
+    authController.getUserInfo
+)
+router.patch(
+    '/userLike',
+    authmiddleware.checkTokens,
+    authController.applyUserLike
+)
 router.patch(
     '/updateUser',
     authmiddleware.checkTokens,
