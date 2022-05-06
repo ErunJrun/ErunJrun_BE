@@ -4,6 +4,7 @@ const multer = require('../../middlewares/multers/multer')
 module.exports = {
     createPost: (req, res) => {
         const { userId } = res.locals
+
         const data = {
             userId,
             title: req.body.title,

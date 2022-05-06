@@ -130,10 +130,8 @@ module.exports = {
             // case 1 token 유효
             // const { authorization, reAuthorization } = req.headers
             const { authorization } = req.headers
-            console.log(authorization)
 
-            if (authorization == "Bearer undefined") {
-                console.log("ㅎㅇㅎㅇ")
+            if (authorization == 'Bearer undefined') {
                 return next()
             }
 
