@@ -177,10 +177,10 @@ async function sendVerificationSMS(req, res) {
             },
         })
         console.log('response', smsRes.data)
-        return res.status(200).json({ message: 'SMS sent' })
+        return res.status(200).json({ success: true, message: 'SMS sent' })
     } catch (err) {
         console.log(err)
-        return res.status(404).json({ message: 'SMS not sent' })
+        return res.status(404).json({ success: false, message: 'SMS not sent' })
     }
 }
 
