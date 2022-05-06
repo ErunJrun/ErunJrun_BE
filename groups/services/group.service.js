@@ -69,7 +69,7 @@ module.exports = {
 
         switch (category) {
             case 'mypage':
-                condition = { userId: myUserId }
+                Object.assign(condition, { userId: myUserId })
                 break
             case 'main':
                 limit = 3
