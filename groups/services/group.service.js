@@ -75,7 +75,15 @@ module.exports = {
                 limit = 3
                 break
             case 'all':
-                if (Object.keys(query).length === 0 && myUserId !== '') {
+                if (
+                    !query.date &&
+                    !query.time &&
+                    !query.thema &&
+                    query.finish === '0' &&
+                    !query.region &&
+                    !query.distance &&
+                    myUserId !== ''
+                ) {
                     const user = await Users.findOne({
                         where: { userId: myUserId },
                     })
