@@ -13,6 +13,7 @@ const kakaoCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
+            const firstLogin = false
             const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
@@ -26,6 +27,8 @@ const kakaoCallback = (req, res, next) => {
             const key = userId + agent
             await userService.login(key, refreshToken)
 
+            if (!currentUser.phone) firstLogin = true
+
             return res.json({
                 succcss: true,
                 token,
@@ -33,6 +36,7 @@ const kakaoCallback = (req, res, next) => {
                 userId,
                 nickname: currentUser.nickname,
                 profileUrl: currentUser.profileUrl,
+                firstLogin
             })
         }
     )(req, res, next)
@@ -46,6 +50,7 @@ const naverCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
+            const firstLogin = false
             const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
@@ -59,6 +64,8 @@ const naverCallback = (req, res, next) => {
             const key = userId + agent
             await userService.login(key, refreshToken)
 
+            if (!currentUser.phone) firstLogin = true
+
             return res.json({
                 succcss: true,
                 token,
@@ -66,6 +73,7 @@ const naverCallback = (req, res, next) => {
                 userId,
                 nickname: currentUser.nickname,
                 profileUrl: currentUser.profileUrl,
+                firstLogin
             })
         }
     )(req, res, next)
