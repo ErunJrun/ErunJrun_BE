@@ -13,6 +13,7 @@ const kakaoCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
+            const firstLogin = false
             const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
@@ -24,7 +25,9 @@ const kakaoCallback = (req, res, next) => {
             )
 
             const key = userId + agent
-            await userService.login(key, refreshToken)
+            await userService.setRedis(key, refreshToken)
+
+            if (!currentUser.phone) firstLogin = true
 
             return res.json({
                 succcss: true,
@@ -33,6 +36,7 @@ const kakaoCallback = (req, res, next) => {
                 userId,
                 nickname: currentUser.nickname,
                 profileUrl: currentUser.profileUrl,
+                firstLogin,
             })
         }
     )(req, res, next)
@@ -46,6 +50,7 @@ const naverCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
+            const firstLogin = false
             const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
@@ -57,7 +62,9 @@ const naverCallback = (req, res, next) => {
             )
 
             const key = userId + agent
-            await userService.login(key, refreshToken)
+            await userService.setRedis(key, refreshToken)
+
+            if (!currentUser.phone) firstLogin = true
 
             return res.json({
                 succcss: true,
@@ -66,6 +73,7 @@ const naverCallback = (req, res, next) => {
                 userId,
                 nickname: currentUser.nickname,
                 profileUrl: currentUser.profileUrl,
+                firstLogin,
             })
         }
     )(req, res, next)
@@ -89,7 +97,7 @@ async function logout(req, res) {
     const agent = req.headers['user-agent']
     const key = userId + agent
 
-    await userService.logout(key)
+    await userService.delRedis(key)
 
     res.send({
         success: true,
@@ -103,7 +111,7 @@ async function deleteUser(req, res) {
     const key = userId + agent
 
     try {
-        await userService.logout(key)
+        await userService.delRedis(key)
         await userService.deleteUser(userId)
         res.status(200).send({
             success: true,
@@ -119,12 +127,14 @@ async function deleteUser(req, res) {
 
 async function sendVerificationSMS(req, res) {
     try {
+        const userId = res.locals.userId
         const { tel } = req.body
         const user_phone_number = tel.split('-').join('') // SMS를 수신할 전화번호
         const verificationCode =
             Math.floor(Math.random() * (999999 - 100000)) + 100000 // 인증 코드 (6자리 숫자)
         const date = Date.now().toString() // 날짜 string
-
+        // redis에 인증코드 저장
+        await userService.setRedis(userId, verificationCode)
         // 환경 변수
         const sens_service_id = process.env.NCP_SENS_ID
         const sens_access_key = process.env.NCP_SENS_ACCESS
@@ -177,11 +187,35 @@ async function sendVerificationSMS(req, res) {
             },
         })
         console.log('response', smsRes.data)
-        return res.status(200).json({ message: 'SMS sent' })
+        return res
+            .status(200)
+            .json({ success: true, message: '인증번호를 발송했습니다.' })
     } catch (err) {
         console.log(err)
-        return res.status(404).json({ message: 'SMS not sent' })
+        return res.status(404).json({
+            success: false,
+            message: '인증번호를 발송하지 못했습니다.',
+        })
     }
+}
+
+async function verifyCode(req, res) {
+    const userId = res.locals.userId
+    const { tel, code } = req.body
+    const data = { phone: tel }
+
+    const dbCode = await userService.getRedis(userId)
+
+    if (code == dbCode) {
+        await userService.delRedis(userId)
+        await userService.updateUser(userId, data)
+        return res
+            .status(200)
+            .json({ success: true, message: '핸드폰 인증 완료.' })
+    } else
+        return res
+            .status(200)
+            .json({ success: false, message: '인증번호가 다릅니다.' })
 }
 
 module.exports = {
@@ -191,4 +225,5 @@ module.exports = {
     logout,
     deleteUser,
     sendVerificationSMS,
+    verifyCode,
 }
