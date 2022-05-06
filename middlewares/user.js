@@ -131,7 +131,7 @@ module.exports = {
             // const { authorization, reAuthorization } = req.headers
             const { authorization } = req.headers
 
-            if (!authorization) {
+            if (authorization == "Bearer undefined") {
                 next()
             }
 
