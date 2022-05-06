@@ -14,7 +14,7 @@ const kakaoCallback = (req, res, next) => {
             console.log(user)
             const agent = req.headers['user-agent']
             const { userId } = user
-            const firstLogin = false
+            let firstLogin = false
             const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
@@ -28,9 +28,7 @@ const kakaoCallback = (req, res, next) => {
             const key = userId + agent
             await userService.setRedis(key, refreshToken)
 
-            if (!currentUser.likeLocation){
-                firstLogin = true
-            }
+            if (!currentUser.likeLocation) firstLogin = true
 
             return res.json({
                 succcss: true,
@@ -53,7 +51,7 @@ const naverCallback = (req, res, next) => {
             if (err) return next(err)
             const agent = req.headers['user-agent']
             const { userId } = user
-            const firstLogin = false
+            let firstLogin = false
             const currentUser = await userService.getUser(userId)
             const token = jwt.sign({ userId: userId }, process.env.TOKENKEY, {
                 expiresIn: process.env.VALID_ACCESS_TOKEN_TIME,
