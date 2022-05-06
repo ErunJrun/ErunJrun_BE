@@ -143,7 +143,7 @@ module.exports = {
                     }
 
                     //지역 필터입니다
-                    if (query.region) {
+                    if (query.region && query.region !== '0') {
                         const regionQuery = query.region.split('/')
                         Object.assign(condition, {
                             region: { [Op.in]: regionQuery },
