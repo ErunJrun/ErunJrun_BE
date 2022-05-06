@@ -11,6 +11,7 @@ const kakaoCallback = (req, res, next) => {
         { failureRedirect: '/' },
         async (err, user, info) => {
             if (err) return next(err)
+            console.log(user)
             const agent = req.headers['user-agent']
             const { userId } = user
             const firstLogin = false
