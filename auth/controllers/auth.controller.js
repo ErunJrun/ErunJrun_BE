@@ -51,6 +51,9 @@ module.exports = {
         const data = {
             nickname: req.body.nickname,
             bio: req.body.bio,
+            likeLocation: req.body.likeLocation,
+            likeDistance: req.body.likeDistance,
+            userLevel: req.body.userLevel
         }
 
         try {
