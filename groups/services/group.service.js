@@ -79,7 +79,6 @@ module.exports = {
                     !query.date &&
                     !query.time &&
                     !query.thema &&
-                    query.finish === '0' &&
                     !query.region &&
                     !query.distance &&
                     myUserId !== ''
@@ -111,6 +110,7 @@ module.exports = {
                             break
                     }
                     Object.assign(condition, { region: user.likeLocation })
+                    if (query.finish === '1') finishCondition = '1'
                 } else {
                     //러닝일자 필터
                     if (query.date) {
