@@ -9,7 +9,6 @@ module.exports = {
             // case 1 token 유효
             // const { authorization, reAuthorization } = req.headers
             const { authorization } = req.headers
-            console.log(req.headers)
 
             if (!authorization)
                 return res.status(401).json({
@@ -47,7 +46,6 @@ module.exports = {
                 if (error.name === 'TokenExpiredError') {
                     // case 2 token 만료, refreshToken 유효
                     const { reauthorization } = req.headers
-                    console.log(reauthorization)
 
                     if (!reauthorization)
                         return res.status(401).json({
@@ -132,12 +130,11 @@ module.exports = {
             // case 1 token 유효
             // const { authorization, reAuthorization } = req.headers
             const { authorization } = req.headers
-            console.log(req.headers)
 
             if (!authorization) {
                 next()
             }
-            
+
             if (authorization.split(' ').length !== 2)
                 return res.status(401).json({
                     succcss: false,
@@ -168,7 +165,6 @@ module.exports = {
                 if (error.name === 'TokenExpiredError') {
                     // case 2 token 만료, refreshToken 유효
                     const { reauthorization } = req.headers
-                    console.log(reauthorization)
 
                     if (!reauthorization)
                         return res.status(401).json({
