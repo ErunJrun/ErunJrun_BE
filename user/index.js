@@ -17,6 +17,7 @@ router.get('/auth', checkTokens, userController.checkMyInfo)
 router.delete('/logout', checkTokens, userController.logout)
 router.delete('/delete', checkTokens, userController.deleteUser)
 
-router.get('/message', userController.sendVerificationSMS)
+router.post('/message', checkTokens, userController.sendVerificationSMS)
+router.post('/verify', checkTokens, userController.verifyCode)
 
 module.exports = router
