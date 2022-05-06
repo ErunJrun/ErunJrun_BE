@@ -134,7 +134,7 @@ module.exports = {
 
             if (authorization == "Bearer undefined") {
                 console.log("ㅎㅇㅎㅇ")
-                next()
+                return next()
             }
 
             if (authorization.split(' ').length !== 2)
