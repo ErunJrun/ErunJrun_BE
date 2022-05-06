@@ -318,8 +318,8 @@ module.exports = {
         Groups.update(data, { where: { groupId } })
         return
     },
-    deletePost: (groupId) => {
-        Groups.destroy({ where: { groupId } })
+    deletePost: async (groupId) => {
+        await Groups.destroy({ where: { groupId } })
         return
     },
     getGroupDetail: async (groupId, userId) => {
