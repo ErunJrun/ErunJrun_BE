@@ -28,7 +28,9 @@ const kakaoCallback = (req, res, next) => {
             const key = userId + agent
             await userService.setRedis(key, refreshToken)
 
-            if (!currentUser.likeLocation) firstLogin = true
+            if (!currentUser.likeLocation){
+                firstLogin = true
+            }
 
             return res.json({
                 succcss: true,
