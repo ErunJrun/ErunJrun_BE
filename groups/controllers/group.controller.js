@@ -56,7 +56,7 @@ module.exports = {
         const { category } = req.params
         const query = req.query
         let data
-        let userId = ''
+        let userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
 
         if (category === 'mypage' && query.userId) {
             userId = query.userId

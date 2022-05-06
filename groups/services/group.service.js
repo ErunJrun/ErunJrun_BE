@@ -42,6 +42,9 @@ module.exports = {
             case '제주특별자치도':
                 region = 9
                 break
+            default:
+                region = 0
+                break
         }
 
         let timeCode = data.startTime.split(':')[0]
@@ -72,129 +75,84 @@ module.exports = {
                 limit = 3
                 break
             case 'all':
-                let distanceCondition
-                let dateCondition
-                let timeCondition
-                let themaCondition
-
-                if (query.date) {
-                    let startDate = query.date.split('/')[0]
-                    let endDate = query.date.split('/')[1]
-                    dateCondition = {
-                        [Op.and]: [
-                            { [Op.gte]: startDate },
-                            { [Op.lte]: endDate },
-                        ],
-                    }
-                } else {
-                    dateCondition = { [Op.not]: null }
-                }
-
-                if (query.time && query.time !== '0') {
-                    const timequery = query.time.split('/')
-                    timeCondition = { [Op.in]: timequery }
-                } else {
-                    timeCondition = { [Op.not]: null }
-                }
-
-                if (query.finish === '1') finishCondition = '1'
-                if (query.thema) {
-                    const themaquery = decodeURIComponent(query.thema).split(
-                        '/'
-                    )
-                    themaCondition = { [Op.in]: themaquery }
-                } else {
-                    themaCondition = { [Op.not]: null }
-                }
-
                 if (Object.keys(query).length === 0 && myUserId !== '') {
                     const user = await Users.findOne({
                         where: { userId: myUserId },
                     })
 
-                    if (user.likeLocation === null) user.likeLocation = '0'
-                    if (user.likeDistance === null) user.likeDistance = '0'
-
-                    if (user.likeLocation === '0')
-                        user.likeLocation = { [Op.not]: null }
-
                     switch (user.likeDistance) {
-                        case '0':
-                            distanceCondition = { [Op.gte]: 0 }
-                            break
                         case '1':
-                            distanceCondition = { [Op.lt]: 5 }
+                            Object.assign(condition, {
+                                distance: { [Op.lt]: 5 },
+                            })
                             break
                         case '2':
-                            distanceCondition = {
-                                [Op.and]: [{ [Op.lt]: 10 }, { [Op.gte]: 5 }],
-                            }
+                            Object.assign(condition, {
+                                distance: { [Op.between]: [5, 9] },
+                            })
                             break
                         case '3':
-                            distanceCondition = {
-                                [Op.and]: [{ [Op.lt]: 15 }, { [Op.gte]: 10 }],
-                            }
+                            Object.assign(condition, {
+                                distance: { [Op.between]: [10, 15] },
+                            })
                             break
                         case '4':
-                            distanceCondition = { [Op.gte]: 15 }
+                            Object.assign(condition, {
+                                distance: { [Op.get]: 15 },
+                            })
                             break
                     }
-
-                    condition = {
-                        date: dateCondition,
-                        region: user.likeLocation,
-                        distance: distanceCondition,
-                    }
+                    Object.assign(condition, { region: user.likeLocation })
                 } else {
-                    let regionCondition = {}
-                    let distanceConditionList = []
+                    //러닝일자 필터
+                    if (query.date) {
+                        let startDate = query.date.split('/')[0]
+                        let endDate = query.date.split('/')[1]
+
+                        Object.assign(condition, {
+                            date: { [Op.between]: [startDate, endDate] },
+                        })
+                    }
+
+                    //러닝시간 필터
+                    if (query.time && query.time !== '0') {
+                        const timequery = query.time.split('/')
+                        Object.assign(condition, {
+                            timecode: { [Op.in]: timequery },
+                        })
+                    }
+
+                    //모집마감 필터
+                    if (query.finish === '1') finishCondition = '1'
+                    //테마 필터
+                    if (query.thema) {
+                        const themaquery = decodeURIComponent(
+                            query.thema
+                        ).split('/')
+                        Object.assign(condition, {
+                            thema: { [Op.in]: themaquery },
+                        })
+                    }
 
                     //지역 필터입니다
                     if (query.region) {
                         const regionQuery = query.region.split('/')
-                        regionCondition = { [Op.in]: regionQuery }
-                    } else {
-                        regionCondition = { [Op.not]: null }
+                        Object.assign(condition, {
+                            region: { [Op.in]: regionQuery },
+                        })
                     }
 
                     //러닝거리 필터
                     if (query.distance) {
                         const distanceQuery = query.distance.split('/')
-                        for (let i = 0; i < distanceQuery.length; i++) {
-                            switch (distanceQuery[i]) {
-                                case '0':
-                                    distanceCondition = { [Op.gte]: 0 }
-                                    break
-                                case '1':
-                                    distanceCondition = { [Op.lt]: 5 }
-                                    break
-                                case '2':
-                                    distanceCondition = {
-                                        [Op.between]: [5, 10],
-                                    }
-                                    break
-                                case '3':
-                                    distanceCondition = {
-                                        [Op.between]: [10, 15],
-                                    }
-                                    break
-                                case '4':
-                                    distanceCondition = { [Op.gte]: 15 }
-                                    break
-                            }
-                            distanceConditionList.push(distanceCondition)
-                        }
-                    } else {
-                        distanceConditionList.push({ [Op.not]: null })
-                    }
-                    condition = {
-                        [Op.and]: [
-                            { date: dateCondition },
-                            { region: regionCondition },
-                            { distance: { [Op.or]: distanceConditionList } },
-                            { timecode: timeCondition },
-                            { thema: themaCondition },
-                        ],
+                        Object.assign(condition, {
+                            distance: {
+                                [Op.between]: [
+                                    Math.min(...distanceQuery) * 5 - 5,
+                                    Math.max(...distanceQuery) * 5,
+                                ],
+                            },
+                        })
                     }
                 }
         }
