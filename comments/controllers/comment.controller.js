@@ -4,7 +4,7 @@ module.exports = {
     // TODO: CONTENT가 비어있지 않은지 확인
     createComment: async (req, res) => {
         const { category, categoryId } = req.params
-        const { userId } = res.loclas
+        const { userId } = res.locals
         // const userId = '2fc1e54e-dd6b-49e9-96ae-61284ceaae09'
         // 데이터 object 케이스별로 만들어주기
         let input
@@ -83,7 +83,7 @@ module.exports = {
     updateComment: async (req, res) => {
         const { commentId } = req.params
         const { content } = req.body
-        const { userId } = res.loclas
+        const { userId } = res.locals
         // const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         // commentId로 comment 존재여부 체크
         if (!(await commentService.checkComment(commentId))) {
@@ -118,7 +118,7 @@ module.exports = {
 
     deleteComment: async (req, res) => {
         const { commentId } = req.params
-        const { userId } = res.loclas
+        const { userId } = res.locals
         // const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
         if (!(await commentService.checkComment(commentId))) {
             return res.status(400).send({
