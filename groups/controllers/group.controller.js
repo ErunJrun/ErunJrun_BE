@@ -167,6 +167,8 @@ module.exports = {
                 })
             }
 
+            await groupService.addAlarm(groupId, chkGroup.title, 'delete')
+
             for (let i = 1; i <= 3; i++) {
                 let url = chkGroup[`thumbnailUrl${i}`]
 
@@ -174,8 +176,7 @@ module.exports = {
                     multer.deleteImg(url)
                 }
             }
-            await groupService.addAlarm(groupId, chkGroup.title, 'delete')
-            groupService.deletePost(groupId)
+            await groupService.deletePost(groupId)
 
             res.status(200).send({
                 success: true,
