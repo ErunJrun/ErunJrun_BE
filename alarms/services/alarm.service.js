@@ -91,7 +91,12 @@ module.exports = {
                             role,
                         })
                             .then(() => {
-                                sendGroupSMS(phone, category, role, groupTitle).catch((error) => {
+                                sendGroupSMS(
+                                    phone,
+                                    category,
+                                    role,
+                                    groupTitle
+                                ).catch((error) => {
                                     console.log(error)
                                     return error
                                 })
@@ -393,7 +398,7 @@ async function sendGroupSMS(phone, category, role, groupTitle) {
                 content,
                 messages: [{ to: '01023246687' }],
             },
-        
+
             // `${user_phone_number}`
         })
         console.log('response', smsRes.data)
