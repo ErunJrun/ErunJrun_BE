@@ -20,17 +20,37 @@ module.exports = {
     },
     // 매일 8시마다 createDdayAlarm
     createDdayAlarm: () => {
-        schedule.scheduleJob('8 * * *', alarmService.createDdayAlarm)
+        try {
+            schedule.scheduleJob('8 * * *', alarmService.createDdayAlarm)
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '문자전송 실패',
+            })
+        }
     },
     // 매 1분마다 createEndAlarm(실제시간 기준 30분, 00분)
     createStartAlarm: () => {
-        schedule.scheduleJob(' */1 * * * *', alarmService.createStartAlarm)
+        try {
+            schedule.scheduleJob(' */1 * * * *', alarmService.createStartAlarm)
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '문자전송 실패',
+            })
+        }
     },
     // 매 1분 마다 createEndAlarm 실행
     createEndAlarm: () => {
-        schedule.scheduleJob(' */1 * * * *', alarmService.createEndAlarm)
+        try {
+            schedule.scheduleJob(' */1 * * * *', alarmService.createEndAlarm)
+        } catch (error) {
+            return res.status(400).send({
+                success: false,
+                message: '문자전송 실패',
+            })
+        }
     },
 }
-
 // createStartAlarm, createEndAlarm의 범위를 지정해주어야함.
 //

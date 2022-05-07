@@ -174,8 +174,54 @@ module.exports = {
     },
     updateComment: async (content, commentId) => {
         try {
-            await Comments.update({ content }, { where: { commentId } })
-            return
+            let data
+            await Comments.update({ content }, { where: { commentId } }).then(
+                async (value) => {
+                    const conditionRule = await Comments.findOne({where: {commentId}}).then((value) => {return value.dataValues})
+                    let condition = {}
+                    if (conditionRule.groupId === null) {
+                        condition = { courseId: conditionRule.courseId}
+                    } else{
+                        condition = { groupId: conditionRule.groupId}
+                    }
+                    data = await Comments.findAll({
+                        where: condition,
+                        attributes: [
+                            'commentId',
+                            'groupId',
+                            'courseId',
+                            'content',
+                            'createdAt',
+                        ],
+                        include: [
+                            {
+                                model: Users,
+                                as: 'user',
+                                foreignKey: 'userId',
+                                attributes: [
+                                    'userId',
+                                    'nickname',
+                                    'profileUrl',
+                                    'userLevel',
+                                ],
+                            },
+                        ],
+                        order: [['createdAt', 'desc']],
+                    }).then((value) => {
+                        for (let i = 0; i < value.length; i++) {
+                            value[i].dataValues.createdAt = timeForToday(
+                                value[i].dataValues.createdAt
+                            )
+                        }
+                        return value
+                    }).catch((error) => {
+                        console.log(error)
+                        return error
+                    })
+
+                }
+            )
+            return data
         } catch (error) {
             return error
         }
