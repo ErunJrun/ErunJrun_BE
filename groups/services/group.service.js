@@ -153,14 +153,20 @@ module.exports = {
                     //러닝거리 필터
                     if (query.distance) {
                         const distanceQuery = query.distance.split('/')
-                        Object.assign(condition, {
-                            distance: {
-                                [Op.between]: [
-                                    Math.min(...distanceQuery) * 5 - 5,
-                                    Math.max(...distanceQuery) * 5,
-                                ],
-                            },
-                        })
+                        if (distanceQuery.includes('0')) {
+                            Object.assign(condition, {
+                                distance: { [Op.gte]: 0 },
+                            })
+                        } else {
+                            Object.assign(condition, {
+                                distance: {
+                                    [Op.between]: [
+                                        Math.min(...distanceQuery) * 5 - 5,
+                                        Math.max(...distanceQuery) * 5,
+                                    ],
+                                },
+                            })
+                        }
                     }
                 }
         }
