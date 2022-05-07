@@ -66,6 +66,7 @@ module.exports = {
         }
 
         if (
+            category === 'all' &&
             !query.date &&
             !query.time &&
             !query.thema &&
@@ -100,7 +101,7 @@ module.exports = {
                         message: '불러오기 상태값이 올바르지 않습니다',
                     })
             }
-            if (data == '' && category === 'prefer') {
+            if (data.length === 0 && category === 'prefer') {
                 data = await groupService.getGroupData(userId, 'all', query)
             }
 

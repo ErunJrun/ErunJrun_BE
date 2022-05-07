@@ -137,8 +137,14 @@ module.exports = {
                     }
 
                     //지역 필터입니다
-                    if (query.region && query.region !== '0') {
-                        const regionQuery = query.region.split('/')
+                    if (query.region) {
+                        let regionQuery = query.region.split('/')
+                        if (regionQuery.includes('0')) {
+                            regionQuery = []
+                            for (let i = 1; i <= 9; i++) {
+                                regionQuery.push(i)
+                            }
+                        }
                         Object.assign(condition, {
                             region: { [Op.in]: regionQuery },
                         })
