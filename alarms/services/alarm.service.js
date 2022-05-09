@@ -116,14 +116,6 @@ module.exports = {
     createStartAlarm: async (req, res) => {
         const after30MinuteTime = moment().add('30', 'm').format('HH:mm:ss')
         const after30MinuteDate = moment().add('30', 'm').format('YYYY-MM-DD')
-        // console.log(now)
-        // console.log(after30)
-        // 30분 이후가 자정을 넘으면 1일 추가
-        // console.log('여기는 start')
-        // console.log(now - after30)
-        // if (now - after30 < 0) {
-        //     nowDate = moment().add('1', 'days').format('YYYY-MM-DD')
-        // }
         await Groups.findAll({
             where: {
                 [Op.and]: [
@@ -212,11 +204,6 @@ module.exports = {
     createEndAlarm: async (req, res) => {
         const before30MinuteTime = moment().add('-30', 'm').format('HH:mm:ss')
         const before30MinuteDate = moment().add('-30', 'm').format('YYYY-MM-DD')
-        // console.log('여기는 End')
-        // console.log(before30 - now)
-        // if (before30 - now < 0) {
-        //     nowDate = moment().add('-1', 'days').format('YYYY-MM-DD')
-        // }
         await Groups.findAll({
             where: {
                 [Op.and]: [
