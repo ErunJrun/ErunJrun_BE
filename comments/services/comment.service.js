@@ -4,6 +4,7 @@ const {
     Alarms,
     Groups,
     Courses,
+    Recomments
 } = require('../../models/index')
 
 const moment = require('moment')
@@ -98,14 +99,36 @@ module.exports = {
                             'userLevel',
                         ],
                     },
+                    {
+                        model: Recomments,
+                        as: 'Recomments',
+                        foreignKey: 'commentId',
+                        attributes: ['recommentId', 'commentId', 'userId', 'content', 'createdAt'],
+                        include: [
+                            {
+                                model: Users,
+                                as: 'user',
+                                foreignKey: 'userId',
+                                attributes: [
+                                    'userId',
+                                    'nickname',
+                                    'profileUrl',
+                                    'userLevel'
+                                ]
+                            }
+                        ]
+                    }
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
+                    for (let z =0; z < value[i].dataValues.Recomments.length; z++){
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    value[i].dataValues.Recomments[z].dataValues.createdAt = timeForToday(value[i].dataValues.Recomments[z].dataValues.createdAt)
                 }
+            }
                 return value
             })
             return data
@@ -145,14 +168,36 @@ module.exports = {
                             'userLevel',
                         ],
                     },
+                    {
+                        model: Recomments,
+                        as: 'Recomments',
+                        foreignKey: 'commentId',
+                        attributes: ['recommentId', 'commentId', 'userId', 'content', 'createdAt'],
+                        include: [
+                            {
+                                model: Users,
+                                as: 'user',
+                                foreignKey: 'userId',
+                                attributes: [
+                                    'userId',
+                                    'nickname',
+                                    'profileUrl',
+                                    'userLevel'
+                                ]
+                            }
+                        ]
+                    }
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
+                    for (let z =0; z < value[i].dataValues.Recomments.length; z++){
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    value[i].dataValues.Recomments[z].dataValues.createdAt = timeForToday(value[i].dataValues.Recomments[z].dataValues.createdAt)
                 }
+            }
                 return value
             })
             return data
@@ -209,15 +254,38 @@ module.exports = {
                                     'userLevel',
                                 ],
                             },
+                            {
+                                model: Recomments,
+                                as: 'Recomments',
+                                foreignKey: 'commentId',
+                                attributes: ['recommentId', 'commentId', 'userId', 'content','createdAt'],
+                                include: [
+                                    {
+                                        model: Users,
+                                        as: 'user',
+                                        foreignKey: 'userId',
+                                        attributes: [
+                                            'userId',
+                                            'nickname',
+                                            'profileUrl',
+                                            'userLevel',
+                                            
+                                        ]
+                                    }
+                                ]
+                            }
                         ],
                         order: [['createdAt', 'desc']],
                     })
                         .then((value) => {
                             for (let i = 0; i < value.length; i++) {
+                                for (let z =0; z < value[i].dataValues.Recomments.length; z++){
                                 value[i].dataValues.createdAt = timeForToday(
                                     value[i].dataValues.createdAt
                                 )
+                                value[i].dataValues.Recomments[z].dataValues.createdAt = timeForToday(value[i].dataValues.Recomments[z].dataValues.createdAt)
                             }
+                        }
                             return value
                         })
                         .catch((error) => {
