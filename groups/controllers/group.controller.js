@@ -150,6 +150,9 @@ module.exports = {
 
                 for (let i = req.body.thumbnailUrl.length + 1; i <= 3; i++) {
                     data[`thumbnailUrl${i}`] = req.files[3 - i].location
+                    if (chkGroup[`thumbnailUrl${i}`] !== null) {
+                        multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                    }
                 }
             }
             await groupService.addAlarm(groupId, chkGroup.title, 'update')
