@@ -151,12 +151,16 @@ module.exports = {
     getRecomment: async (input) => {
         try {
             let condition = {}
-            const conditionRule = await Comments.findOne({where: {commentId: input.commentId}}).then((value) => {return value.dataValues})
+            const conditionRule = await Comments.findOne({
+                where: { commentId: input.commentId },
+            }).then((value) => {
+                return value.dataValues
+            })
             console.log(conditionRule)
-            if (conditionRule.courseId === null){
-                condition = {groupId: conditionRule.groupId}
-            }else{
-                condition = {courseId: conditionRule.courseId}
+            if (conditionRule.courseId === null) {
+                condition = { groupId: conditionRule.groupId }
+            } else {
+                condition = { courseId: conditionRule.courseId }
             }
 
             const data = await Comments.findAll({
@@ -246,71 +250,78 @@ module.exports = {
     updateRecomment: async (content, recommentId) => {
         try {
             let data
-            await Recomments.update({ content }, { where: { recommentId } })
-                .then(async (value) => {
-                    const commentId = {
-                        commentId: await Recomments.findOne({
-                            where: { recommentId },
-                        }).then((value) => {
-                            return value.dataValues.commentId
-                        }),
-                    }
-                    let condition = {}
-                    const conditionRule = await Comments.findOne({where: {commentId: input.commentId}}).then((value) => {return value.dataValues})
-                    if (conditionRule.courseId === null){
-                        condition = {groupId: conditionRule.groupId}
-                    }else{
-                        condition = {courseId: conditionRule.courseId}
-                    }
-                    data = await Comments.findAll({
-                        where: condition,
-                        attributes: [
-                            'commentId',
-                            'groupId',
-                            'courseId',
-                            'content',
-                            'createdAt',
-                        ],
-                        include: [
-                            {
-                                model: Users,
-                                as: 'user',
-                                foreignKey: 'userId',
-                                attributes: [
-                                    'userId',
-                                    'nickname',
-                                    'profileUrl',
-                                    'userLevel',
-                                ],
-                            },
-                            {
-                                model: Recomments,
-                                as: 'Recomments',
-                                foreignKey: 'commentId',
-                                attributes: [
-                                    'recommentId',
-                                    'commentId',
-                                    'userId',
-                                    'content',
-                                    'createdAt',
-                                ],
-                                include: [
-                                    {
-                                        model: Users,
-                                        as: 'user',
-                                        foreignKey: 'userId',
-                                        attributes: [
-                                            'userId',
-                                            'nickname',
-                                            'profileUrl',
-                                            'userLevel',
-                                        ],
-                                    },
-                                ],
-                            },
-                        ],
-                        order: [['createdAt', 'desc']],
+            await Recomments.update(
+                { content },
+                { where: { recommentId } }
+            ).then(async (value) => {
+                const commentId = {
+                    commentId: await Recomments.findOne({
+                        where: { recommentId },
                     }).then((value) => {
+                        return value.dataValues.commentId
+                    }),
+                }
+                let condition = {}
+                const conditionRule = await Comments.findOne({
+                    where: commentId ,
+                }).then((value) => {
+                    return value.dataValues
+                })
+                if (conditionRule.courseId === null) {
+                    condition = { groupId: conditionRule.groupId }
+                } else {
+                    condition = { courseId: conditionRule.courseId }
+                }
+                data = await Comments.findAll({
+                    where: condition,
+                    attributes: [
+                        'commentId',
+                        'groupId',
+                        'courseId',
+                        'content',
+                        'createdAt',
+                    ],
+                    include: [
+                        {
+                            model: Users,
+                            as: 'user',
+                            foreignKey: 'userId',
+                            attributes: [
+                                'userId',
+                                'nickname',
+                                'profileUrl',
+                                'userLevel',
+                            ],
+                        },
+                        {
+                            model: Recomments,
+                            as: 'Recomments',
+                            foreignKey: 'commentId',
+                            attributes: [
+                                'recommentId',
+                                'commentId',
+                                'userId',
+                                'content',
+                                'createdAt',
+                            ],
+                            include: [
+                                {
+                                    model: Users,
+                                    as: 'user',
+                                    foreignKey: 'userId',
+                                    attributes: [
+                                        'userId',
+                                        'nickname',
+                                        'profileUrl',
+                                        'userLevel',
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                    order: [['createdAt', 'desc']],
+                })
+                    .then((value) => {
                         for (let i = 0; i < value.length; i++) {
                             for (
                                 let z = 0;
@@ -320,11 +331,12 @@ module.exports = {
                                 value[i].dataValues.createdAt = timeForToday(
                                     value[i].dataValues.createdAt
                                 )
-                                value[i].dataValues.Recomments[z].dataValues.createdAt =
-                                    timeForToday(
-                                        value[i].dataValues.Recomments[z].dataValues
-                                            .createdAt
-                                    )
+                                value[i].dataValues.Recomments[
+                                    z
+                                ].dataValues.createdAt = timeForToday(
+                                    value[i].dataValues.Recomments[z].dataValues
+                                        .createdAt
+                                )
                             }
                         }
                         return value
@@ -333,8 +345,10 @@ module.exports = {
                         console.log(error)
                         return error
                     })
+                
+            })
             return data
-        })}catch (error){
+        } catch (error) {
             console.log(error)
             return error
         }
