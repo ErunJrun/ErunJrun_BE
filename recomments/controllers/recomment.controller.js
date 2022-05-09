@@ -74,11 +74,14 @@ module.exports = {
             })
         }
         try {
-            const data = await recommentService.updateRecomment(content, recommentId)
+            const data = await recommentService.updateRecomment(
+                content,
+                recommentId
+            )
             res.status(200).send({
                 success: true,
                 message: '대댓글 수정에 성공하였습니다',
-                data
+                data,
             })
         } catch (error) {
             return res.status(400).send({
