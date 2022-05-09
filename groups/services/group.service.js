@@ -2,6 +2,7 @@ const sequelize = require('sequelize')
 const Op = sequelize.Op
 const { Groups, Appliers, Users, Alarms } = require('../../models')
 const moment = require('moment')
+const { literal } = require('sequelize')
 
 module.exports = {
     createPost: async (data) => {
@@ -70,7 +71,10 @@ module.exports = {
     getGroupData: async (myUserId, category, query) => {
         let condition = {}
         let limit
-        let finishCondition = '0'
+        let applyCondition = {}
+
+        let nowDate = moment().format('YYYY-MM-DD')
+        let nowTime = moment().format('HH:mm:ss')
 
         try {
             switch (category) {
@@ -79,6 +83,10 @@ module.exports = {
                     break
                 case 'main':
                     limit = 6
+                    break
+                case 'complete':
+                    applyCondition = { userId: myUserId }
+                    Object.assign(condition, {})
                     break
                 case 'prefer':
                 case 'all':
@@ -110,7 +118,23 @@ module.exports = {
                                 break
                         }
                         Object.assign(condition, { region: user.likeLocation })
-                        if (query.finish === '1') finishCondition = '1'
+                        if (query.finish !== '1') {
+                            Object.assign(condition, {
+                                [Op.or]: [
+                                    { date: { [Op.gt]: nowDate } },
+                                    {
+                                        [Op.and]: [
+                                            { date: nowDate },
+                                            {
+                                                standbyTime: {
+                                                    [Op.lte]: nowTime,
+                                                },
+                                            },
+                                        ],
+                                    },
+                                ],
+                            })
+                        }
                     } else {
                         //러닝일자 필터
                         if (query.date) {
@@ -137,7 +161,24 @@ module.exports = {
                         }
 
                         //모집마감 필터
-                        if (query.finish === '1') finishCondition = '1'
+                        // if (query.finish === '1') finishCondition = '1'
+                        if (query.finish !== '1') {
+                            Object.assign(condition, {
+                                [Op.or]: [
+                                    { date: { [Op.gt]: nowDate } },
+                                    {
+                                        [Op.and]: [
+                                            { date: nowDate },
+                                            {
+                                                standbyTime: {
+                                                    [Op.lte]: nowTime,
+                                                },
+                                            },
+                                        ],
+                                    },
+                                ],
+                            })
+                        }
                         //테마 필터
                         if (query.thema) {
                             const themaquery = decodeURIComponent(
@@ -228,6 +269,7 @@ module.exports = {
                         as: 'Appliers',
                         foreignKey: 'userId',
                         attributes: [],
+                        where: { ...applyCondition },
                     },
                 ],
                 group: ['groupId'],
@@ -284,17 +326,7 @@ module.exports = {
                         .lang('ko')
                         .format('YYYY.MM.DD (dd) HH:mm')
                     result[i].dataValues.date = DateTime
-
-                    const dateNow = moment()
-                        .add(4, 'hours')
-                        .format('YYYY-MM-DD HH:mm:ss')
-                    if (finishCondition === '0' && dateNow >= startDateTime) {
-                        delete result[i]
-                    }
                 }
-                result = result.filter((element) => {
-                    return element !== null
-                })
                 return result
             })
             if (limit) {

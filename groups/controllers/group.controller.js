@@ -31,11 +31,9 @@ module.exports = {
             }
 
             if (req.body.data <= Date.now()) {
-                res.status(400).send({
-                    success: false,
-                    message:
-                        '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다',
-                })
+                throw new Error(
+                    '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다'
+                )
             }
 
             await groupService.createPost(data)
@@ -92,6 +90,9 @@ module.exports = {
                         'prefer',
                         query
                     )
+                    break
+                case 'complete':
+                    data = await groupService.getGroupData(userId, 'complete')
                     break
                 default:
                     return res.status(400).send({
