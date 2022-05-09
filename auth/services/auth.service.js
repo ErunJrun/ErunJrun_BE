@@ -32,15 +32,6 @@ module.exports = {
                 },
                 attributes: [
                     [sequelize.literal('datediff(date, now())'), 'dDay'],
-                    [
-                        sequelize.fn(
-                            'CONCAT',
-                            sequelize.col('date'),
-                            ' ',
-                            sequelize.col('standbyTime')
-                        ),
-                        'dDayTime',
-                    ],
                     'date',
                     'title',
                     'location',
@@ -48,7 +39,12 @@ module.exports = {
                     'groupId',
                     ['thumbnailUrl1', 'thumbnailUrl'],
                     'standbyTime',
-                    'maxPeople',
+                    [
+                        sequelize.literal(
+                            'timestampdiff(minute,standbyTime, finishTime)'
+                        ),
+                        'totalTime',
+                    ],
                 ],
                 include: [
                     {
