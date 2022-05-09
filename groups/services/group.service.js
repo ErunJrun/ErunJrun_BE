@@ -86,7 +86,7 @@ module.exports = {
                     break
                 case 'complete':
                     applyCondition = { userId: myUserId }
-                    Object.assign(condition, {})
+                    Object.assign(condition, { date: [Op.lt] })
                     break
                 case 'prefer':
                 case 'all':
@@ -161,7 +161,6 @@ module.exports = {
                         }
 
                         //모집마감 필터
-                        // if (query.finish === '1') finishCondition = '1'
                         if (query.finish !== '1') {
                             Object.assign(condition, {
                                 [Op.or]: [
