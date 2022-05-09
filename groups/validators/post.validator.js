@@ -46,6 +46,9 @@ const postValidation = [
     body('mapLatLng')
         .notEmpty()
         .withMessage('코스에 대한 정보는 반드시 입력해주셔야 합니다'),
+    body('thema')
+        .notEmpty()
+        .withMessage('러닝 테마는 반드시 입력해주셔야 합니다'),
     error,
 ]
 
@@ -76,6 +79,9 @@ const updateValidation = [
         .notEmpty()
         .withMessage('종료 시간은 반드시 입력해주셔야 합니다'),
     body('speed').notEmpty().withMessage('페이스는 반드시 입력해주셔야 합니다'),
+    body('thema')
+        .notEmpty()
+        .withMessage('러닝 테마는 반드시 입력해주셔야 합니다'),
     error,
 ]
 

@@ -132,6 +132,7 @@ module.exports = {
             parking: req.body.parking,
             baggage: req.body.baggage,
             content: req.body.content,
+            thema: req.body.thema,
         }
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
