@@ -75,9 +75,6 @@ const updateValidation = [
     body('finishTime')
         .notEmpty()
         .withMessage('종료 시간은 반드시 입력해주셔야 합니다'),
-    body('distance')
-        .notEmpty()
-        .withMessage('거리는 반드시 입력해주셔야 합니다'),
     body('speed').notEmpty().withMessage('페이스는 반드시 입력해주셔야 합니다'),
     error,
 ]
