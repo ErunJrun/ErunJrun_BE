@@ -86,7 +86,7 @@ module.exports = {
                     break
                 case 'complete':
                     applyCondition = { userId: myUserId }
-                    Object.assign(condition, { date: [Op.lt] })
+                    Object.assign(condition, { date: { [Op.lt]: nowDate } })
                     break
                 case 'prefer':
                 case 'all':
