@@ -325,6 +325,11 @@ module.exports = {
                         .lang('ko')
                         .format('YYYY.MM.DD (dd) HH:mm')
                     result[i].dataValues.date = DateTime
+
+                    result[i].dataValues.location =
+                        result[i].location.split(' ')[0] +
+                        ' ' +
+                        result[i].location.split(' ')[1]
                 }
                 return result
             })
