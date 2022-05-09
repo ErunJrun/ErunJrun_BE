@@ -143,18 +143,37 @@ module.exports = {
                 throw new Error('본인이 작성한 글만 삭제할 수 있습니다')
             }
 
-            if (req.files) {
-                for (let i = 0; i < req.body.thumbnailUrl.length; i++) {
+            if (req.body.thumbnailUrl) {
+                for (i = 0; i < req.body.thumbnailUrl.length; i++) {
                     data[`thumbnailUrl${i + 1}`] = req.body.thumbnailUrl[i]
                 }
 
-                for (let i = req.body.thumbnailUrl.length + 1; i <= 3; i++) {
-                    data[`thumbnailUrl${i}`] = req.files[3 - i].location
+                for (i = req.body.thumbnailUrl.length + 1; i <= 3; i++) {
+                    if (req.files) {
+                        data[`thumbnailUrl${i}`] = req.files[3 - i].location
+                    } else {
+                        data[`thumbnailUrl${i}`] = null
+                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        }
+                    }
+                }
+            } else {
+                if (req.files) {
+                    for (let i = 0; i < req.files.length; i++) {
+                        data[`thumbnailUrl${i + 1}`] = req.files[i].location
+                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        }
+                    }
+                } else {
+                    data[`thumbnailUrl${i + 1}`] = null
                     if (chkGroup[`thumbnailUrl${i}`] !== null) {
                         multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
                     }
                 }
             }
+
             await groupService.addAlarm(groupId, chkGroup.title, 'update')
             groupService.updatePost(groupId, data)
 
