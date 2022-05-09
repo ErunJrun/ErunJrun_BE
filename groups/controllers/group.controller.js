@@ -144,8 +144,12 @@ module.exports = {
             }
 
             if (req.files) {
-                for (let i = 0; i < req.files.length; i++) {
-                    data[`thumbnailUrl${i + 1}`] = req.files[i].location
+                for (let i = 0; i < req.body.thumbnailUrl.length; i++) {
+                    data[`thumbnailUrl${i + 1}`] = req.body.thumbnailUrl[i]
+                }
+
+                for (let i = req.body.thumbnailUrl.length + 1; i <= 3; i++) {
+                    data[`thumbnailUrl${i}`] = req.files[3 - i].location
                 }
             }
             await groupService.addAlarm(groupId, chkGroup.title, 'update')
@@ -156,6 +160,7 @@ module.exports = {
                 message: '게시글이 수정되었습니다',
             })
         } catch (error) {
+            console.log(error)
             return res.status(400).send({
                 success: false,
                 meesage: error.message,
