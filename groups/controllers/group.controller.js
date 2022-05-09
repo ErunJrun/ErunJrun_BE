@@ -2,7 +2,7 @@ const groupService = require('../services/group.service')
 const multer = require('../../middlewares/multers/multer')
 
 module.exports = {
-    createPost: (req, res) => {
+    createPost: async (req, res, next) => {
         const { userId } = res.locals
 
         const data = {
@@ -38,18 +38,16 @@ module.exports = {
                 })
             }
 
-            groupService.createPost(data)
+            await groupService.createPost(data)
 
             res.status(200).send({
                 success: true,
                 message: '게시물이 등록되었습니다',
             })
         } catch (error) {
-            console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: '그룹러닝 게시물 등록을 실패하였습니다',
-                error,
+                meesage: error.message,
             })
         }
     },
@@ -107,11 +105,9 @@ module.exports = {
 
             res.status(200).send({ success: true, data })
         } catch (error) {
-            console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: '그룹러닝 게시물 불러오기를 실패하였습니다',
-                error,
+                meesage: error.message,
             })
         }
     },
@@ -139,16 +135,10 @@ module.exports = {
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
             if (!chkGroup) {
-                return res.status(400).send({
-                    success: false,
-                    message: '해당 게시물이 존재하지 않습니다',
-                })
+                throw new Error('해당 게시물이 존재하지 않습니다')
             }
             if (chkGroup.userId !== userId) {
-                return res.status(400).send({
-                    success: false,
-                    message: '본인이 작성한 글만 수정할 수 있습니다',
-                })
+                throw new Error('본인이 작성한 글만 삭제할 수 있습니다')
             }
 
             if (req.files) {
@@ -164,11 +154,9 @@ module.exports = {
                 message: '게시글이 수정되었습니다',
             })
         } catch (error) {
-            console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: '그룹러닝 게시물 수정을 실패하였습니다',
-                error,
+                meesage: error.message,
             })
         }
     },
@@ -179,16 +167,10 @@ module.exports = {
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
             if (!chkGroup) {
-                return res.status(400).send({
-                    success: false,
-                    message: '해당 게시물이 존재하지 않습니다',
-                })
+                throw new Error('해당 게시물이 존재하지 않습니다')
             }
             if (chkGroup.userId !== userId) {
-                return res.status(400).send({
-                    success: false,
-                    message: '본인이 작성한 글만 삭제할 수 있습니다',
-                })
+                throw new Error('본인이 작성한 글만 삭제할 수 있습니다')
             }
 
             await groupService.addAlarm(groupId, chkGroup.title, 'delete')
@@ -207,34 +189,31 @@ module.exports = {
                 message: '게시글이 삭제되었습니다',
             })
         } catch (error) {
-            console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: '그룹러닝 게시물 삭제를 실패하였습니다',
-                error,
+                meesage: error.message,
             })
         }
     },
     getGroupDetail: async (req, res) => {
         const { groupId } = req.params
-        const { userId } = res.locals
+        let userId = ''
+
+        if (res.locals.userId) {
+            userId = res.locals.userId
+        }
 
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
             if (!chkGroup) {
-                return res.status(400).send({
-                    success: false,
-                    message: '해당 게시물이 존재하지 않습니다',
-                })
+                throw new Error('해당 게시물이 존재하지 않습니다')
             }
             const data = await groupService.getGroupDetail(groupId, userId)
             res.status(200).send({ success: true, data })
         } catch (error) {
-            console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: '그룹러닝 게시물 불러오기를 실패하였습니다',
-                error,
+                meesage: error.message,
             })
         }
     },
@@ -248,10 +227,7 @@ module.exports = {
             if (chkApply) {
                 const chkGroup = await groupService.getUserGroupData(groupId)
                 if (chkGroup.userId === userId) {
-                    return res.status(400).send({
-                        success: false,
-                        message: '개설자는 신청을 취소할 수 없습니다',
-                    })
+                    throw new Error('개설자는 신청을 취소할 수 없습니다')
                 }
                 groupService.cancelGroup(groupId, userId)
                 return res.status(200).send({
@@ -266,11 +242,9 @@ module.exports = {
                 })
             }
         } catch (error) {
-            console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: '그룹러닝 신청에 실패하였습니다',
-                error,
+                meesage: error.message,
             })
         }
     },
