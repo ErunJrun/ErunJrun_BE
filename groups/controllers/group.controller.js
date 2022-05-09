@@ -144,17 +144,30 @@ module.exports = {
             }
 
             if (req.body.thumbnailUrl) {
-                for (i = 0; i < req.body.thumbnailUrl.length; i++) {
-                    data[`thumbnailUrl${i + 1}`] = req.body.thumbnailUrl[i]
+                let thumbnailUrl = []
+                if (typeof req.body.thumbnailUrl === 'string') {
+                    thumbnailUrl.push(req.body.thumbnailUrl)
+                } else {
+                    thumbnailUrl = req.body.thumbnailUrl
                 }
 
-                for (i = req.body.thumbnailUrl.length + 1; i <= 3; i++) {
-                    if (req.files) {
-                        data[`thumbnailUrl${i}`] = req.files[3 - i].location
+                for (let i = 0; i < thumbnailUrl.length; i++) {
+                    data[`thumbnailUrl${i + 1}`] = thumbnailUrl[i]
+                }
+
+                for (let i = 0; i < 3 - thumbnailUrl.length; i++) {
+                    if (req.files[i]) {
+                        data[`thumbnailUrl${thumbnailUrl.length + i + 1}`] =
+                            req.files[i].location
                     } else {
-                        data[`thumbnailUrl${i}`] = null
-                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
-                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        data[`thumbnailUrl${thumbnailUrl.length + i + 1}`] =
+                            null
+                        if (
+                            chkGroup[
+                                `thumbnailUrl${thumbnailUrl.length + i + 1}`
+                            ] !== null
+                        ) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i + 1}`])
                         }
                     }
                 }

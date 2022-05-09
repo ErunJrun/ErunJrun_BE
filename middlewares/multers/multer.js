@@ -80,15 +80,16 @@ const uploadProfile = multer({
 })
 
 const deleteImg = (url) => {
-    const filename = url.split('/')[4]
-
-    s3.deleteObject(
-        {
-            Bucket: process.env.AWS_S3_BUCKET,
-            Key: filename,
-        },
-        function (err, data) {}
-    )
+    if (url) {
+        const filename = url.split('/')[4]
+        s3.deleteObject(
+            {
+                Bucket: process.env.AWS_S3_BUCKET,
+                Key: filename,
+            },
+            function (err, data) {}
+        )
+    }
 }
 
 const deleteProfile = (url) => {
