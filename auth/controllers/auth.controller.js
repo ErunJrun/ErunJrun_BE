@@ -52,7 +52,7 @@ module.exports = {
             bio: req.body.bio,
             likeLocation: req.body.likeLocation,
             likeDistance: req.body.likeDistance,
-            userLevel: req.body.userLevel
+            userLevel: req.body.userLevel,
         }
 
         try {
