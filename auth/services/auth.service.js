@@ -1,6 +1,7 @@
 const { Users, Groups, Appliers } = require('../../models/index')
 const sequelize = require('sequelize')
 const Op = sequelize.Op
+const moment = require('moment')
 
 module.exports = {
     getUserInfo: async (input) => {
@@ -36,6 +37,7 @@ module.exports = {
                     'title',
                     'location',
                     'distance',
+                    'thema',
                     'groupId',
                     ['thumbnailUrl1', 'thumbnailUrl'],
                     'standbyTime',
@@ -56,11 +58,34 @@ module.exports = {
                 ],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
+                    value[i].dataValues.location =
+                        value[i].dataValues.location.split(' ')[0] +
+                        ' ' +
+                        value[i].dataValues.location.split(' ')[1]
+                    value[i].dataValues.date =
+                        value[i].dataValues.date +
+                        ' ' +
+                        value[i].dataValues.standbyTime
+                    value[i].dataValues.date = moment
+                        .utc(value[i].dataValues.date)
+                        .lang('ko')
+                        .format('YYYY.MM.DD (dd) HH:mm')
+                    value[i].dataValues.distance =
+                        value[i].dataValues.distance + 'km'
+                    value[i].dataValues.totalTime =
+                        parseInt(value[i].dataValues.totalTime / 60) +
+                        'h' +
+                        ' ' +
+                        (value[i].dataValues.totalTime % 60) +
+                        'min'
                     value[i].dataValues.appliedPeople =
                         value[i].dataValues.Appliers.length
                     delete value[i].dataValues.Appliers
                 }
                 return value
+            })
+            waitingGroup.sort((a, b) => {
+                return a.dataValues.dDay - b.dataValues.dDay
             })
             data.userInfo = userInfo
             data.waiting = waitingGroup

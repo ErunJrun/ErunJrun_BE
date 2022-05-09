@@ -36,7 +36,8 @@ module.exports = function (sequelize, DataTypes) {
             },
             mannerPoint: {
                 type: DataTypes.FLOAT,
-                allowNull: true,
+                allowNull: false,
+                defaultValue: 50,
             },
             social: {
                 type: DataTypes.STRING(100),
