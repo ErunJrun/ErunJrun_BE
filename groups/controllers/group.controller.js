@@ -1,5 +1,6 @@
 const groupService = require('../services/group.service')
 const multer = require('../../middlewares/multers/multer')
+const moment = require('moment')
 
 module.exports = {
     createPost: async (req, res, next) => {
@@ -134,6 +135,7 @@ module.exports = {
             content: req.body.content,
             thema: req.body.thema,
         }
+        const nowDate = moment().format('YYYY-MM-DD')
         try {
             const chkGroup = await groupService.getUserGroupData(groupId)
             if (!chkGroup) {
@@ -141,6 +143,11 @@ module.exports = {
             }
             if (chkGroup.userId !== userId) {
                 throw new Error('본인이 작성한 글만 삭제할 수 있습니다')
+            }
+            const dateTime = chkGroup.date + ' ' + chkGroup.standbyTime
+
+            if (dateTime < nowDate) {
+                throw new Error('이미 지난 그룹러닝은 수정할 수 없습니다')
             }
 
             if (req.body.thumbnailUrl) {
