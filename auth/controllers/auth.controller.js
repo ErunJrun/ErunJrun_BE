@@ -53,6 +53,7 @@ module.exports = {
             likeLocation: req.body.likeLocation,
             likeDistance: req.body.likeDistance,
             userLevel: req.body.userLevel,
+            agreeSMS: req.body.agreeSMS
         }
 
         try {
