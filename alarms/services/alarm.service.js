@@ -2,7 +2,6 @@ const { Users, Groups, Appliers, Alarms } = require('../../models/index')
 const sequelize = require('sequelize')
 const Op = sequelize.Op
 const moment = require('moment')
-const schedule = require('node-schedule')
 const CryptoJS = require('crypto-js')
 const axios = require('axios')
 
@@ -15,6 +14,7 @@ module.exports = {
                     userId,
                 },
                 attributes: [
+                    'createdAt',
                     'category',
                     'nickname',
                     'courseId',
@@ -22,8 +22,14 @@ module.exports = {
                     'groupId',
                     'groupTitle',
                     'role',
+                    'check',
                 ],
                 order: [['createdAt', 'desc']],
+            }).then((value) => {
+                for (let i =0; i < value.length; i++){
+                    value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
+                }
+                return value
             })
 
             return data
@@ -53,24 +59,18 @@ module.exports = {
                         z++
                     ) {
                         // 닉네임 추출
-                        const nickname = await Users.findOne({
+                        const user = await Users.findOne({
                             where: {
                                 userId: value[i].dataValues.Appliers[z].userId,
                             },
                         })
                             .then((value) => {
-                                return value.dataValues.nickname
+                                return value.dataValues
                             })
                             .catch((error) => {
                                 console.log(error)
                             })
-                        const phone = await Users.findOne({
-                            where: {
-                                userId: value[i].dataValues.Appliers[z].userId,
-                            },
-                        }).then((value) => {
-                            return value.dataValues.phone
-                        })
+
                         let role = ''
                         if (
                             value[i].dataValues.userId ===
@@ -87,12 +87,13 @@ module.exports = {
                             userId: value[i].dataValues.Appliers[z].userId,
                             groupId: value[i].dataValues.groupId,
                             groupTitle: value[i].dataValues.title,
-                            nickname,
+                            nickname: user.nickname,
                             role,
                         })
                             .then(() => {
+                                if (user.agreeSMS === true){
                                 sendGroupSMS(
-                                    phone,
+                                    user.phone,
                                     category,
                                     role,
                                     groupTitle
@@ -100,8 +101,13 @@ module.exports = {
                                     console.log(error)
                                     return error
                                 })
+                                return
+                            } else{
+                                return
+                            }
                             })
                             .catch((error) => {
+                                console.log('수신 동의 거부 유저입니다.')
                                 console.log(error)
                             })
                     }
@@ -142,26 +148,18 @@ module.exports = {
                             z++
                         ) {
                             // 닉네임 추출
-                            const nickname = await Users.findOne({
+                            const user = await Users.findOne({
                                 where: {
                                     userId: value[i].dataValues.Appliers[z]
                                         .userId,
                                 },
                             })
                                 .then((value) => {
-                                    return value.dataValues.nickname
+                                    return value.dataValues
                                 })
                                 .catch((error) => {
                                     console.log(error)
                                 })
-                            const phone = await Users.findOne({
-                                where: {
-                                    userId: value[i].dataValues.Appliers[z]
-                                        .userId,
-                                },
-                            }).then((value) => {
-                                return value.dataValues.phone
-                            })
                             let role = ''
                             if (
                                 value[i].dataValues.userId ===
@@ -178,12 +176,13 @@ module.exports = {
                                 userId: value[i].dataValues.Appliers[z].userId,
                                 groupId: value[i].dataValues.groupId,
                                 groupTitle: value[i].dataValues.title,
-                                nickname,
+                                nickname: user.nickname,
                                 role,
                             })
                                 .then(() => {
+                                    if(user.agreeSMS === true){
                                     sendGroupSMS(
-                                        phone,
+                                        user.phone,
                                         category,
                                         role,
                                         value[i].dataValues.title,
@@ -193,6 +192,10 @@ module.exports = {
                                         return error
                                     })
                                     return
+                                } else {
+                                    console.log('수신 동의 거부 유저입니다.')
+                                    return
+                                }
                                 })
                                 .catch((error) => {
                                     console.log(error)
@@ -247,26 +250,18 @@ module.exports = {
                             z++
                         ) {
                             // 닉네임 추출
-                            const nickname = await Users.findOne({
+                            const user = await Users.findOne({
                                 where: {
                                     userId: value[i].dataValues.Appliers[z]
                                         .userId,
                                 },
                             })
                                 .then((value) => {
-                                    return value.dataValues.nickname
+                                    return value.dataValues
                                 })
                                 .catch((error) => {
                                     console.log(error)
                                 })
-                            const phone = await Users.findOne({
-                                where: {
-                                    userId: value[i].dataValues.Appliers[z]
-                                        .userId,
-                                },
-                            }).then((value) => {
-                                return value.dataValues.phone
-                            })
                             let role = ''
                             if (
                                 value[i].dataValues.userId ===
@@ -283,10 +278,11 @@ module.exports = {
                                 userId: value[i].dataValues.Appliers[z].userId,
                                 groupId: value[i].dataValues.groupId,
                                 groupTitle: value[i].dataValues.title,
-                                nickname,
+                                nickname: user.nickname,
                                 role,
                             })
                                 .then(() => {
+                                    if (user.agreeSMS === true){ 
                                     sendGroupSMS(
                                         phone,
                                         category,
@@ -298,6 +294,10 @@ module.exports = {
                                         return error
                                     })
                                     return
+                                } else {
+                                    console.log('수신 동의 거부 유저입니다.')
+                                    return
+                                }
                                 })
                                 .catch((error) => {
                                     console.log(error)
@@ -520,4 +520,27 @@ async function sendUrlSMS(
         console.log(error)
         throw new Error('문자 전송 실패')
     }
+}
+
+function timeForToday(createdAt) {
+    const today = new Date()
+    const timeValue = new Date(createdAt)
+
+    const betweenTime = Math.floor(
+        (today.getTime() - timeValue.getTime()) / 1000 / 60
+    ) // 분
+    if (betweenTime < 1) return '방금 전' // 1분 미만이면 방금 전
+    if (betweenTime < 60) return `${betweenTime}분 전` // 60분 미만이면 n분 전
+
+    const betweenTimeHour = Math.floor(betweenTime / 60) // 시
+    if (betweenTimeHour < 24) return `${betweenTimeHour}시간 전` // 24시간 미만이면 n시간 전
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24) // 일
+    if (betweenTimeDay < 7) return `${betweenTimeDay}일 전` // 7일 미만이면 n일 전
+    if (betweenTimeDay < 365)
+        return `${timeValue.getMonth() + 1}월 ${timeValue.getDate()}일` // 365일 미만이면 년을 제외하고 월 일만
+
+    return `${timeValue.getFullYear()}년 ${
+        timeValue.getMonth() + 1
+    }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
 }

@@ -2,7 +2,7 @@ const alarmService = require('../services/alarm.service')
 const schedule = require('node-schedule')
 module.exports = {
     getAlarm: async (req, res) => {
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
         // 유저의 정보 가져오기
         //  유저가 참여 예정인 그룹러닝 게시물 정보(호스트) 가져와야함
         try {
