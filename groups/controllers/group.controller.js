@@ -22,6 +22,7 @@ module.exports = {
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
             thema: req.body.thema,
+            chattingRoom: req.body.chattingRoom,
         }
 
         try {
@@ -46,7 +47,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -166,7 +167,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -191,6 +192,7 @@ module.exports = {
             baggage: req.body.baggage,
             content: req.body.content,
             thema: req.body.thema,
+            chattingRoom: req.body.chattingRoom,
         }
         const nowDate = moment().format('YYYY-MM-DD')
         try {
@@ -262,7 +264,7 @@ module.exports = {
             console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -297,7 +299,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -319,7 +321,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -353,7 +355,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
