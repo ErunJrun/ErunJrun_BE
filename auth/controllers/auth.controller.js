@@ -44,6 +44,22 @@ module.exports = {
         }
     },
 
+    getUpdateUserInfo: async (req, res) => {
+        const { userId } = res.locals
+        try {
+            const data = await authService.getUpdateUserInfo(userId)
+            res.status(200).send({
+                success: true,
+                data,
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(400).send({
+                success: false,
+                message: '유저 정보 수정 페이지 불러오기에 실패했습니다',
+            })
+        }
+    },
     updateUserInfo: async (req, res) => {
         const { userId } = res.locals
 
@@ -55,7 +71,6 @@ module.exports = {
             userLevel: req.body.userLevel,
             agreeSMS: req.body.agreeSMS,
         }
-
         try {
             const currentUrl = await authService.getUserUrl(userId)
 
