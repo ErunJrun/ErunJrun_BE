@@ -71,7 +71,6 @@ module.exports = {
         let condition = {}
         let limit
         let applyCondition = {}
-        let preferData = {}
 
         let nowDate = moment().format('YYYY-MM-DD')
         let nowTime = moment().format('HH:mm:ss')
@@ -308,6 +307,20 @@ module.exports = {
                             result[i].dataValues.applyState = false
                         } else {
                             result[i].dataValues.applyState = true
+                        }
+
+                        if (
+                            apply &&
+                            result[i].userId === myUserId &&
+                            category === 'complete'
+                        ) {
+                            result[i].dataValues.evaluation = apply.evaluation
+                        } else if (
+                            apply &&
+                            result[i].userId !== myUserId &&
+                            category === 'complete'
+                        ) {
+                            result[i].dataValues.attendance = apply.attendance
                         }
                     } else {
                         result[i].dataValues.applyState = false
