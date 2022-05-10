@@ -463,6 +463,18 @@ module.exports = {
                     .format('YYYY년 MM월 DD일 dddd HH시 mm분')
                 result.dataValues.datetime = DateTime
 
+                let standbyTime = result.standbyTime.split(':')
+                result.dataValues.standbyTime =
+                    standbyTime[0] + '시 ' + standbyTime[1] + '분'
+
+                let startTime = result.startTime.split(':')
+                result.dataValues.startTime =
+                    startTime[0] + '시 ' + startTime[1] + '분'
+
+                let finishTime = result.finishTime.split(':')
+                result.dataValues.finishTime =
+                    finishTime[0] + '시 ' + finishTime[1] + '분'
+
                 result.dataValues.mapLatLng = JSON.parse(result.mapLatLng)
 
                 for (let i = 0; i < result.Appliers.length; i++) {
