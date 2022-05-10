@@ -9,6 +9,11 @@ router.get(
     authmiddleware.checkUsers,
     authController.getUserInfo
 )
+router.get(
+    '/updateUser',
+    authmiddleware.checkTokens,
+    authController.getUpdateUserInfo
+)
 router.patch(
     '/userLike',
     authmiddleware.checkTokens,

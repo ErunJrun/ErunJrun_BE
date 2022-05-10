@@ -103,7 +103,22 @@ module.exports = {
             return error
         }
     },
-
+    getUpdateUserInfo: async (userId) => {
+        return Users.findOne({
+            where: { userId },
+            attributes: [
+                'userId',
+                'nickname',
+                'profileUrl',
+                'bio',
+                'likeLocation',
+                'likeDistance',
+                'userLevel',
+                'phone',
+                'agreeSMS',
+            ],
+        })
+    },
     updateUserInfo: async (userId, data) => {
         Users.update(data, { where: { userId } })
     },
