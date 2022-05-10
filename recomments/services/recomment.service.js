@@ -138,6 +138,9 @@ module.exports = {
                                 value[i].dataValues.Recomments[z].dataValues
                                     .createdAt
                             )
+                        value[i].dataValues.Recomments[
+                            z
+                        ].dataValues.isEdit = false
                     }
                 }
                 return value
@@ -226,6 +229,9 @@ module.exports = {
                                 value[i].dataValues.Recomments[z].dataValues
                                     .createdAt
                             )
+                        value[i].dataValues.Recomments[
+                            z
+                        ].dataValues.isEdit = false
                     }
                 }
                 return value
@@ -337,6 +343,9 @@ module.exports = {
                                     value[i].dataValues.Recomments[z].dataValues
                                         .createdAt
                                 )
+                                value[i].dataValues.Recomments[
+                                    z
+                                ].dataValues.isEdit = false
                             }
                         }
                         return value
