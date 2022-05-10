@@ -22,6 +22,7 @@ module.exports = {
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
             thema: req.body.thema,
+            chattingRoom: req.body.chattingRoom,
         }
 
         try {
@@ -191,6 +192,7 @@ module.exports = {
             baggage: req.body.baggage,
             content: req.body.content,
             thema: req.body.thema,
+            chattingRoom: req.body.chattingRoom,
         }
         const nowDate = moment().format('YYYY-MM-DD')
         try {
