@@ -46,7 +46,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -166,7 +166,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -262,7 +262,7 @@ module.exports = {
             console.log(error)
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -297,7 +297,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -319,7 +319,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
@@ -353,7 +353,7 @@ module.exports = {
         } catch (error) {
             return res.status(400).send({
                 success: false,
-                meesage: error.message,
+                message: error.message,
             })
         }
     },
