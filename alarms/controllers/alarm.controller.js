@@ -52,5 +52,4 @@ module.exports = {
         }
     },
 }
-// createStartAlarm, createEndAlarm의 범위를 지정해주어야함.
-//
+

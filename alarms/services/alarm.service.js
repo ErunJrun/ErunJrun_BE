@@ -26,8 +26,10 @@ module.exports = {
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
-                for (let i =0; i < value.length; i++){
-                    value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
+                for (let i = 0; i < value.length; i++) {
+                    value[i].dataValues.createdAt = timeForToday(
+                        value[i].dataValues.createdAt
+                    )
                 }
                 return value
             })
@@ -91,20 +93,20 @@ module.exports = {
                             role,
                         })
                             .then(() => {
-                                if (user.agreeSMS === true){
-                                sendGroupSMS(
-                                    user.phone,
-                                    category,
-                                    role,
-                                    groupTitle
-                                ).catch((error) => {
-                                    console.log(error)
-                                    return error
-                                })
-                                return
-                            } else{
-                                return
-                            }
+                                if (user.agreeSMS === true) {
+                                    sendGroupSMS(
+                                        user.phone,
+                                        category,
+                                        role,
+                                        groupTitle
+                                    ).catch((error) => {
+                                        console.log(error)
+                                        return error
+                                    })
+                                    return
+                                } else {
+                                    return
+                                }
                             })
                             .catch((error) => {
                                 console.log('수신 동의 거부 유저입니다.')
@@ -180,22 +182,24 @@ module.exports = {
                                 role,
                             })
                                 .then(() => {
-                                    if(user.agreeSMS === true){
-                                    sendGroupSMS(
-                                        user.phone,
-                                        category,
-                                        role,
-                                        value[i].dataValues.title,
-                                        starttime
-                                    ).catch((error) => {
-                                        console.log(error)
-                                        return error
-                                    })
-                                    return
-                                } else {
-                                    console.log('수신 동의 거부 유저입니다.')
-                                    return
-                                }
+                                    if (user.agreeSMS === true) {
+                                        sendGroupSMS(
+                                            user.phone,
+                                            category,
+                                            role,
+                                            value[i].dataValues.title,
+                                            starttime
+                                        ).catch((error) => {
+                                            console.log(error)
+                                            return error
+                                        })
+                                        return
+                                    } else {
+                                        console.log(
+                                            '수신 동의 거부 유저입니다.'
+                                        )
+                                        return
+                                    }
                                 })
                                 .catch((error) => {
                                     console.log(error)
@@ -243,7 +247,6 @@ module.exports = {
             .then(async (value) => {
                 try {
                     for (let i = 0; i < value.length; i++) {
-                        console.log(value[i].dataValues)
                         for (
                             let z = 0;
                             z < value[i].dataValues.Appliers.length;
@@ -282,22 +285,24 @@ module.exports = {
                                 role,
                             })
                                 .then(() => {
-                                    if (user.agreeSMS === true){ 
-                                    sendGroupSMS(
-                                        phone,
-                                        category,
-                                        role,
-                                        value[i].dataValues.title,
-                                        starttime
-                                    ).catch((error) => {
-                                        console.log(error)
-                                        return error
-                                    })
-                                    return
-                                } else {
-                                    console.log('수신 동의 거부 유저입니다.')
-                                    return
-                                }
+                                    if (user.agreeSMS === true) {
+                                        sendGroupSMS(
+                                            phone,
+                                            category,
+                                            role,
+                                            value[i].dataValues.title,
+                                            starttime
+                                        ).catch((error) => {
+                                            console.log(error)
+                                            return error
+                                        })
+                                        return
+                                    } else {
+                                        console.log(
+                                            '수신 동의 거부 유저입니다.'
+                                        )
+                                        return
+                                    }
                                 })
                                 .catch((error) => {
                                     console.log(error)

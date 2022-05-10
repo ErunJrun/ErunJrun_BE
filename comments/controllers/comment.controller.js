@@ -104,7 +104,6 @@ module.exports = {
         // comment 수정
         try {
             const data = await commentService.updateComment(content, commentId)
-            console.log(data)
             res.status(200).send({
                 success: true,
                 data,

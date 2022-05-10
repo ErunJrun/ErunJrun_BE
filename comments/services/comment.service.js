@@ -28,7 +28,6 @@ module.exports = {
                                 console.log(error)
                             })
                         // 알람 생성
-                        console.log(value.dataValues)
                         await Alarms.create({
                             userId: value.dataValues.userId,
                             groupId: value.dataValues.groupId,
