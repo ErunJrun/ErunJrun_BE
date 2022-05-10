@@ -2,7 +2,6 @@ const sequelize = require('sequelize')
 const Op = sequelize.Op
 const { Groups, Appliers, Users, Alarms } = require('../../models')
 const moment = require('moment')
-const { literal } = require('sequelize')
 
 module.exports = {
     createPost: async (data) => {
@@ -72,6 +71,7 @@ module.exports = {
         let condition = {}
         let limit
         let applyCondition = {}
+        let preferData = {}
 
         let nowDate = moment().format('YYYY-MM-DD')
         let nowTime = moment().format('HH:mm:ss')
@@ -83,6 +83,21 @@ module.exports = {
                     break
                 case 'main':
                     limit = 6
+                    Object.assign(condition, {
+                        [Op.or]: [
+                            { date: { [Op.gt]: nowDate } },
+                            {
+                                [Op.and]: [
+                                    { date: nowDate },
+                                    {
+                                        standbyTime: {
+                                            [Op.lte]: nowTime,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    })
                     break
                 case 'complete':
                     applyCondition = { userId: myUserId }
@@ -341,8 +356,10 @@ module.exports = {
                 const bTime = b.dataValues.applyEndTime.split(' ')[0]
                 return aTime - bTime
             })
+
             return data
         } catch (error) {
+            console.log(error)
             throw new Error('그룹러닝 게시물 불러오기를 실패하였습니다')
         }
     },
@@ -470,6 +487,9 @@ module.exports = {
     chkApplyUser: (groupId, userId) => {
         return Appliers.findOne({ where: { groupId, userId } })
     },
+    getApplyCount: (groupId) => {
+        return Appliers.count({ where: { groupId } })
+    },
     addAlarm: async (groupId, groupTitle, category) => {
         const user = await Appliers.findAll({
             where: { groupId },
@@ -482,5 +502,11 @@ module.exports = {
                 userId: user[i].userId,
             })
         }
+    },
+    getUserbyId: (userId) => {
+        return Users.findOne({
+            where: { userId },
+            attributes: ['likeDistance', 'likeLocation'],
+        })
     },
 }

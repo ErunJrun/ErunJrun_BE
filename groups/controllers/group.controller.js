@@ -55,8 +55,12 @@ module.exports = {
         const query = req.query
         let data
         let userId = ''
+        let preferData
 
-        if (category === 'mypage' && query.userId) {
+        if (
+            (category === 'mypage' || category === 'complete') &&
+            query.userId
+        ) {
             userId = query.userId
         } else if (res.locals.userId) {
             userId = res.locals.userId
@@ -101,11 +105,64 @@ module.exports = {
                         message: '불러오기 상태값이 올바르지 않습니다',
                     })
             }
-            if (data.length === 0 && category === 'prefer') {
-                data = await groupService.getGroupData(userId, 'all', query)
+            if (category === 'prefer') {
+                if (data.length === 0) {
+                    data = await groupService.getGroupData(userId, 'all', query)
+                }
+
+                preferData = await groupService.getUserbyId(userId)
+
+                switch (preferData.likeDistance) {
+                    case '1':
+                        preferData.likeDistance = '5km 미만'
+                        break
+                    case '2':
+                        preferData.likeDistance = '5km 이상 10km 미만'
+                        break
+                    case '3':
+                        preferData.likeDistance = '10km 이상 15km 미만'
+                        break
+                    case '4':
+                        preferData.likeDistance = '15km 이상'
+                        break
+                    default:
+                        preferData.likeDistance = '미정'
+                        break
+                }
+
+                switch (preferData.likeLocation) {
+                    case '1':
+                        preferData.likeLocation = '서울'
+                        break
+                    case '2':
+                        preferData.likeLocation = '경기도'
+                        break
+                    case '3':
+                        preferData.likeLocation = '인천광역시'
+                        break
+                    case '4':
+                        preferData.likeLocation = '강원도'
+                        break
+                    case '5':
+                        preferData.likeLocation = '충청도/세종특별시/대전광역시'
+                        break
+                    case '6':
+                        preferData.likeLocation = '경상북도/대구광역시'
+                        break
+                    case '7':
+                        preferData.likeLocation =
+                            '경상남도/부산광역시/울산광역시'
+                        break
+                    case '8':
+                        preferData.likeLocation = '전라남도/전라북도/광주광역시'
+                        break
+                    case '9':
+                        preferData.likeLocation = '제주특별시'
+                        break
+                }
             }
 
-            res.status(200).send({ success: true, data })
+            res.status(200).send({ success: true, data, preferData })
         } catch (error) {
             return res.status(400).send({
                 success: false,
@@ -268,8 +325,7 @@ module.exports = {
     },
     applyGroup: async (req, res) => {
         const { groupId } = req.params
-        // const {userId} = res.locals
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const { userId } = res.locals
 
         try {
             const chkApply = await groupService.chkApplyUser(groupId, userId)
@@ -279,15 +335,19 @@ module.exports = {
                     throw new Error('개설자는 신청을 취소할 수 없습니다')
                 }
                 groupService.cancelGroup(groupId, userId)
+                const applyPeople = await groupService.getApplyCount(groupId)
                 return res.status(200).send({
                     success: true,
                     message: '그룹러닝 신청이 취소되었습니다',
+                    data: { applyPeople, applyState: false },
                 })
             } else {
-                groupService.applyGroup(groupId, userId)
+                await groupService.applyGroup(groupId, userId)
+                const applyPeople = await groupService.getApplyCount(groupId)
                 return res.status(200).send({
                     success: true,
                     message: '그룹러닝에 신청되었습니다',
+                    data: { applyPeople, applyState: true },
                 })
             }
         } catch (error) {

@@ -94,6 +94,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(20),
                 allowNull: false,
             },
+            chattingRoom: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
+            },
         },
         {
             sequelize,
