@@ -194,7 +194,7 @@ module.exports = {
                         }
                         //테마 필터
                         if (query.thema) {
-                            const themaquery = decodeURIComponent(
+                            let themaquery = decodeURIComponent(
                                 query.thema
                             ).split('/')
                             if (themaquery.includes('전체')) {
