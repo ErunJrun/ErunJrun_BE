@@ -77,9 +77,7 @@ module.exports = {
             condition = { courseId: input.courseId }
         }
         try {
-            let data = {}
-            data.totalCount = 0
-            data.info = await Comments.findAll({
+            const data = await Comments.findAll({
                 where: condition,
                 attributes: [
                     'commentId',
@@ -100,58 +98,16 @@ module.exports = {
                             'userLevel',
                         ],
                     },
-                    {
-                        model: Recomments,
-                        as: 'Recomments',
-                        foreignKey: 'commentId',
-                        attributes: [
-                            'recommentId',
-                            'commentId',
-                            'userId',
-                            'content',
-                            'createdAt',
-                        ],
-                        include: [
-                            {
-                                model: Users,
-                                as: 'user',
-                                foreignKey: 'userId',
-                                attributes: [
-                                    'userId',
-                                    'nickname',
-                                    'profileUrl',
-                                    'userLevel',
-                                ],
-                            },
-                        ],
-                    },
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
-                data.totalCount += value.length
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
-                    data.totalCount += value[i].dataValues.Recomments.length
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Recomments.length;
-                        z++
-                    ) {
-                        value[i].dataValues.Recomments[z].dataValues.createdAt =
-                            timeForToday(
-                                value[i].dataValues.Recomments[z].dataValues
-                                    .createdAt
-                            )
-                        value[i].dataValues.Recomments[
-                            z
-                        ].dataValues.isEdit = false
-                    }
                 }
                 return value
             })
-
             return data
         } catch (error) {
             console.log(error)
@@ -168,9 +124,7 @@ module.exports = {
             condition = { courseId: input.courseId }
         }
         try {
-            let data = {}
-            data.totalCount = 0
-            data.info = await Comments.findAll({
+            const data = await Comments.findAll({
                 where: condition,
                 attributes: [
                     'commentId',
@@ -191,54 +145,13 @@ module.exports = {
                             'userLevel',
                         ],
                     },
-                    {
-                        model: Recomments,
-                        as: 'Recomments',
-                        foreignKey: 'commentId',
-                        attributes: [
-                            'recommentId',
-                            'commentId',
-                            'userId',
-                            'content',
-                            'createdAt',
-                        ],
-                        include: [
-                            {
-                                model: Users,
-                                as: 'user',
-                                foreignKey: 'userId',
-                                attributes: [
-                                    'userId',
-                                    'nickname',
-                                    'profileUrl',
-                                    'userLevel',
-                                ],
-                            },
-                        ],
-                    },
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
-                data.totalCount += value.length
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
-                    data.totalCount += value[i].dataValues.Recomments.length 
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Recomments.length;
-                        z++
-                    ) {
-                        value[i].dataValues.Recomments[z].dataValues.createdAt =
-                            timeForToday(
-                                value[i].dataValues.Recomments[z].dataValues
-                                    .createdAt
-                            )
-                        value[i].dataValues.Recomments[
-                            z
-                        ].dataValues.isEdit = false
-                    }
                 }
                 return value
             })
@@ -261,8 +174,7 @@ module.exports = {
     },
     updateComment: async (content, commentId) => {
         try {
-            let data = {}
-            data.totalCount = 0
+            let data
             await Comments.update({ content }, { where: { commentId } }).then(
                 async (value) => {
                     const conditionRule = await Comments.findOne({
@@ -276,7 +188,7 @@ module.exports = {
                     } else {
                         condition = { groupId: conditionRule.groupId }
                     }
-                    data.info = await Comments.findAll({
+                    data = await Comments.findAll({
                         where: condition,
                         attributes: [
                             'commentId',
@@ -297,56 +209,14 @@ module.exports = {
                                     'userLevel',
                                 ],
                             },
-                            {
-                                model: Recomments,
-                                as: 'Recomments',
-                                foreignKey: 'commentId',
-                                attributes: [
-                                    'recommentId',
-                                    'commentId',
-                                    'userId',
-                                    'content',
-                                    'createdAt',
-                                ],
-                                include: [
-                                    {
-                                        model: Users,
-                                        as: 'user',
-                                        foreignKey: 'userId',
-                                        attributes: [
-                                            'userId',
-                                            'nickname',
-                                            'profileUrl',
-                                            'userLevel',
-                                        ],
-                                    },
-                                ],
-                            },
                         ],
                         order: [['createdAt', 'desc']],
                     })
                         .then((value) => {
-                            data.totalCount += value.length
                             for (let i = 0; i < value.length; i++) {
                                 value[i].dataValues.createdAt = timeForToday(
                                     value[i].dataValues.createdAt
                                 )
-                                data.totalCount += value[i].dataValues.Recomments.length 
-                                for (
-                                    let z = 0;
-                                    z < value[i].dataValues.Recomments.length;
-                                    z++
-                                ) {
-                                    value[i].dataValues.Recomments[
-                                        z
-                                    ].dataValues.createdAt = timeForToday(
-                                        value[i].dataValues.Recomments[z]
-                                            .dataValues.createdAt
-                                    )
-                                    value[i].dataValues.Recomments[
-                                        z
-                                    ].dataValues.isEdit = false
-                                }
                             }
                             return value
                         })

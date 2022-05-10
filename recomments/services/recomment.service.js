@@ -9,13 +9,11 @@ const {
 
 module.exports = {
     createRecomment: async (input) => {
-        let condition = {}
         await Recomments.create(input).then(async (value) => {
             await Comments.findOne({
                 where: { commentId: value.dataValues.commentId },
             }).then(async (value) => {
                 if (value.dataValues.courseId === null) {
-                    condition = { groupId: value.dataValues.groupId }
                     await Groups.findOne({
                         where: { groupId: value.dataValues.groupId },
                     })
@@ -46,7 +44,6 @@ module.exports = {
                         })
                 }
                 if (value.dataValues.groupId === null) {
-                    condition = { courseId: value.dataValues.courseId }
                     await Courses.findOne({
                         where: { courseId: value.dataValues.courseId },
                     }).then(async (value) => {
@@ -73,18 +70,19 @@ module.exports = {
                     })
                 }
             })
+        }).catch ((error) => {
+            console.log(error)
+            return error
         })
-        try {
-            let data = {}
-            data.totalCount = 0
-            data.info = await Comments.findAll({
-                where: condition,
+        try{
+            const data = await Recomments.findAll({
+                where: {commentId: input.commentId},
                 attributes: [
+                    'recommentId',
                     'commentId',
-                    'groupId',
-                    'courseId',
+                    'userId',
                     'content',
-                    'createdAt',
+                    'createdAt'
                 ],
                 include: [
                     {
@@ -98,88 +96,31 @@ module.exports = {
                             'userLevel',
                         ],
                     },
-                    {
-                        model: Recomments,
-                        as: 'Recomments',
-                        foreignKey: 'commentId',
-                        attributes: [
-                            'recommentId',
-                            'commentId',
-                            'userId',
-                            'content',
-                            'createdAt',
-                        ],
-                        include: [
-                            {
-                                model: Users,
-                                as: 'user',
-                                foreignKey: 'userId',
-                                attributes: [
-                                    'userId',
-                                    'nickname',
-                                    'profileUrl',
-                                    'userLevel',
-                                ],
-                            },
-                        ],
-                    },
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
-                data.totalCount += value.length
-                for (let i = 0; i < value.length; i++) {
-                    value[i].dataValues.createdAt = timeForToday(
-                        value[i].dataValues.createdAt
-                    )
-                    data.totalCount += value[i].dataValues.Recomments.length
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Recomments.length;
-                        z++
-                    ) {
-                        value[i].dataValues.Recomments[z].dataValues.createdAt =
-                            timeForToday(
-                                value[i].dataValues.Recomments[z].dataValues
-                                    .createdAt
-                            )
-                        value[i].dataValues.Recomments[
-                            z
-                        ].dataValues.isEdit = false
-                    }
+                for (let i =0; i < value.length; i++){
+                    value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
+                    value[i].dataValues.isEdit = false
                 }
                 return value
             })
             return data
-        } catch (error) {
+        } catch(error){
             console.log(error)
             return error
         }
     },
     getRecomment: async (input) => {
         try {
-            let condition = {}
-            const conditionRule = await Comments.findOne({
-                where: { commentId: input.commentId },
-            }).then((value) => {
-                return value.dataValues
-            })
-            console.log(conditionRule)
-            if (conditionRule.courseId === null) {
-                condition = { groupId: conditionRule.groupId }
-            } else {
-                condition = { courseId: conditionRule.courseId }
-            }
-
-            let data = {}
-            data.totalCount = 0
-            data.info = await Comments.findAll({
-                where: condition,
+            const data = await Recomments.findAll({
+                where: input,
                 attributes: [
+                    'recommentId',
                     'commentId',
-                    'groupId',
-                    'courseId',
+                    'userId',
                     'content',
-                    'createdAt',
+                    'createdAt'
                 ],
                 include: [
                     {
@@ -193,58 +134,20 @@ module.exports = {
                             'userLevel',
                         ],
                     },
-                    {
-                        model: Recomments,
-                        as: 'Recomments',
-                        foreignKey: 'commentId',
-                        attributes: [
-                            'recommentId',
-                            'commentId',
-                            'userId',
-                            'content',
-                            'createdAt',
-                        ],
-                        include: [
-                            {
-                                model: Users,
-                                as: 'user',
-                                foreignKey: 'userId',
-                                attributes: [
-                                    'userId',
-                                    'nickname',
-                                    'profileUrl',
-                                    'userLevel',
-                                ],
-                            },
-                        ],
-                    },
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
-                data.totalCount += value.length
-                for (let i = 0; i < value.length; i++) {
-                    value[i].dataValues.createdAt = timeForToday(
-                        value[i].dataValues.createdAt
-                    )
-                    data.totalCount += value[i].dataValues.Recomments.length
-                    for (
-                        let z = 0;
-                        z < value[i].dataValues.Recomments.length;
-                        z++
-                    ) {
-                        value[i].dataValues.Recomments[z].dataValues.createdAt =
-                            timeForToday(
-                                value[i].dataValues.Recomments[z].dataValues
-                                    .createdAt
-                            )
-                        value[i].dataValues.Recomments[
-                            z
-                        ].dataValues.isEdit = false
-                    }
-                }
-                return value
-            })
-            return data
+            for (let i =0; i < value.length; i++){
+                value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
+                value[i].dataValues.isEdit = false
+            }
+            return value
+        })
+        .catch((error) => {
+            console.log(error)
+            return error
+        })
+        return data
         } catch (error) {
             console.log(error)
             return error
@@ -263,38 +166,26 @@ module.exports = {
     },
     updateRecomment: async (content, recommentId) => {
         try {
-            let data = {}
-            data.totalCount = 0
+            let data
             await Recomments.update(
                 { content },
                 { where: { recommentId } }
             ).then(async (value) => {
-                const commentId = {
+                const condition = {
                     commentId: await Recomments.findOne({
                         where: { recommentId },
                     }).then((value) => {
                         return value.dataValues.commentId
                     }),
                 }
-                let condition = {}
-                const conditionRule = await Comments.findOne({
-                    where: commentId,
-                }).then((value) => {
-                    return value.dataValues
-                })
-                if (conditionRule.courseId === null) {
-                    condition = { groupId: conditionRule.groupId }
-                } else {
-                    condition = { courseId: conditionRule.courseId }
-                }
-                data.info = await Comments.findAll({
+                data = await Recomments.findAll({
                     where: condition,
                     attributes: [
+                        'recommentId',
                         'commentId',
-                        'groupId',
-                        'courseId',
+                        'userId',
                         'content',
-                        'createdAt',
+                        'createdAt'
                     ],
                     include: [
                         {
@@ -308,65 +199,24 @@ module.exports = {
                                 'userLevel',
                             ],
                         },
-                        {
-                            model: Recomments,
-                            as: 'Recomments',
-                            foreignKey: 'commentId',
-                            attributes: [
-                                'recommentId',
-                                'commentId',
-                                'userId',
-                                'content',
-                                'createdAt',
-                            ],
-                            include: [
-                                {
-                                    model: Users,
-                                    as: 'user',
-                                    foreignKey: 'userId',
-                                    attributes: [
-                                        'userId',
-                                        'nickname',
-                                        'profileUrl',
-                                        'userLevel',
-                                    ],
-                                },
-                            ],
-                        },
                     ],
                     order: [['createdAt', 'desc']],
+                }).then((value) => {
+                    for (let i =0; i < value.length; i++){
+                        value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
+                        value[i].dataValues.isEdit = false
+                    }
+                    return value
+                }).catch((error) => {
+                    console.log(error)
+                    return error
                 })
-                    .then((value) => {
-                        data.totalCount += value.length
-                        for (let i = 0; i < value.length; i++) {
-                            value[i].dataValues.createdAt = timeForToday(
-                                value[i].dataValues.createdAt
-                            )
-                            data.totalCount += value[i].dataValues.Recomments.length 
-                            for (
-                                let z = 0;
-                                z < value[i].dataValues.Recomments.length;
-                                z++
-                            ) {
-                                value[i].dataValues.Recomments[
-                                    z
-                                ].dataValues.createdAt = timeForToday(
-                                    value[i].dataValues.Recomments[z].dataValues
-                                        .createdAt
-                                )
-                                value[i].dataValues.Recomments[
-                                    z
-                                ].dataValues.isEdit = false
-                            }
-                        }
-                        return value
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                        return error
-                    })
             })
-            return data
+            .catch((error) => {
+                console.log(error)
+                return error
+            })
+        return data
         } catch (error) {
             console.log(error)
             return error
