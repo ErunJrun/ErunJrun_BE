@@ -9,17 +9,17 @@ const {
 
 module.exports = {
     createRecomment: async (input) => {
+        let condition = {}
         await Recomments.create(input).then(async (value) => {
             await Comments.findOne({
                 where: { commentId: value.dataValues.commentId },
             }).then(async (value) => {
                 if (value.dataValues.courseId === null) {
-                    console.log(value.dataValues)
+                    condition = { groupId: value.dataValues.groupId }
                     await Groups.findOne({
                         where: { groupId: value.dataValues.groupId },
                     })
                         .then(async (value) => {
-                            console.log(value)
                             // 닉네임 가져오기
                             const nickname = await Users.findOne({
                                 where: { userId: value.dataValues.userId },
@@ -31,7 +31,6 @@ module.exports = {
                                     console.log(error)
                                 })
                             // 알람 생성
-                            console.log(value.dataValues)
                             await Alarms.create({
                                 userId: value.dataValues.userId,
                                 groupId: value.dataValues.groupId,
@@ -47,6 +46,7 @@ module.exports = {
                         })
                 }
                 if (value.dataValues.groupId === null) {
+                    condition = { courseId: value.dataValues.courseId }
                     await Courses.findOne({
                         where: { courseId: value.dataValues.courseId },
                     }).then(async (value) => {
@@ -75,9 +75,15 @@ module.exports = {
             })
         })
         try {
-            const data = await Recomments.findAll({
-                where: { commentId: input.commentId },
-                attributes: ['recommentId', 'commentId', 'userId', 'content'],
+            const data = await Comments.findAll({
+                where: condition,
+                attributes: [
+                    'commentId',
+                    'groupId',
+                    'courseId',
+                    'content',
+                    'createdAt',
+                ],
                 include: [
                     {
                         model: Users,
@@ -90,8 +96,51 @@ module.exports = {
                             'userLevel',
                         ],
                     },
+                    {
+                        model: Recomments,
+                        as: 'Recomments',
+                        foreignKey: 'commentId',
+                        attributes: [
+                            'recommentId',
+                            'commentId',
+                            'userId',
+                            'content',
+                            'createdAt',
+                        ],
+                        include: [
+                            {
+                                model: Users,
+                                as: 'user',
+                                foreignKey: 'userId',
+                                attributes: [
+                                    'userId',
+                                    'nickname',
+                                    'profileUrl',
+                                    'userLevel',
+                                ],
+                            },
+                        ],
+                    },
                 ],
                 order: [['createdAt', 'desc']],
+            }).then((value) => {
+                for (let i = 0; i < value.length; i++) {
+                    for (
+                        let z = 0;
+                        z < value[i].dataValues.Recomments.length;
+                        z++
+                    ) {
+                        value[i].dataValues.createdAt = timeForToday(
+                            value[i].dataValues.createdAt
+                        )
+                        value[i].dataValues.Recomments[z].dataValues.createdAt =
+                            timeForToday(
+                                value[i].dataValues.Recomments[z].dataValues
+                                    .createdAt
+                            )
+                    }
+                }
+                return value
             })
             return data
         } catch (error) {
@@ -101,9 +150,28 @@ module.exports = {
     },
     getRecomment: async (input) => {
         try {
-            const data = await Recomments.findAll({
+            let condition = {}
+            const conditionRule = await Comments.findOne({
                 where: { commentId: input.commentId },
-                attributes: ['recommentId', 'commentId', 'userId', 'content'],
+            }).then((value) => {
+                return value.dataValues
+            })
+            console.log(conditionRule)
+            if (conditionRule.courseId === null) {
+                condition = { groupId: conditionRule.groupId }
+            } else {
+                condition = { courseId: conditionRule.courseId }
+            }
+
+            const data = await Comments.findAll({
+                where: condition,
+                attributes: [
+                    'commentId',
+                    'groupId',
+                    'courseId',
+                    'content',
+                    'createdAt',
+                ],
                 include: [
                     {
                         model: Users,
@@ -116,8 +184,51 @@ module.exports = {
                             'userLevel',
                         ],
                     },
+                    {
+                        model: Recomments,
+                        as: 'Recomments',
+                        foreignKey: 'commentId',
+                        attributes: [
+                            'recommentId',
+                            'commentId',
+                            'userId',
+                            'content',
+                            'createdAt',
+                        ],
+                        include: [
+                            {
+                                model: Users,
+                                as: 'user',
+                                foreignKey: 'userId',
+                                attributes: [
+                                    'userId',
+                                    'nickname',
+                                    'profileUrl',
+                                    'userLevel',
+                                ],
+                            },
+                        ],
+                    },
                 ],
                 order: [['createdAt', 'desc']],
+            }).then((value) => {
+                for (let i = 0; i < value.length; i++) {
+                    for (
+                        let z = 0;
+                        z < value[i].dataValues.Recomments.length;
+                        z++
+                    ) {
+                        value[i].dataValues.createdAt = timeForToday(
+                            value[i].dataValues.createdAt
+                        )
+                        value[i].dataValues.Recomments[z].dataValues.createdAt =
+                            timeForToday(
+                                value[i].dataValues.Recomments[z].dataValues
+                                    .createdAt
+                            )
+                    }
+                }
+                return value
             })
             return data
         } catch (error) {
@@ -138,8 +249,105 @@ module.exports = {
     },
     updateRecomment: async (content, recommentId) => {
         try {
-            await Recomments.update({ content }, { where: { recommentId } })
-            return
+            let data
+            await Recomments.update(
+                { content },
+                { where: { recommentId } }
+            ).then(async (value) => {
+                const commentId = {
+                    commentId: await Recomments.findOne({
+                        where: { recommentId },
+                    }).then((value) => {
+                        return value.dataValues.commentId
+                    }),
+                }
+                let condition = {}
+                const conditionRule = await Comments.findOne({
+                    where: commentId ,
+                }).then((value) => {
+                    return value.dataValues
+                })
+                if (conditionRule.courseId === null) {
+                    condition = { groupId: conditionRule.groupId }
+                } else {
+                    condition = { courseId: conditionRule.courseId }
+                }
+                data = await Comments.findAll({
+                    where: condition,
+                    attributes: [
+                        'commentId',
+                        'groupId',
+                        'courseId',
+                        'content',
+                        'createdAt',
+                    ],
+                    include: [
+                        {
+                            model: Users,
+                            as: 'user',
+                            foreignKey: 'userId',
+                            attributes: [
+                                'userId',
+                                'nickname',
+                                'profileUrl',
+                                'userLevel',
+                            ],
+                        },
+                        {
+                            model: Recomments,
+                            as: 'Recomments',
+                            foreignKey: 'commentId',
+                            attributes: [
+                                'recommentId',
+                                'commentId',
+                                'userId',
+                                'content',
+                                'createdAt',
+                            ],
+                            include: [
+                                {
+                                    model: Users,
+                                    as: 'user',
+                                    foreignKey: 'userId',
+                                    attributes: [
+                                        'userId',
+                                        'nickname',
+                                        'profileUrl',
+                                        'userLevel',
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                    order: [['createdAt', 'desc']],
+                })
+                    .then((value) => {
+                        for (let i = 0; i < value.length; i++) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.Recomments.length;
+                                z++
+                            ) {
+                                value[i].dataValues.createdAt = timeForToday(
+                                    value[i].dataValues.createdAt
+                                )
+                                value[i].dataValues.Recomments[
+                                    z
+                                ].dataValues.createdAt = timeForToday(
+                                    value[i].dataValues.Recomments[z].dataValues
+                                        .createdAt
+                                )
+                            }
+                        }
+                        return value
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        return error
+                    })
+                
+            })
+            return data
         } catch (error) {
             console.log(error)
             return error
@@ -153,4 +361,26 @@ module.exports = {
             return error
         }
     },
+}
+function timeForToday(createdAt) {
+    const today = new Date()
+    const timeValue = new Date(createdAt)
+
+    const betweenTime = Math.floor(
+        (today.getTime() - timeValue.getTime()) / 1000 / 60
+    ) // 분
+    if (betweenTime < 1) return '방금 전' // 1분 미만이면 방금 전
+    if (betweenTime < 60) return `${betweenTime}분 전` // 60분 미만이면 n분 전
+
+    const betweenTimeHour = Math.floor(betweenTime / 60) // 시
+    if (betweenTimeHour < 24) return `${betweenTimeHour}시간 전` // 24시간 미만이면 n시간 전
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24) // 일
+    if (betweenTimeDay < 7) return `${betweenTimeDay}일 전` // 7일 미만이면 n일 전
+    if (betweenTimeDay < 365)
+        return `${timeValue.getMonth() + 1}월 ${timeValue.getDate()}일` // 365일 미만이면 년을 제외하고 월 일만
+
+    return `${timeValue.getFullYear()}년 ${
+        timeValue.getMonth() + 1
+    }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
 }
