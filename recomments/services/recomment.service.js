@@ -75,7 +75,9 @@ module.exports = {
             })
         })
         try {
-            const data = await Comments.findAll({
+            let data = {}
+            data.totalCount = 0
+            data.info = await Comments.findAll({
                 where: condition,
                 attributes: [
                     'commentId',
@@ -124,10 +126,12 @@ module.exports = {
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
+                data.totalCount += value.length
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    data.totalCount += value[i].dataValues.Recomments.length
                     for (
                         let z = 0;
                         z < value[i].dataValues.Recomments.length;
@@ -166,7 +170,9 @@ module.exports = {
                 condition = { courseId: conditionRule.courseId }
             }
 
-            const data = await Comments.findAll({
+            let data = {}
+            data.totalCount = 0
+            data.info = await Comments.findAll({
                 where: condition,
                 attributes: [
                     'commentId',
@@ -215,10 +221,12 @@ module.exports = {
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
+                data.totalCount += value.length
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    data.totalCount += value[i].dataValues.Recomments.length
                     for (
                         let z = 0;
                         z < value[i].dataValues.Recomments.length;
@@ -255,7 +263,8 @@ module.exports = {
     },
     updateRecomment: async (content, recommentId) => {
         try {
-            let data
+            let data = {}
+            data.totalCount = 0
             await Recomments.update(
                 { content },
                 { where: { recommentId } }
@@ -278,7 +287,7 @@ module.exports = {
                 } else {
                     condition = { courseId: conditionRule.courseId }
                 }
-                data = await Comments.findAll({
+                data.info = await Comments.findAll({
                     where: condition,
                     attributes: [
                         'commentId',
@@ -328,10 +337,12 @@ module.exports = {
                     order: [['createdAt', 'desc']],
                 })
                     .then((value) => {
+                        data.totalCount += value.length
                         for (let i = 0; i < value.length; i++) {
                             value[i].dataValues.createdAt = timeForToday(
                                 value[i].dataValues.createdAt
                             )
+                            data.totalCount += value[i].dataValues.Recomments.length 
                             for (
                                 let z = 0;
                                 z < value[i].dataValues.Recomments.length;
