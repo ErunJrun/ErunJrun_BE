@@ -64,7 +64,7 @@ module.exports = {
 
             return
         } catch (error) {
-            throw new Error('그룹러닝 게시물 등록을 실패하였습니다')
+            throw new Error(error)
         }
     },
     getGroupData: async (myUserId, category, query) => {
@@ -372,8 +372,7 @@ module.exports = {
 
             return data
         } catch (error) {
-            console.log(error)
-            throw new Error('그룹러닝 게시물 불러오기를 실패하였습니다')
+            throw new Error(error)
         }
     },
     getUserGroupData: (groupId) => {
@@ -391,7 +390,7 @@ module.exports = {
             Groups.update(data, { where: { groupId } })
             return
         } catch (error) {
-            throw new Error('그룹러닝 게시물 수정에 실패하였습니다')
+            throw new Error(error)
         }
     },
     deletePost: async (groupId) => {
@@ -399,7 +398,7 @@ module.exports = {
             await Groups.destroy({ where: { groupId } })
             return
         } catch (error) {
-            throw new Error('그룹러닝 게시물 삭제에 실패하였습니다')
+            throw new Error(error)
         }
     },
     getGroupDetail: async (groupId, userId) => {
@@ -480,21 +479,21 @@ module.exports = {
             })
             return data
         } catch (error) {
-            throw new Error('그룹러닝 게시물 불러오기를 실패하였습니다')
+            throw new Error(error)
         }
     },
     applyGroup: (groupId, userId) => {
         try {
             return Appliers.create({ groupId, userId })
         } catch (error) {
-            throw new Error('그룹러닝 신청이 실패하였습니다')
+            throw new Error(error)
         }
     },
     cancelGroup: (groupId, userId) => {
         try {
             return Appliers.destroy({ where: { groupId, userId } })
         } catch (error) {
-            throw new Error('그룹러닝 신청취소가 실패하였습니다')
+            throw new Error(error)
         }
     },
     chkApplyUser: (groupId, userId) => {
