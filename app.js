@@ -9,6 +9,8 @@ const session = require('express-session')
 var cookieParser = require('cookie-parser')
 const passportConfig = require('./passport')
 const moment = require('moment')
+const { Logger, stream } = require('./middlewares/loggers/logger')
+const path = require('path')
 require('moment-timezone')
 moment.tz.setDefault('Asia/Seoul')
 
@@ -22,7 +24,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 // app.use(helmet())
-app.use(morgan('dev'))
+app.use(morgan('combined', { stream }))
 app.use(express.json({ limit: '5mb' }))
 app.use(express.static('public'))
 app.use(express.urlencoded({ extended: false, limit: '5mb' }))
@@ -54,7 +56,8 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
-    res.json({ success: false, message: err.message })
+    Logger.error(`${err.message} \n ${err.stack ? err.stack : ''} `)
+    return res.status(400).json({ success: false, message: err.message })
 })
 
 module.exports = app
