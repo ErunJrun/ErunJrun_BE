@@ -138,6 +138,9 @@ module.exports = {
                                 value[i].dataValues.Recomments[z].dataValues
                                     .createdAt
                             )
+                        value[i].dataValues.Recomments[
+                            z
+                        ].dataValues.isEdit = false
                     }
                 }
                 return value
@@ -226,6 +229,9 @@ module.exports = {
                                 value[i].dataValues.Recomments[z].dataValues
                                     .createdAt
                             )
+                        value[i].dataValues.Recomments[
+                            z
+                        ].dataValues.isEdit = false
                     }
                 }
                 return value
@@ -263,7 +269,7 @@ module.exports = {
                 }
                 let condition = {}
                 const conditionRule = await Comments.findOne({
-                    where: commentId ,
+                    where: commentId,
                 }).then((value) => {
                     return value.dataValues
                 })
@@ -337,6 +343,9 @@ module.exports = {
                                     value[i].dataValues.Recomments[z].dataValues
                                         .createdAt
                                 )
+                                value[i].dataValues.Recomments[
+                                    z
+                                ].dataValues.isEdit = false
                             }
                         }
                         return value
@@ -345,7 +354,6 @@ module.exports = {
                         console.log(error)
                         return error
                     })
-                
             })
             return data
         } catch (error) {
