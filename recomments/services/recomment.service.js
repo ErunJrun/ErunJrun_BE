@@ -263,7 +263,7 @@ module.exports = {
                 }
                 let condition = {}
                 const conditionRule = await Comments.findOne({
-                    where: commentId ,
+                    where: commentId,
                 }).then((value) => {
                     return value.dataValues
                 })
@@ -345,7 +345,6 @@ module.exports = {
                         console.log(error)
                         return error
                     })
-                
             })
             return data
         } catch (error) {
