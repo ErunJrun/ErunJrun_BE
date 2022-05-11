@@ -14,9 +14,9 @@ module.exports = {
                 data,
             })
         } catch (error) {
-            res.status(400).send({
-                success: false,
-                message: '유저 정보 불러오기에 실패하였습니다',
+            return next({
+                message: '유저 정보 불러오기에 실패하였습니다.',
+                stack: error,
             })
         }
     },
@@ -37,9 +37,9 @@ module.exports = {
                 message: '프로필 수정에 성공하였습니다.',
             })
         } catch (error) {
-            return res.status(400).send({
-                success: false,
+            return next({
                 message: '프로필 수정에 실패하였습니다.',
+                stack: error,
             })
         }
     },
@@ -54,9 +54,9 @@ module.exports = {
             })
         } catch (error) {
             console.log(error)
-            res.status(400).send({
-                success: false,
-                message: '유저 정보 수정 페이지 불러오기에 실패했습니다',
+            return next({
+                message: '유저 정보 수정 페이지 불러오기에 실패했습니다.',
+                stack: error,
             })
         }
     },
@@ -89,9 +89,9 @@ module.exports = {
             })
         } catch (error) {
             console.log(error)
-            return res.status(400).send({
-                success: false,
+            return next({
                 message: '프로필 수정에 실패하였습니다.',
+                stack: error,
             })
         }
     },
