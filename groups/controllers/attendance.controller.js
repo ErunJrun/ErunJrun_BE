@@ -3,7 +3,7 @@ const attendanceService = require('../services/attendance.service')
 module.exports = {
     getAttendance: async (req, res) => {
         const { groupId } = req.params
-        const userId = 'f37d59f2-c0ce-4712-a7d8-04314158a300'
+        const {userId} = res.locals
         // TODO: 유저가 호스트인지 체크
         try {
             await attendanceService.checkHost(groupId, userId)
