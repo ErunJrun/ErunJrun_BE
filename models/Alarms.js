@@ -51,6 +51,10 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
                 defaultValue: 0,
             },
+            commentId: {
+                type: DataTypes.STRING(150),
+                allowNull: true,
+            },
         },
         {
             sequelize,

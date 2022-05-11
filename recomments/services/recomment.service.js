@@ -18,24 +18,25 @@ module.exports = {
                         await Groups.findOne({
                             where: { groupId: value.dataValues.groupId },
                         })
-                            .then(async (value) => {
+                            .then(async (result) => {
                                 // 닉네임 가져오기
                                 const nickname = await Users.findOne({
-                                    where: { userId: value.dataValues.userId },
+                                    where: { userId: result.dataValues.userId },
                                 })
                                     .then((value) => {
-                                        return value.dataValues.nickname
+                                        return result.dataValues.nickname
                                     })
                                     .catch((error) => {
                                         console.log(error)
                                     })
                                 // 알람 생성
                                 await Alarms.create({
-                                    userId: value.dataValues.userId,
-                                    groupId: value.dataValues.groupId,
-                                    groupTitle: value.dataValues.title,
+                                    userId: result.dataValues.userId,
+                                    groupId: result.dataValues.groupId,
+                                    groupTitle: result.dataValues.title,
                                     category: 'recomment',
                                     nickname,
+                                    commentId: value.dataValues.commentId
                                 }).catch((error) => {
                                     console.log(error)
                                 })
