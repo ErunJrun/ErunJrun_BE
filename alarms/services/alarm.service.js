@@ -98,7 +98,7 @@ module.exports = {
                         ) {
                             role = 'host'
                         } else {
-                            role = 'attendence'
+                            role = 'attendance'
                         }
                         const category = 'Dday'
                         // 호스트, 게스트 알람 생성
@@ -111,12 +111,14 @@ module.exports = {
                             role,
                         })
                             .then(() => {
-                                if (user.agreeSMS === true) {
+                                if (user.phone !== null && user.agreeSMS === true) {
                                     sendGroupSMS(
                                         user.phone,
                                         category,
                                         role,
-                                        groupTitle
+                                        value[i].dataValues.title,
+                                        user.nickname,
+                                        starttime
                                     ).catch((error) => {
                                         console.log(error)
                                         return error
@@ -180,6 +182,7 @@ module.exports = {
                                 .catch((error) => {
                                     console.log(error)
                                 })
+                            console.log(value[i].dataValues.Appliers[z].userId)
                             let role = ''
                             if (
                                 value[i].dataValues.userId ===
@@ -187,7 +190,7 @@ module.exports = {
                             ) {
                                 role = 'host'
                             } else {
-                                role = 'attendence'
+                                role = 'attendance'
                             }
                             const category = 'start'
                             // 호스트, 게스트 알람 생성
@@ -200,13 +203,15 @@ module.exports = {
                                 role,
                             })
                                 .then((value) => {
+                                    console.log(user)
                                     console.log(value)
-                                    if (user.agreeSMS === true) {
+                                    if (user.phone !== null && user.agreeSMS === true) {
                                         sendGroupSMS(
                                             user.phone,
                                             category,
                                             role,
-                                            value.groupTitle,
+                                            value.dataValues.groupTitle,
+                                            user.nickname,
                                             starttime
                                         )
                                         return
@@ -268,6 +273,7 @@ module.exports = {
                             z < value[i].dataValues.Appliers.length;
                             z++
                         ) {
+                            console.log(value[i].dataValues.Appliers)
                             // 닉네임 추출
                             const user = await Users.findOne({
                                 where: {
@@ -288,7 +294,7 @@ module.exports = {
                             ) {
                                 role = 'host'
                             } else {
-                                role = 'attendence'
+                                role = 'attendance'
                             }
                             const category = 'end'
                             // 호스트, 게스트 알람 생성
@@ -301,12 +307,14 @@ module.exports = {
                                 role,
                             })
                                 .then(() => {
-                                    if (user.agreeSMS === true) {
+                                    if (user.phone !== null && user.agreeSMS === true)
+                                     {
                                         sendGroupSMS(
                                             phone,
                                             category,
                                             role,
-                                            value[i].dataValues.title,
+                                            value.dataValues.groupTitle,
+                                            user.nickname,
                                             starttime
                                         ).catch((error) => {
                                             console.log(error)
@@ -340,14 +348,9 @@ module.exports = {
         return
     },
 }
-async function sendGroupSMS(phone, category, role, groupTitle, starttime) {
-    // content 구분 중요
-    // 1: Dday, Start, End
-    // 2: host, attendence
-    // 3: 그룹러닝 타이틀 각각 넣어야함
-    // DATE는 현재시점으로 보내면 됨
-    // 핸드폰 번호는 유저 번호 받기
+async function sendGroupSMS(phone, category, role, groupTitle, nickname, starttime) {
     try {
+        console.log(phone, nickname)
         const user_phone_number = phone.split('-').join('') // SMS를 수신할 전화번호
         const date = Date.now().toString() // 날짜 string
 
@@ -383,25 +386,25 @@ async function sendGroupSMS(phone, category, role, groupTitle, starttime) {
         let content
         switch (category) {
             case 'Day':
-                content = `오늘은[${groupTitle}]러닝이 시작합니다`
+                content = `${nickname}님 오늘은[${groupTitle}]러닝이 시작합니다`
                 break
             case 'start':
                 switch (role) {
                     case 'host':
-                        content = `30분 뒤 [${groupTitle}]이 시작합니다. 출석체크를 해주세요. \n 링크: www.rengabro.com/group/attendence`
+                        content = `${nickname}님 30분 뒤 [${groupTitle}]이 시작합니다. 출석체크를 해주세요. \n 링크: www.rengabro.com/group/attendence`
                         break
                     case 'attendance':
-                        content = `30분 뒤 [${groupTitle}]이 시작합니다.`
+                        content = `${nickname}님 30분 뒤 [${groupTitle}]이 시작합니다.`
                         break
                 }
                 break
             case 'end':
                 switch (role) {
                     case 'host':
-                        content = `[${groupTitle}] 그룹러닝은 어떠셨나요?`
+                        content = `${nickname}님 [${groupTitle}] 그룹러닝은 어떠셨나요?`
                         break
                     case 'attendance':
-                        content = `aaa님과 함께한 [${groupTitle}]러닝은 어떠셨나요? 호스트평가를 해주세요. \n 링크: www.rengabro.com/group/attendence`
+                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: www.rengabro.com/group/attendence`
                         break
                 }
             default:

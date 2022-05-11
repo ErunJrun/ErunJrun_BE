@@ -21,7 +21,6 @@ module.exports = {
                 [Op.and]: [{ groupId }, { userId }],
             },
         })
-        console.log(user)
         if (user === null) {
             throw new Error('호스트 평가는 그룹러닝 참가자만 할 수 있습니다')
         }
