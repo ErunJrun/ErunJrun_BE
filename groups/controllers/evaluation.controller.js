@@ -3,7 +3,7 @@ const evaluationService = require('../services/evaluation.service')
 module.exports = {
     getEvaluation: async (req, res) => {
         const { groupId } = req.params
-        const {userId} = res.locals
+        const { userId } = res.locals
         // 호스트는 자기 호스트 평가 페이지에 들어와서는 안된다.
         try {
             await evaluationService.checkHost(groupId, userId)
@@ -48,7 +48,7 @@ module.exports = {
     },
     updateEvaluation: async (req, res) => {
         const { groupId } = req.params
-        const {userId} = res.locals
+        const { userId } = res.locals
         const hostId = req.body.userId
         const { point } = req.body
         try {

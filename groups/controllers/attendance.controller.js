@@ -3,8 +3,7 @@ const attendanceService = require('../services/attendance.service')
 module.exports = {
     getAttendance: async (req, res) => {
         const { groupId } = req.params
-        const {userId} = res.locals
-        // TODO: 유저가 호스트인지 체크
+        const { userId } = res.locals
         try {
             await attendanceService.checkHost(groupId, userId)
         } catch (error) {
@@ -14,7 +13,6 @@ module.exports = {
             })
         }
 
-        // 모임 시간이 넘었을 경우, 출석체크 진입 불가
         try {
             await attendanceService.checkAttendanceTime(groupId)
         } catch (error) {
@@ -23,7 +21,6 @@ module.exports = {
                 message: '출석체크 시간이 지났습니다',
             })
         }
-        // 출석체크 제출한 경우, 출석체크 재진입 불가
         try {
             await attendanceService.checkAttendanceDone(groupId)
         } catch (error) {
