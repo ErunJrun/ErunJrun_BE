@@ -53,6 +53,14 @@ module.exports = {
                         attributes: ['userId', 'nickname', 'profileUrl'],
                     },
                 ],
+            }).then((value) => {
+                const GroupDate =
+                    value.dataValues.date + ' ' + value.dataValues.standbyTime
+                value.dataValues.date = moment
+                    .utc(GroupDate)
+                    .lang('ko')
+                    .format('YYYY.MM.DD (dd) HH:mm')
+                return value
             })
             return hostUser
         } catch (error) {
