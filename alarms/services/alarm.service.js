@@ -38,19 +38,22 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
-                    if ((value[i].dataValues.category) === 'recomment' && (value[i].dataValues.commentId !== null)) {
-                            const rawContent = await Comments.findOne({
-                                where: {
-                                    commentId: value[i].dataValues.commentId,
-                                }
-                            }).then((result) => {
-                                try{ 
-                                value[i].dataValues.commentContent = result.dataValues.content
-                            }
-                            catch(error) {
+                    if (
+                        value[i].dataValues.category === 'recomment' &&
+                        value[i].dataValues.commentId !== null
+                    ) {
+                        await Comments.findOne({
+                            where: {
+                                commentId: value[i].dataValues.commentId,
+                            },
+                        }).then((result) => {
+                            try {
+                                value[i].dataValues.commentContent =
+                                    result.dataValues.content
+                            } catch (error) {
                                 value[i].dataValues.commentContent = null
                             }
-                            })
+                        })
                     }
                 }
                 return value
