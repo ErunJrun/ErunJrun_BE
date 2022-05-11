@@ -67,6 +67,7 @@ module.exports = {
             res.status(400).send({
                 success: false,
                 message: '호스트 평가가 완료되지 않았습니다',
+                error
             })
         }
     },
