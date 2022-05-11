@@ -1,4 +1,10 @@
-const { Users, Groups, Appliers, Alarms, Comments } = require('../../models/index')
+const {
+    Users,
+    Groups,
+    Appliers,
+    Alarms,
+    Comments,
+} = require('../../models/index')
 const sequelize = require('sequelize')
 const Op = sequelize.Op
 const moment = require('moment')
@@ -24,7 +30,7 @@ module.exports = {
                     'groupTitle',
                     'role',
                     'check',
-                    'commentId'
+                    'commentId',
                 ],
                 order: [['createdAt', 'desc']],
             }).then(async (value) => {
@@ -32,11 +38,17 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
-                    if (value[i].dataValues.category === 'recomment'){
-                        if (value[i].dataValues.commentId !== null ){
-                        const content = await Comments.findOne({where: {commentId: value[i].dataValues.commentId}}).then((value) => {return value.dataValues.content})
-                        value[i].dataValues.commentContent = content
-                    }
+                    if (value[i].dataValues.category === 'recomment') {
+                        if (value[i].dataValues.commentId !== null) {
+                            const content = await Comments.findOne({
+                                where: {
+                                    commentId: value[i].dataValues.commentId,
+                                },
+                            }).then((value) => {
+                                return value.dataValues.content
+                            })
+                            value[i].dataValues.commentContent = content
+                        }
                     }
                 }
                 return value

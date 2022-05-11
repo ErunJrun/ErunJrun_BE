@@ -74,10 +74,11 @@ module.exports = {
             }).then((value) => {
                 return value.map((item) => item.groupId)
             })
+            console.log(appliedGroupId)
             // applier 숫자 세서 보여주기( applier에서 groupId의 개수 세면 됨)
             const waitingGroup = await Groups.findAll({
                 where: {
-                    groupId: { [Op.or]: appliedGroupId },
+                    groupId: { [Op.in]: appliedGroupId },
                     date: { [Op.gte]: sequelize.literal('now()') },
                 },
                 attributes: [
@@ -106,6 +107,7 @@ module.exports = {
                     },
                 ],
             }).then((value) => {
+                console.log(value)
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.location =
                         value[i].dataValues.location.split(' ')[0] +

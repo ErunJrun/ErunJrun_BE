@@ -36,7 +36,7 @@ module.exports = {
                                     groupTitle: result.dataValues.title,
                                     category: 'recomment',
                                     nickname,
-                                    commentId: value.dataValues.commentId
+                                    commentId: value.dataValues.commentId,
                                 }).catch((error) => {
                                     console.log(error)
                                 })
