@@ -4,5 +4,5 @@ const alarmController = require('./controllers/alarm.controller')
 const { checkTokens } = require('../middlewares/user')
 
 router.get('/', checkTokens, alarmController.getAlarm)
-
+router.patch('/', checkTokens, alarmController.updatereadState)
 module.exports = router

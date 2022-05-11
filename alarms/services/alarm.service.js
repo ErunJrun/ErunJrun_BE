@@ -31,30 +31,32 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
-                    
                 }
                 return value
             })
 
-            return data 
+            return data
         } catch (error) {
             console.log(error)
             return error
         }
     },
-    checkCount : async (userId) => {
-        let uncheckCount = 0
+    checkunreadCount: async (userId) => {
+        let unreadCount = 0
         await Alarms.findAll({
-            where: {userId},
-            attributes: ['check']
+            where: { userId },
+            attributes: ['check'],
         }).then((value) => {
-            for (let i = 0 ; i < value.length; i++){
-                if (value[i].dataValues.check === false){
-                    uncheckCount +=1
+            for (let i = 0; i < value.length; i++) {
+                if (value[i].dataValues.check === false) {
+                    unreadCount += 1
                 }
             }
         })
-        return uncheckCount
+        return unreadCount
+    },
+    updatereadState: async (userId) => {
+        return await Alarms.update({check: true}, {where: {userId}})
     },
     createDdayAlarm: async (req, res) => {
         const nowDate = moment().format('YYYY-MM-DD')
@@ -565,5 +567,3 @@ function timeForToday(createdAt) {
         timeValue.getMonth() + 1
     }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
 }
-
-
