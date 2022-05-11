@@ -118,9 +118,9 @@ async function deleteUser(req, res) {
             message: '회원탈퇴에 성공하였습니다.',
         })
     } catch (error) {
-        return res.status(400).send({
-            success: false,
+        return next({
             message: '회원탈퇴에 실패하였습니다.',
+            stack: error,
         })
     }
 }
@@ -192,9 +192,9 @@ async function sendVerificationSMS(req, res) {
             .json({ success: true, message: '인증번호를 발송했습니다.' })
     } catch (err) {
         console.log(err)
-        return res.status(404).json({
-            success: false,
+        return next({
             message: '인증번호를 발송하지 못했습니다.',
+            stack: error,
         })
     }
 }
