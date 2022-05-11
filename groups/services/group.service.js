@@ -438,6 +438,9 @@ module.exports = {
                 result.dataValues.profileUrl = user.profileUrl
                 result.dataValues.userLevel = user.userLevel
 
+                let startDateTime =
+                    result.dataValues.date + ' ' + result.dataValues.standbyTime
+
                 if (result.dataValues.applyEndTime === 0) {
                     let time = moment().format('YYYY-MM-DD HH:mm:ss')
 
@@ -449,9 +452,6 @@ module.exports = {
                 } else {
                     result.dataValues.applyEndTime = '0 일'
                 }
-
-                let startDateTime =
-                    result.dataValues.date + ' ' + result.dataValues.standbyTime
 
                 const DateTime = moment
                     .utc(startDateTime)
