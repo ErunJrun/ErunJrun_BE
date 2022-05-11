@@ -21,22 +21,20 @@ module.exports = {
         }
     },
     updatereadState: async (req, res) => {
-        const {userId} = res.locals
-        try{
-        await alarmService.updatereadState(userId)
-        res.status(200).send({
-            success: true,
-            message: '새 알람 모두 읽기에 성공했습니다'
-        })
-    }
-    catch(error){
-        console.log(error)
-        res.status(400).send({
-            success: false,
-            message: '새 알람 모두 읽기에 실패했습니다'
-        })
-
-    }
+        const { userId } = res.locals
+        try {
+            await alarmService.updatereadState(userId)
+            res.status(200).send({
+                success: true,
+                message: '새 알람 모두 읽기에 성공했습니다',
+            })
+        } catch (error) {
+            console.log(error)
+            res.status(400).send({
+                success: false,
+                message: '새 알람 모두 읽기에 실패했습니다',
+            })
+        }
     },
     // 매일 8시마다 createDdayAlarm
     createDdayAlarm: () => {
