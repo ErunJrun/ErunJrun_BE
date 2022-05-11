@@ -9,15 +9,45 @@ const {
 
 module.exports = {
     createRecomment: async (input) => {
-        await Recomments.create(input).then(async (value) => {
-            await Comments.findOne({
-                where: { commentId: value.dataValues.commentId },
-            }).then(async (value) => {
-                if (value.dataValues.courseId === null) {
-                    await Groups.findOne({
-                        where: { groupId: value.dataValues.groupId },
-                    })
-                        .then(async (value) => {
+        await Recomments.create(input)
+            .then(async (value) => {
+                await Comments.findOne({
+                    where: { commentId: value.dataValues.commentId },
+                }).then(async (value) => {
+                    if (value.dataValues.courseId === null) {
+                        await Groups.findOne({
+                            where: { groupId: value.dataValues.groupId },
+                        })
+                            .then(async (value) => {
+                                // 닉네임 가져오기
+                                const nickname = await Users.findOne({
+                                    where: { userId: value.dataValues.userId },
+                                })
+                                    .then((value) => {
+                                        return value.dataValues.nickname
+                                    })
+                                    .catch((error) => {
+                                        console.log(error)
+                                    })
+                                // 알람 생성
+                                await Alarms.create({
+                                    userId: value.dataValues.userId,
+                                    groupId: value.dataValues.groupId,
+                                    groupTitle: value.dataValues.title,
+                                    category: 'recomment',
+                                    nickname,
+                                }).catch((error) => {
+                                    console.log(error)
+                                })
+                            })
+                            .catch((error) => {
+                                console.log(error)
+                            })
+                    }
+                    if (value.dataValues.groupId === null) {
+                        await Courses.findOne({
+                            where: { courseId: value.dataValues.courseId },
+                        }).then(async (value) => {
                             // 닉네임 가져오기
                             const nickname = await Users.findOne({
                                 where: { userId: value.dataValues.userId },
@@ -31,58 +61,30 @@ module.exports = {
                             // 알람 생성
                             await Alarms.create({
                                 userId: value.dataValues.userId,
-                                groupId: value.dataValues.groupId,
-                                groupTitle: value.dataValues.title,
+                                courseId: value.dataValues.courseId,
+                                courseTitle: value.dataValues.title,
                                 category: 'recomment',
                                 nickname,
                             }).catch((error) => {
                                 console.log(error)
                             })
                         })
-                        .catch((error) => {
-                            console.log(error)
-                        })
-                }
-                if (value.dataValues.groupId === null) {
-                    await Courses.findOne({
-                        where: { courseId: value.dataValues.courseId },
-                    }).then(async (value) => {
-                        // 닉네임 가져오기
-                        const nickname = await Users.findOne({
-                            where: { userId: value.dataValues.userId },
-                        })
-                            .then((value) => {
-                                return value.dataValues.nickname
-                            })
-                            .catch((error) => {
-                                console.log(error)
-                            })
-                        // 알람 생성
-                        await Alarms.create({
-                            userId: value.dataValues.userId,
-                            courseId: value.dataValues.courseId,
-                            courseTitle: value.dataValues.title,
-                            category: 'recomment',
-                            nickname,
-                        }).catch((error) => {
-                            console.log(error)
-                        })
-                    })
-                }
+                    }
+                })
             })
-        }).catch ((error) => {
-            console.log(error)
-            return error
-        })
-        try{
+            .catch((error) => {
+                console.log(error)
+                return error
+            })
+        try {
             const data = await Recomments.findAll({
-                where: {commentId: input.commentId},
+                where: { commentId: input.commentId },
                 attributes: [
                     'recommentId',
                     'commentId',
                     'userId',
                     'content',
-                    'createdAt'
+                    'createdAt',
                 ],
                 include: [
                     {
@@ -99,14 +101,16 @@ module.exports = {
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
-                for (let i =0; i < value.length; i++){
-                    value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
+                for (let i = 0; i < value.length; i++) {
+                    value[i].dataValues.createdAt = timeForToday(
+                        value[i].dataValues.createdAt
+                    )
                     value[i].dataValues.isEdit = false
                 }
                 return value
             })
             return data
-        } catch(error){
+        } catch (error) {
             console.log(error)
             return error
         }
@@ -120,7 +124,7 @@ module.exports = {
                     'commentId',
                     'userId',
                     'content',
-                    'createdAt'
+                    'createdAt',
                 ],
                 include: [
                     {
@@ -136,18 +140,21 @@ module.exports = {
                     },
                 ],
                 order: [['createdAt', 'desc']],
-            }).then((value) => {
-            for (let i =0; i < value.length; i++){
-                value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
-                value[i].dataValues.isEdit = false
-            }
-            return value
-        })
-        .catch((error) => {
-            console.log(error)
-            return error
-        })
-        return data
+            })
+                .then((value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        value[i].dataValues.createdAt = timeForToday(
+                            value[i].dataValues.createdAt
+                        )
+                        value[i].dataValues.isEdit = false
+                    }
+                    return value
+                })
+                .catch((error) => {
+                    console.log(error)
+                    return error
+                })
+            return data
         } catch (error) {
             console.log(error)
             return error
@@ -167,56 +174,58 @@ module.exports = {
     updateRecomment: async (content, recommentId) => {
         try {
             let data
-            await Recomments.update(
-                { content },
-                { where: { recommentId } }
-            ).then(async (value) => {
-                const condition = {
-                    commentId: await Recomments.findOne({
-                        where: { recommentId },
-                    }).then((value) => {
-                        return value.dataValues.commentId
-                    }),
-                }
-                data = await Recomments.findAll({
-                    where: condition,
-                    attributes: [
-                        'recommentId',
-                        'commentId',
-                        'userId',
-                        'content',
-                        'createdAt'
-                    ],
-                    include: [
-                        {
-                            model: Users,
-                            as: 'user',
-                            foreignKey: 'userId',
-                            attributes: [
-                                'userId',
-                                'nickname',
-                                'profileUrl',
-                                'userLevel',
-                            ],
-                        },
-                    ],
-                    order: [['createdAt', 'desc']],
-                }).then((value) => {
-                    for (let i =0; i < value.length; i++){
-                        value[i].dataValues.createdAt = timeForToday(value[i].dataValues.createdAt)
-                        value[i].dataValues.isEdit = false
+            await Recomments.update({ content }, { where: { recommentId } })
+                .then(async (value) => {
+                    const condition = {
+                        commentId: await Recomments.findOne({
+                            where: { recommentId },
+                        }).then((value) => {
+                            return value.dataValues.commentId
+                        }),
                     }
-                    return value
-                }).catch((error) => {
+                    data = await Recomments.findAll({
+                        where: condition,
+                        attributes: [
+                            'recommentId',
+                            'commentId',
+                            'userId',
+                            'content',
+                            'createdAt',
+                        ],
+                        include: [
+                            {
+                                model: Users,
+                                as: 'user',
+                                foreignKey: 'userId',
+                                attributes: [
+                                    'userId',
+                                    'nickname',
+                                    'profileUrl',
+                                    'userLevel',
+                                ],
+                            },
+                        ],
+                        order: [['createdAt', 'desc']],
+                    })
+                        .then((value) => {
+                            for (let i = 0; i < value.length; i++) {
+                                value[i].dataValues.createdAt = timeForToday(
+                                    value[i].dataValues.createdAt
+                                )
+                                value[i].dataValues.isEdit = false
+                            }
+                            return value
+                        })
+                        .catch((error) => {
+                            console.log(error)
+                            return error
+                        })
+                })
+                .catch((error) => {
                     console.log(error)
                     return error
                 })
-            })
-            .catch((error) => {
-                console.log(error)
-                return error
-            })
-        return data
+            return data
         } catch (error) {
             console.log(error)
             return error
