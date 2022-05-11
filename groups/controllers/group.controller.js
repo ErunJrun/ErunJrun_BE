@@ -199,7 +199,7 @@ module.exports = {
         }
         const nowDate = moment().format('YYYY-MM-DD')
         try {
-            const chkGroup = await groupService.getUserGroupData(groupId)
+            const chkGroup = await groupService.getGroupById(groupId)
             if (!chkGroup) {
                 return next(new Error('해당 게시물이 존재하지 않습니다'))
             }
@@ -277,7 +277,7 @@ module.exports = {
         const { userId } = res.locals
 
         try {
-            const chkGroup = await groupService.getUserGroupData(groupId)
+            const chkGroup = await groupService.getGroupById(groupId)
             if (!chkGroup) {
                 return next(new Error('해당 게시물이 존재하지 않습니다'))
             }
@@ -316,7 +316,7 @@ module.exports = {
         }
 
         try {
-            const chkGroup = await groupService.getUserGroupData(groupId)
+            const chkGroup = await groupService.getGroupById(groupId)
             if (!chkGroup) {
                 return next(new Error('해당 게시물이 존재하지 않습니다'))
             }
@@ -335,8 +335,18 @@ module.exports = {
 
         try {
             const chkApply = await groupService.chkApplyUser(groupId, userId)
+            const chkGroup = await groupService.getGroupById(groupId)
+
+            const startDateTime =
+                (await chkGroup.date) + ' ' + chkGroup.startTime
+            const nowDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
+
+            if (startDateTime <= nowDateTime) {
+                return next(
+                    new Error('이미 지난 그룹러닝은 신청 및 취소가 불가합니다')
+                )
+            }
             if (chkApply) {
-                const chkGroup = await groupService.getUserGroupData(groupId)
                 if (chkGroup.userId === userId) {
                     return next(new Error('개설자는 신청을 취소할 수 없습니다'))
                 }
@@ -348,8 +358,12 @@ module.exports = {
                     data: { applyPeople, applyState: false },
                 })
             } else {
-                await groupService.applyGroup(groupId, userId)
                 const applyPeople = await groupService.getApplyCount(groupId)
+                if (chkGroup.maxPeople <= applyPeople) {
+                    return next(new Error('신청인원이 남아있지 않습니다'))
+                }
+                if (applyPeople) await groupService.applyGroup(groupId, userId)
+
                 return res.status(200).send({
                     success: true,
                     message: '그룹러닝에 신청되었습니다',
