@@ -162,7 +162,7 @@ module.exports = {
 
                         //러닝시간 필터
                         if (query.time && query.time !== '0') {
-                            const timequery = query.time.split('/')
+                            let timequery = query.time.split('/')
                             if (timequery.includes('0')) {
                                 timequery = []
                                 for (let i = 1; i <= 6; i++) {
@@ -309,18 +309,14 @@ module.exports = {
                             result[i].dataValues.applyState = true
                         }
 
-                        if (
-                            apply &&
-                            result[i].userId === myUserId &&
-                            category === 'complete'
-                        ) {
-                            result[i].dataValues.evaluation = apply.evaluation
-                        } else if (
-                            apply &&
-                            result[i].userId !== myUserId &&
-                            category === 'complete'
-                        ) {
-                            result[i].dataValues.attendance = apply.attendance
+                        if (apply && category === 'complete') {
+                            if (result[i].userId === myUserId) {
+                                result[i].dataValues.evaluation =
+                                    apply.evaluation
+                            } else {
+                                result[i].dataValues.attendance =
+                                    apply.attendance
+                            }
                         }
                     } else {
                         result[i].dataValues.applyState = false
