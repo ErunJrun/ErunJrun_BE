@@ -7,9 +7,11 @@ module.exports = {
         //  유저가 참여 예정인 그룹러닝 게시물 정보(호스트) 가져와야함
         try {
             const data = await alarmService.getAlarm(userId)
+            const uncheckCount = await alarmService.checkCount(userId)
             res.status(200).send({
                 success: true,
-                data,
+                uncheckCount,
+                data
             })
         } catch (error) {
             res.status(400).send({
