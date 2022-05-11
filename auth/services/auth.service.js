@@ -20,6 +20,55 @@ module.exports = {
                     'mannerPoint',
                 ],
             })
+
+            switch (userInfo.likeLocation) {
+                case '1':
+                    userInfo.likeLocation = '서울'
+                    break
+                case '2':
+                    userInfo.likeLocation = '경기도'
+                    break
+                case '3':
+                    userInfo.likeLocation = '인천광역시'
+                    break
+                case '4':
+                    userInfo.likeLocation = '강원도'
+                    break
+                case '5':
+                    userInfo.likeLocation = '충청도/세종특별시/대전광역시'
+                    break
+                case '6':
+                    userInfo.likeLocation = '경상북도/대구광역시'
+                    break
+                case '7':
+                    userInfo.likeLocation = '경상남도/부산광역시/울산광역시'
+                    break
+                case '8':
+                    userInfo.likeLocation = '전라도/광주광역시'
+                    break
+                case '9':
+                    userInfo.likeLocation = '제주특별시'
+                    break
+            }
+
+            switch (userInfo.likeDistance) {
+                case '0':
+                    userInfo.likeDistance = '잘 모르겠어요'
+                    break
+                case '1':
+                    userInfo.likeDistance = '5km 미만'
+                    break
+                case '2':
+                    userInfo.likeDistance = '5km 이상 10km 미만'
+                    break
+                case '3':
+                    userInfo.likeDistance = '10km 이상 15km 미만'
+                    break
+                case '4':
+                    userInfo.likeDistance = '15km 이상'
+                    break
+            }
+
             const appliedGroupId = await Appliers.findAll({
                 where: input,
             }).then((value) => {
