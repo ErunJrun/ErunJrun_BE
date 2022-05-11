@@ -68,32 +68,39 @@ module.exports = {
         return applyUser
     },
     getGroupInfo: async (groupId) => {
-        try{
-        return await Groups.findOne({
-            where: {groupId},
-            attributes: ['title', 'date','standbyTime', 'maxPeople'],
-            include: [
-                {
-                    model: Appliers,
-                    as: 'Appliers',
-                    foreignKey: 'groupId',
-                    attributes: ['groupId', 'userId']
-                }
-            ]            
-        }).then((value) => {
-            value.dataValues.date = moment
-            .utc(value.dataValues.date + ' ' + value.dataValues.standbyTime)
-            .lang('ko')
-            .format('YYYY.MM.DD (dd) HH:mm')
-            value.dataValues.attendanceCount = String(value.dataValues.Appliers.length) + '/' + String(value.dataValues.maxPeople)
-            delete value.dataValues.standbyTime
-            delete value.dataValues.Appliers
-            return value
-        })
-    } catch(error){
-        console.log(error)
-        throw new Error(error)
-    }
+        try {
+            return await Groups.findOne({
+                where: { groupId },
+                attributes: ['title', 'date', 'standbyTime', 'maxPeople'],
+                include: [
+                    {
+                        model: Appliers,
+                        as: 'Appliers',
+                        foreignKey: 'groupId',
+                        attributes: ['groupId', 'userId'],
+                    },
+                ],
+            }).then((value) => {
+                value.dataValues.date = moment
+                    .utc(
+                        value.dataValues.date +
+                            ' ' +
+                            value.dataValues.standbyTime
+                    )
+                    .lang('ko')
+                    .format('YYYY.MM.DD (dd) HH:mm')
+                value.dataValues.attendanceCount =
+                    String(value.dataValues.Appliers.length) +
+                    '/' +
+                    String(value.dataValues.maxPeople)
+                delete value.dataValues.standbyTime
+                delete value.dataValues.Appliers
+                return value
+            })
+        } catch (error) {
+            console.log(error)
+            throw new Error(error)
+        }
     },
     updateAttendance: async (groupId, attendance) => {
         // 출석체크 점수 바꾸기

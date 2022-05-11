@@ -49,7 +49,7 @@ module.exports = {
     updateEvaluation: async (req, res) => {
         const { groupId } = req.params
         const { userId } = res.locals
-        const hostId = req.body.userId
+        const hostId = req.body.hostId
         const { point } = req.body
         try {
             await evaluationService.updateEvaluation(
