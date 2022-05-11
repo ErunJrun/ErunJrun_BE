@@ -32,9 +32,11 @@ module.exports = {
         // 출석체크
         try {
             const applyUser = await attendanceService.getAttendance(groupId)
+            const groupInfo = await attendanceService.getGroupInfo(groupId)
             res.status(200).send({
                 success: true,
-                applyUser,
+                groupInfo,
+                applyUser
             })
         } catch (error) {
             console.log(error)

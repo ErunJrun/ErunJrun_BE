@@ -24,7 +24,7 @@ module.exports = {
         // standbytime을 지난 경우, 출석체크 진입 못하게 하기.
         console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
         console.log(attendanceTime)
-        if (moment().format('YYYY-MM-DD HH:mm:ss') > attendanceTime) {
+        if (moment().format('YYYY-MM-DD HH:mm:ss') < attendanceTime) {
             return
         } else {
             throw new Error('출석체크 시간이 지났습니다')
@@ -41,8 +41,9 @@ module.exports = {
                     conut++
                 }
             }
+            console.log(value.length)
             console.log(count)
-            if (count === value.length) {
+            if (count !== value.length) {
                 return
             } else {
                 throw new Error('이미 제출된 출석명단입니다')
@@ -66,6 +67,34 @@ module.exports = {
         })
         return applyUser
     },
+    getGroupInfo: async (groupId) => {
+        try{
+        return await Groups.findOne({
+            where: {groupId},
+            attributes: ['title', 'date','standbyTime', 'maxPeople'],
+            include: [
+                {
+                    model: Appliers,
+                    as: 'Appliers',
+                    foreignKey: 'groupId',
+                    attributes: ['groupId', 'userId']
+                }
+            ]            
+        }).then((value) => {
+            value.dataValues.date = moment
+            .utc(value.dataValues.date + ' ' + value.dataValues.standbyTime)
+            .lang('ko')
+            .format('YYYY.MM.DD (dd) HH:mm')
+            value.dataValues.attendanceCount = String(value.dataValues.Appliers.length) + '/' + String(value.dataValues.maxPeople)
+            delete value.dataValues.standbyTime
+            delete value.dataValues.Appliers
+            return value
+        })
+    } catch(error){
+        console.log(error)
+        throw new Error(error)
+    }
+    },
     updateAttendance: async (groupId, attendance) => {
         // 출석체크 점수 바꾸기
         // 유저의 매너점수를 기존에서 +1점 해주기
@@ -75,13 +104,13 @@ module.exports = {
                 { where: { groupId } }
             ).then(async (value) => {
                 await Users.findAll({
-                    where: { userId: { [Op.or]: attendance } },
+                    where: { userId: { [Op.in]: attendance } },
                 }).then(async (value) => {
                     for (let i = 0; i < value.length; i++) {
                         const newPoint = value[i].dataValues.mannerPoint + 1
                         await Users.update(
                             { mannerPoint: newPoint },
-                            { where: { userId: { [Op.or]: attendance } } }
+                            { where: { userId: { [Op.in]: attendance } } }
                         )
                     }
                 })
