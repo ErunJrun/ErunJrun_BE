@@ -36,7 +36,7 @@ module.exports = {
             res.status(200).send({
                 success: true,
                 groupInfo,
-                applyUser
+                applyUser,
             })
         } catch (error) {
             console.log(error)

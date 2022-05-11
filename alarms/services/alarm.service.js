@@ -82,6 +82,7 @@ module.exports = {
         return await Alarms.update({ check: true }, { where: { userId } })
     },
     createDdayAlarm: async (req, res) => {
+        const starttime = new Date(moment()).getTime()
         const nowDate = moment().format('YYYY-MM-DD')
         const data = await Groups.findAll({
             where: { date: nowDate },
@@ -420,10 +421,11 @@ async function sendGroupSMS(
         hmac.update(sens_access_key)
         const hash = hmac.finalize()
         const signature = hash.toString(CryptoJS.enc.Base64)
+        console.log(groupTitle)
 
         let content
         switch (category) {
-            case 'Day':
+            case 'Dday':
                 content = `${nickname}님 오늘은[${groupTitle}]러닝이 있습니다`
                 break
             case 'start':
