@@ -42,6 +42,15 @@ module.exports = {
                 )
             }
 
+            if (req.body.standbyTime > req.body.startTime)
+                return next(
+                    new Error('시작시간은 스탠바이 시간보다 빠를수 없습니다')
+                )
+            if (req.body.startTime > req.body.finishTime)
+                return next(
+                    new Error('종료시간은 시작시간보다 빠를 수 없습니다')
+                )
+
             await groupService.createPost(data)
 
             res.status(200).send({
