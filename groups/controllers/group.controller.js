@@ -367,11 +367,12 @@ module.exports = {
                     data: { applyPeople, applyState: false },
                 })
             } else {
-                const applyPeople = await groupService.getApplyCount(groupId)
+                let applyPeople = await groupService.getApplyCount(groupId)
                 if (chkGroup.maxPeople <= applyPeople) {
                     return next(new Error('신청인원이 남아있지 않습니다'))
                 }
-                if (applyPeople) await groupService.applyGroup(groupId, userId)
+                await groupService.applyGroup(groupId, userId)
+                applyPeople++
 
                 return res.status(200).send({
                     success: true,
