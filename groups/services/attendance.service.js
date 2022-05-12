@@ -65,13 +65,17 @@ module.exports = {
                     attributes: ['nickname', 'profileUrl'],
                 },
             ],
+            order: [['userId', 'desc']],
         })
         const hostUser = await Groups.findOne({
-            where: {groupId},
-            attributes: ['groupId', 'userId']
+            where: { groupId },
+            attributes: ['groupId', 'userId'],
         })
-        for (let i=0; i < applyUserData.length; i++){
-            if (applyUserData[i].dataValues.userId !== hostUser.dataValues.userId){
+        for (let i = 0; i < applyUserData.length; i++) {
+            if (
+                applyUserData[i].dataValues.userId !==
+                hostUser.dataValues.userId
+            ) {
                 applyUser.push(applyUserData[i].dataValues)
             }
         }
@@ -125,14 +129,35 @@ module.exports = {
                 { attendance: true },
                 { where: { groupId } }
             ).then(async (value) => {
+                let userId = []
+                const applyUserData = await Appliers.findAll({
+                    where: {
+                        groupId,
+                    },
+                    attributes: ['applyId', 'groupId', 'userId', 'attendance'],
+                    include: [
+                        {
+                            model: Users,
+                            as: 'user',
+                            foreignKey: 'userId',
+                            attributes: ['nickname', 'profileUrl'],
+                        },
+                    ],
+                    order: [['userId', 'desc']]
+                }).then((value) => {
+                    for (let i = 0; i < attendance.length; i++) {
+                        userId.push(value[attendance[i]].dataValues.userId)
+                    }
+                })
                 await Users.findAll({
-                    where: { userId: { [Op.in]: attendance } },
+                    where: { userId: { [Op.in]: userId } },
                 }).then(async (value) => {
+                    console.log(value)
                     for (let i = 0; i < value.length; i++) {
                         const newPoint = value[i].dataValues.mannerPoint + 1
                         await Users.update(
                             { mannerPoint: newPoint },
-                            { where: { userId: { [Op.in]: attendance } } }
+                            { where: { userId: { [Op.in]: userId } } }
                         )
                     }
                 })
