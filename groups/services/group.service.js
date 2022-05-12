@@ -2,6 +2,7 @@ const sequelize = require('sequelize')
 const Op = sequelize.Op
 const { Groups, Appliers, Users, Alarms } = require('../../models')
 const moment = require('moment')
+const alarmService = require('../../alarms/services/alarm.service')
 
 module.exports = {
     createPost: async (data) => {
@@ -520,6 +521,8 @@ module.exports = {
                 groupId,
                 groupTitle,
                 userId: user[i].userId,
+            }).then((result) => {
+                alarmService.deleteOutdateAlarm(result.userId)
             })
         }
     },
