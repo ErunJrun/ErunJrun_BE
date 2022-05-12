@@ -11,26 +11,14 @@ module.exports = {
             const { authorization } = req.headers
 
             if (!authorization)
-                return res.status(401).json({
-                    succcss: false,
-                    message: '로그인 후 사용하세요',
-                    reason: 'authorization 값이 존재하지 않습니다.',
-                })
+                return next(new Error('authorization 값이 존재하지 않습니다.'))
             if (authorization.split(' ').length !== 2)
-                return res.status(401).json({
-                    succcss: false,
-                    message: '다시 로그인해주세요',
-                    reason: 'authorization 값이 올바르지 않습니다.',
-                })
+                return next(new Error('authorization 값이 올바르지 않습니다.'))
 
             const [tokenType, tokenValue] = authorization.split(' ')
 
             if (tokenType !== 'Bearer')
-                return res.status(401).json({
-                    succcss: false,
-                    message: '다시 로그인해주세요',
-                    reason: '토큰이 Bearer가 아닙니다.',
-                })
+                return next(new Error('토큰이 Bearer가 아닙니다.'))
 
             const token = jwt.verify(tokenValue, process.env.TOKENKEY)
             const { userId } = token
@@ -48,26 +36,20 @@ module.exports = {
                     const { reauthorization } = req.headers
 
                     if (!reauthorization)
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '로그인 후 사용하세요',
-                            reason: 'reAuthorization 값이 존재하지 않습니다.',
-                        })
+                        return next(
+                            new Error('reAuthorization 값이 존재하지 않습니다.')
+                        )
                     if (reauthorization.split(' ').length !== 2)
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '다시 로그인해주세요',
-                            reason: 'reAuthorization 값이 올바르지 않습니다.',
-                        })
+                        return next(
+                            new Error('reAuthorization 값이 올바르지 않습니다.')
+                        )
 
                     const [tokenType, tokenValue] = reauthorization.split(' ')
 
                     if (tokenType !== 'Bearer')
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '다시 로그인해주세요',
-                            reason: '리프레쉬 토큰이 Bearer가 아닙니다.',
-                        })
+                        return next(
+                            new Error('리프레쉬 토큰이 Bearer가 아닙니다.')
+                        )
 
                     const refreshToken = jwt.verify(
                         tokenValue,
@@ -79,11 +61,11 @@ module.exports = {
                     const dbRefresh = await redis.get(key)
 
                     if (tokenValue !== dbRefresh)
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '다시 로그인해주세요',
-                            reason: 'database에 저장된 refreshToken과 다릅니다.',
-                        })
+                        return next(
+                            new Error(
+                                'database에 저장된 refreshToken과 다릅니다.'
+                            )
+                        )
 
                     const newToken = jwt.sign(
                         { userId: userId },
@@ -98,27 +80,21 @@ module.exports = {
                         token: newToken,
                     })
                 } else {
-                    res.status(401).json({
-                        result: false,
-                        message: '다시 로그인해주세요',
-                        reason: 'token에 문제가 있음(기한만료가 아닌 에러)',
-                        error,
-                    })
+                    return next(
+                        new Error('token에 문제가 있음(기한만료가 아닌 에러)')
+                    )
                 }
             } catch (error) {
                 if (error.name === 'TokenExpiredError') {
-                    res.status(401).send({
-                        result: false,
-                        message: '다시 로그인해주세요',
-                        reason: 'refreshToken까지 만료',
-                        error,
+                    return next({
+                        message: 'refreshToken까지 만료되었습니다.',
+                        stack: error,
                     })
                 } else {
-                    res.status(401).json({
-                        result: false,
-                        message: '다시 로그인해주세요',
-                        reason: 'refreshToken에 문제가 있음(기한만료가 아닌 에러)',
-                        error,
+                    return next({
+                        message:
+                            'refreshToken에 문제가 있음(기한만료가 아닌 에러)',
+                        stack: error,
                     })
                 }
             }
@@ -136,20 +112,12 @@ module.exports = {
             }
 
             if (authorization.split(' ').length !== 2)
-                return res.status(401).json({
-                    succcss: false,
-                    message: '다시 로그인해주세요',
-                    reason: 'authorization 값이 올바르지 않습니다.',
-                })
+                return next(new Error('authorization 값이 올바르지 않습니다.'))
 
             const [tokenType, tokenValue] = authorization.split(' ')
 
             if (tokenType !== 'Bearer')
-                return res.status(401).json({
-                    succcss: false,
-                    message: '다시 로그인해주세요',
-                    reason: '토큰이 Bearer가 아닙니다.',
-                })
+                return next(new Error('토큰이 Bearer가 아닙니다.'))
 
             const token = jwt.verify(tokenValue, process.env.TOKENKEY)
             const { userId } = token
@@ -167,26 +135,20 @@ module.exports = {
                     const { reauthorization } = req.headers
 
                     if (!reauthorization)
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '로그인 후 사용하세요',
-                            reason: 'reAuthorization 값이 존재하지 않습니다.',
-                        })
+                        return next(
+                            new Error('reAuthorization 값이 존재하지 않습니다.')
+                        )
                     if (reauthorization.split(' ').length !== 2)
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '다시 로그인해주세요',
-                            reason: 'reAuthorization 값이 올바르지 않습니다.',
-                        })
+                        return next(
+                            new Error('reAuthorization 값이 올바르지 않습니다.')
+                        )
 
                     const [tokenType, tokenValue] = reauthorization.split(' ')
 
                     if (tokenType !== 'Bearer')
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '다시 로그인해주세요',
-                            reason: '리프레쉬 토큰이 Bearer가 아닙니다.',
-                        })
+                        return next(
+                            new Error('리프레쉬 토큰이 Bearer가 아닙니다.')
+                        )
 
                     const refreshToken = jwt.verify(
                         tokenValue,
@@ -198,11 +160,11 @@ module.exports = {
                     const dbRefresh = await redis.get(key)
 
                     if (tokenValue !== dbRefresh)
-                        return res.status(401).json({
-                            succcss: false,
-                            message: '다시 로그인해주세요',
-                            reason: 'database에 저장된 refreshToken과 다릅니다.',
-                        })
+                        return next(
+                            new Error(
+                                'database에 저장된 refreshToken과 다릅니다.'
+                            )
+                        )
 
                     const newToken = jwt.sign(
                         { userId: userId },
@@ -217,27 +179,21 @@ module.exports = {
                         token: newToken,
                     })
                 } else {
-                    res.status(401).json({
-                        result: false,
-                        message: '다시 로그인해주세요',
-                        reason: 'token에 문제가 있음(기한만료가 아닌 에러)',
-                        error,
-                    })
+                    return next(
+                        new Error('token에 문제가 있음(기한만료가 아닌 에러)')
+                    )
                 }
             } catch (error) {
                 if (error.name === 'TokenExpiredError') {
-                    res.status(401).send({
-                        result: false,
-                        message: '다시 로그인해주세요',
-                        reason: 'refreshToken까지 만료',
-                        error,
+                    return next({
+                        message: 'refreshToken까지 만료되었습니다.',
+                        stack: error,
                     })
                 } else {
-                    res.status(401).json({
-                        result: false,
-                        message: '다시 로그인해주세요',
-                        reason: 'refreshToken에 문제가 있음(기한만료가 아닌 에러)',
-                        error,
+                    return next({
+                        message:
+                            'refreshToken에 문제가 있음(기한만료가 아닌 에러)',
+                        stack: error,
                     })
                 }
             }
