@@ -25,7 +25,7 @@ module.exports = {
                                 return value.dataValues.nickname
                             })
                             .catch((error) => {
-                                console.log(error)
+                                throw new Error(error)
                             })
                         // 알람 생성
                         await Alarms.create({
@@ -39,7 +39,7 @@ module.exports = {
                                 deleteOutdateAlarm(value.dataValues.userId)
                             })
                             .catch((error) => {
-                                console.log(error)
+                                throw new Error(error)
                             })
                     })
                 } else if (value.dataValues.courseId !== undefined) {
@@ -55,7 +55,7 @@ module.exports = {
                                 return value.dataValues.nickname
                             })
                             .catch((error) => {
-                                console.log(error)
+                                throw new Error(error)
                             })
                         // 알람 생성
                         await Alarms.create({
@@ -69,14 +69,13 @@ module.exports = {
                                 deleteOutdateAlarm(value.dataValues.userId)
                             })
                             .catch((error) => {
-                                console.log(error)
+                                throw new Error(error)
                             })
                     })
                 }
             })
             .catch((error) => {
-                console.log(error)
-                return error
+                throw new Error(error)
             })
         let condition
         if (input.groupId) {
@@ -118,8 +117,7 @@ module.exports = {
             })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
 
@@ -165,8 +163,7 @@ module.exports = {
             })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     checkComment: async (commentId) => {
@@ -229,14 +226,13 @@ module.exports = {
                             return value
                         })
                         .catch((error) => {
-                            console.log(error)
-                            return error
+                            throw new Error(error)
                         })
                 }
             )
             return data
         } catch (error) {
-            return error
+            throw new Error(error)
         }
     },
     deleteComment: async (commentId) => {
@@ -244,7 +240,7 @@ module.exports = {
             await Comments.destroy({ where: { commentId } })
             return
         } catch (error) {
-            return error
+            throw new Error(error)
         }
     },
 }
@@ -287,8 +283,7 @@ async function deleteOutdateAlarm(userId) {
         }
         console.log(alarms.length)
     } catch (error) {
-        console.log(error)
-        return error
+        throw new Error(error)
     }
     return
 }

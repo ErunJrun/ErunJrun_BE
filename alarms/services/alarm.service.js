@@ -10,7 +10,7 @@ const Op = sequelize.Op
 const moment = require('moment')
 const CryptoJS = require('crypto-js')
 const axios = require('axios')
-const TinyURL = require('tinyurl');
+const TinyURL = require('tinyurl')
 
 module.exports = {
     // 유저에게 생성되어있는 알람을 최신순으로 조회
@@ -61,8 +61,7 @@ module.exports = {
             })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     checkunreadCount: async (userId) => {
@@ -159,23 +158,22 @@ module.exports = {
                                         user.nickname,
                                         starttime
                                     ).catch((error) => {
-                                        console.log(error)
-                                        return error
+                                        throw new Error(error)
                                     })
                                     return
                                 } else {
+                                    console.log('수신 동의 거부 유저입니다.')
                                     return
                                 }
                             })
                             .catch((error) => {
-                                console.log('수신 동의 거부 유저입니다.')
-                                console.log(error)
+                                throw new Error(error)
                             })
                     }
                 }
             })
             .catch((error) => {
-                console.log(error)
+                throw new Error(error)
             })
         return data
     },
@@ -219,7 +217,7 @@ module.exports = {
                                     return value.dataValues
                                 })
                                 .catch((error) => {
-                                    console.log(error)
+                                    throw new Error(error)
                                 })
                             console.log(value[i].dataValues.Appliers[z].userId)
                             let role = ''
@@ -264,17 +262,16 @@ module.exports = {
                                     }
                                 })
                                 .catch((error) => {
-                                    console.log(error)
+                                    throw new Error(error)
                                 })
                         }
                     }
                 } catch (error) {
-                    return
+                    throw new Error(error)
                 }
             })
             .catch((error) => {
-                console.log(error)
-                return
+                throw new Error(error)
             })
         const endtime = new Date(moment()).getTime()
         console.log('startAlarm', (endtime - starttime) / 1000)
@@ -304,7 +301,7 @@ module.exports = {
             ],
         })
             .catch((error) => {
-                console.log(error)
+                throw new Error(error)
             })
             .then(async (value) => {
                 try {
@@ -326,7 +323,7 @@ module.exports = {
                                     return value.dataValues
                                 })
                                 .catch((error) => {
-                                    console.log(error)
+                                    throw new Error(error)
                                 })
                             let role = ''
                             if (
@@ -373,18 +370,16 @@ module.exports = {
                                     }
                                 })
                                 .catch((error) => {
-                                    console.log(error)
-                                    return error
+                                    throw new Error(error)
                                 })
                         }
                     }
                 } catch (error) {
-                    return
+                    throw new Error(error)
                 }
             })
             .catch((error) => {
-                console.log(error)
-                return
+                throw new Error(error)
             })
         const endtime = new Date(moment()).getTime()
         console.log('endAlarm', (endtime - starttime) / 1000)
@@ -434,7 +429,9 @@ async function sendGroupSMS(
         const signature = hash.toString(CryptoJS.enc.Base64)
 
         const attendanceURL = await shortenURL('http://localhost:3000/check')
-        const evaluationURL = await shortenURL('http://localhost:3000/evaluation')
+        const evaluationURL = await shortenURL(
+            'http://localhost:3000/evaluation'
+        )
         let content
         switch (category) {
             case 'Dday':

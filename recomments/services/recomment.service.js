@@ -27,7 +27,7 @@ module.exports = {
                                         return result.dataValues.nickname
                                     })
                                     .catch((error) => {
-                                        console.log(error)
+                                        throw new Error(error)
                                     })
                                 // 알람 생성
                                 await Alarms.create({
@@ -37,12 +37,18 @@ module.exports = {
                                     category: 'recomment',
                                     nickname,
                                     commentId: value.dataValues.commentId,
-                                }).catch((error) => {
-                                    console.log(error)
                                 })
+                                    .then((value) => {
+                                        deleteOutdateAlarm(
+                                            value.dataValues.userId
+                                        )
+                                    })
+                                    .catch((error) => {
+                                        throw new Error(error)
+                                    })
                             })
                             .catch((error) => {
-                                console.log(error)
+                                throw new Error(error)
                             })
                     }
                     if (value.dataValues.groupId === null) {
@@ -57,7 +63,7 @@ module.exports = {
                                     return value.dataValues.nickname
                                 })
                                 .catch((error) => {
-                                    console.log(error)
+                                    throw new Error(error)
                                 })
                             // 알람 생성
                             await Alarms.create({
@@ -66,16 +72,19 @@ module.exports = {
                                 courseTitle: value.dataValues.title,
                                 category: 'recomment',
                                 nickname,
-                            }).catch((error) => {
-                                console.log(error)
                             })
+                                .then((value) => {
+                                    deleteOutdateAlarm(value.dataValues.userId)
+                                })
+                                .catch((error) => {
+                                    throw new Error(error)
+                                })
                         })
                     }
                 })
             })
             .catch((error) => {
-                console.log(error)
-                return error
+                throw new Error(error)
             })
         try {
             const data = await Recomments.findAll({
@@ -112,8 +121,7 @@ module.exports = {
             })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     getRecomment: async (input) => {
@@ -152,13 +160,11 @@ module.exports = {
                     return value
                 })
                 .catch((error) => {
-                    console.log(error)
-                    return error
+                    throw new Error(error)
                 })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     checkRecomment: async (recommentId) => {
@@ -218,18 +224,15 @@ module.exports = {
                             return value
                         })
                         .catch((error) => {
-                            console.log(error)
-                            return error
+                            throw new Error(error)
                         })
                 })
                 .catch((error) => {
-                    console.log(error)
-                    return error
+                    throw new Error(error)
                 })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     deleteRecomment: async (recommentId) => {
@@ -237,7 +240,7 @@ module.exports = {
             await Recomments.destroy({ where: { recommentId } })
             return
         } catch (error) {
-            return error
+            throw new Error(error)
         }
     },
 }
@@ -262,4 +265,23 @@ function timeForToday(createdAt) {
     return `${timeValue.getFullYear()}년 ${
         timeValue.getMonth() + 1
     }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
+}
+
+async function deleteOutdateAlarm(userId) {
+    const alarms = await Alarms.findAll({
+        where: { userId },
+        order: [['createdAt', 'desc']],
+    })
+    try {
+        if (alarms.length > 20) {
+            for (let i = 20; i < alarms.length; i++) {
+                await Alarms.destroy({
+                    where: { alarmId: alarms[i].dataValues.alarmId },
+                })
+            }
+        }
+    } catch (error) {
+        throw new Error(error)
+    }
+    return
 }
