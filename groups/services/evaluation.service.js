@@ -64,8 +64,7 @@ module.exports = {
             })
             return hostUser
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     updateEvaluation: async (groupId, userId, hostId, point) => {
@@ -85,15 +84,14 @@ module.exports = {
                             { mannerPoint: newPoint },
                             { where: { userId: hostId } }
                         ).catch((error) => {
-                            console.log(error)
+                            throw new Error(error)
                         })
                     })
                     .catch((error) => {
-                        console.log(error)
+                        throw new Error(error)
                     })
             })
         } catch (error) {
-            console.log(error)
             throw new Error(error)
         }
     },

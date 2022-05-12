@@ -2,7 +2,7 @@ const authService = require('../services/auth.service')
 const multer = require('../../middlewares/multers/multer')
 
 module.exports = {
-    getUserInfo: async (req, res) => {
+    getUserInfo: async (req, res, next) => {
         const { userId } = req.params
         // 유저의 정보 가져오기
         //  유저가 참여 예정인 그룹러닝 게시물 정보(호스트) 가져와야함
@@ -21,7 +21,7 @@ module.exports = {
         }
     },
 
-    applyUserLike: async (req, res) => {
+    applyUserLike: async (req, res, next) => {
         const { userId } = res.locals
 
         const data = {
@@ -44,7 +44,7 @@ module.exports = {
         }
     },
 
-    getUpdateUserInfo: async (req, res) => {
+    getUpdateUserInfo: async (req, res, next) => {
         const { userId } = res.locals
         try {
             const data = await authService.getUpdateUserInfo(userId)
@@ -53,14 +53,13 @@ module.exports = {
                 data,
             })
         } catch (error) {
-            console.log(error)
             return next({
                 message: '유저 정보 수정 페이지 불러오기에 실패했습니다.',
                 stack: error,
             })
         }
     },
-    updateUserInfo: async (req, res) => {
+    updateUserInfo: async (req, res, next) => {
         const { userId } = res.locals
 
         const data = {

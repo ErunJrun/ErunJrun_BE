@@ -98,7 +98,6 @@ module.exports = {
                 return value
             })
         } catch (error) {
-            console.log(error)
             throw new Error(error)
         }
     },
@@ -123,8 +122,7 @@ module.exports = {
                 })
             })
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
 }

@@ -74,7 +74,6 @@ module.exports = {
             }).then((value) => {
                 return value.map((item) => item.groupId)
             })
-            console.log(appliedGroupId)
             // applier 숫자 세서 보여주기( applier에서 groupId의 개수 세면 됨)
             const waitingGroup = await Groups.findAll({
                 where: {
@@ -150,25 +149,28 @@ module.exports = {
             // })
             return data
         } catch (error) {
-            console.log(error)
-            return error
+            throw new Error(error)
         }
     },
     getUpdateUserInfo: async (userId) => {
-        return Users.findOne({
-            where: { userId },
-            attributes: [
-                'userId',
-                'nickname',
-                'profileUrl',
-                'bio',
-                'likeLocation',
-                'likeDistance',
-                'userLevel',
-                'phone',
-                'agreeSMS',
-            ],
-        })
+        try {
+            return Users.findOne({
+                where: { userId },
+                attributes: [
+                    'userId',
+                    'nickname',
+                    'profileUrl',
+                    'bio',
+                    'likeLocation',
+                    'likeDistance',
+                    'userLevel',
+                    'phone',
+                    'agreeSMS',
+                ],
+            })
+        } catch (error) {
+            throw new Error(error)
+        }
     },
     updateUserInfo: async (userId, data) => {
         Users.update(data, { where: { userId } })
