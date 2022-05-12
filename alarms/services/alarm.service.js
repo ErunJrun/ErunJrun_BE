@@ -10,6 +10,7 @@ const Op = sequelize.Op
 const moment = require('moment')
 const CryptoJS = require('crypto-js')
 const axios = require('axios')
+const TinyURL = require('tinyurl');
 
 module.exports = {
     // 유저에게 생성되어있는 알람을 최신순으로 조회
@@ -81,7 +82,7 @@ module.exports = {
     checkCount: async (userId) => {
         let count = 0
         await Alarms.findAll({
-            where: {userId}
+            where: { userId },
         }).then((value) => {
             count = value.length
             return value
@@ -434,6 +435,9 @@ async function sendGroupSMS(
         const signature = hash.toString(CryptoJS.enc.Base64)
         console.log(groupTitle)
 
+        const attendanceURL = await shortenURL('http://localhost:3000/check')
+        const evaluationURL = await shortenURL('http://localhost:3000/evaluation')
+        console.log(attendanceURL, evaluationURL)
         let content
         switch (category) {
             case 'Dday':
@@ -442,10 +446,10 @@ async function sendGroupSMS(
             case 'start':
                 switch (role) {
                     case 'host':
-                        content = `${nickname}님 30분 뒤 [${groupTitle}]이 시작합니다. 출석체크를 해주세요. \n 링크: www.rengabro.com/group/attendence`
+                        content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다. 출석체크를 해주세요. \n 링크: ${attendanceURL}`
                         break
                     case 'attendance':
-                        content = `${nickname}님 30분 뒤 [${groupTitle}]이 시작합니다.`
+                        content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다.`
                         break
                 }
                 break
@@ -455,7 +459,7 @@ async function sendGroupSMS(
                         content = `${nickname}님 [${groupTitle}] 그룹러닝은 어떠셨나요?`
                         break
                     case 'attendance':
-                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: www.rengabro.com/group/attendence`
+                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: ${evaluationURL}`
                         break
                 }
             default:
@@ -529,22 +533,32 @@ function getByteB(str) {
     return byte
 }
 
-async function deleteOutdateAlarm (userId) {
+async function deleteOutdateAlarm(userId) {
     const alarms = await Alarms.findAll({
-        where: {userId},
-        order: [['createdAt','desc']]
+        where: { userId },
+        order: [['createdAt', 'desc']],
     })
-    try{
-    if (alarms.length > 20){
-        for (let i =20; i < alarms.length; i++){
-            await Alarms.destroy({where: {alarmId: alarms[i].dataValues.alarmId}})
+    try {
+        if (alarms.length > 20) {
+            for (let i = 20; i < alarms.length; i++) {
+                await Alarms.destroy({
+                    where: { alarmId: alarms[i].dataValues.alarmId },
+                })
+            }
         }
-    }
-    console.log(alarms.length)
-    }
-    catch(error){
+        console.log(alarms.length)
+    } catch (error) {
         console.log(error)
         return error
     }
     return
+}
+
+async function shortenURL(url) {
+    let shorturl = await TinyURL.shorten(url).then((value) => {
+        return value
+    })
+    const result = shorturl
+    console.log('1', result)
+    return result
 }
