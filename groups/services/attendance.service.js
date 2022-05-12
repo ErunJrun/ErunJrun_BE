@@ -51,7 +51,8 @@ module.exports = {
         })
     },
     getAttendance: async (groupId) => {
-        const applyUser = await Appliers.findAll({
+        let applyUser = []
+        const applyUserData = await Appliers.findAll({
             where: {
                 groupId,
             },
@@ -65,6 +66,15 @@ module.exports = {
                 },
             ],
         })
+        const hostUser = await Groups.findOne({
+            where: {groupId},
+            attributes: ['groupId', 'userId']
+        })
+        for (let i=0; i < applyUserData.length; i++){
+            if (applyUserData[i].dataValues.userId !== hostUser.dataValues.userId){
+                applyUser.push(applyUserData[i].dataValues)
+            }
+        }
         return applyUser
     },
     getGroupInfo: async (groupId) => {
@@ -73,6 +83,12 @@ module.exports = {
                 where: { groupId },
                 attributes: ['title', 'date', 'standbyTime', 'maxPeople'],
                 include: [
+                    {
+                        model: Users,
+                        as: 'user',
+                        foreignKey: 'userId',
+                        attributes: ['userId', 'nickname', 'profileUrl'],
+                    },
                     {
                         model: Appliers,
                         as: 'Appliers',
