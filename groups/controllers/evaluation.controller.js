@@ -1,3 +1,4 @@
+const { application } = require('express')
 const evaluationService = require('../services/evaluation.service')
 
 module.exports = {
@@ -51,6 +52,7 @@ module.exports = {
         const { userId } = res.locals
         const hostId = req.body.hostId
         const { point } = req.body
+
         try {
             await evaluationService.updateEvaluation(
                 groupId,
@@ -67,7 +69,7 @@ module.exports = {
             res.status(400).send({
                 success: false,
                 message: '호스트 평가가 완료되지 않았습니다',
-                error
+                error,
             })
         }
     },

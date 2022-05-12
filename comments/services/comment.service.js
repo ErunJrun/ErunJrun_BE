@@ -34,6 +34,8 @@ module.exports = {
                             groupTitle: value.dataValues.title,
                             category: 'comment',
                             nickname,
+                        }).then((value) => {
+                            deleteOutdateAlarm(value.dataValues.userId)
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -60,6 +62,8 @@ module.exports = {
                             courseTitle: value.dataValues.title,
                             category: 'comment',
                             nickname,
+                        }).then((value) => {
+                            deleteOutdateAlarm(value.dataValues.userId)
                         }).catch((error) => {
                             console.log(error)
                         })
@@ -262,4 +266,24 @@ function timeForToday(createdAt) {
     return `${timeValue.getFullYear()}년 ${
         timeValue.getMonth() + 1
     }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
+}
+
+async function deleteOutdateAlarm (userId) {
+    const alarms = await Alarms.findAll({
+        where: {userId},
+        order: [['createdAt','desc']]
+    })
+    try{
+    if (alarms.length > 20){
+        for (let i =20; i < alarms.length; i++){
+            await Alarms.destroy({where: {alarmId: alarms[i].dataValues.alarmId}})
+        }
+    }
+    console.log(alarms.length)
+    }
+    catch(error){
+        console.log(error)
+        return error
+    }
+    return
 }

@@ -5,8 +5,6 @@ module.exports = {
     createComment: async (req, res) => {
         const { category, categoryId } = req.params
         const { userId } = res.locals
-        // const userId = '2fc1e54e-dd6b-49e9-96ae-61284ceaae09'
-        // 데이터 object 케이스별로 만들어주기
         let input
         try {
             switch (category) {

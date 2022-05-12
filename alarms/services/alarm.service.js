@@ -78,6 +78,16 @@ module.exports = {
         })
         return unreadCount
     },
+    checkCount: async (userId) => {
+        let count = 0
+        await Alarms.findAll({
+            where: {userId}
+        }).then((value) => {
+            count = value.length
+            return value
+        })
+        return count
+    },
     updatereadState: async (userId) => {
         return await Alarms.update({ check: true }, { where: { userId } })
     },
@@ -135,6 +145,7 @@ module.exports = {
                             role,
                         })
                             .then(() => {
+                                deleteOutdateAlarm(value.dataValues.userId)
                                 if (
                                     user.phone !== null &&
                                     user.agreeSMS === true
@@ -143,7 +154,7 @@ module.exports = {
                                         user.phone,
                                         category,
                                         role,
-                                        value[i].dataValues.title,
+                                        value.dataValues.title,
                                         user.nickname,
                                         starttime
                                     ).catch((error) => {
@@ -230,8 +241,7 @@ module.exports = {
                                 role,
                             })
                                 .then((value) => {
-                                    console.log(user)
-                                    console.log(value)
+                                    deleteOutdateAlarm(value.dataValues.userId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
@@ -337,6 +347,7 @@ module.exports = {
                                 role,
                             })
                                 .then(() => {
+                                    deleteOutdateAlarm(value.dataValues.userId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
@@ -516,4 +527,24 @@ function getByteB(str) {
         str.charCodeAt(i) > 127 ? (byte += 2) : byte++
     }
     return byte
+}
+
+async function deleteOutdateAlarm (userId) {
+    const alarms = await Alarms.findAll({
+        where: {userId},
+        order: [['createdAt','desc']]
+    })
+    try{
+    if (alarms.length > 20){
+        for (let i =20; i < alarms.length; i++){
+            await Alarms.destroy({where: {alarmId: alarms[i].dataValues.alarmId}})
+        }
+    }
+    console.log(alarms.length)
+    }
+    catch(error){
+        console.log(error)
+        return error
+    }
+    return
 }
