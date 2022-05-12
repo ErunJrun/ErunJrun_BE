@@ -371,7 +371,7 @@ module.exports = {
             throw new Error(error)
         }
     },
-    getUserGroupData: (groupId) => {
+    getGroupById: (groupId) => {
         const data = Groups.findOne({
             where: { groupId },
         })

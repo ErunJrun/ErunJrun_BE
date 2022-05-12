@@ -49,7 +49,7 @@ module.exports = {
     updateEvaluation: async (req, res) => {
         const { groupId } = req.params
         const { userId } = res.locals
-        const hostId = req.body.userId
+        const hostId = req.body.hostId
         const { point } = req.body
         try {
             await evaluationService.updateEvaluation(
@@ -67,6 +67,7 @@ module.exports = {
             res.status(400).send({
                 success: false,
                 message: '호스트 평가가 완료되지 않았습니다',
+                error
             })
         }
     },
