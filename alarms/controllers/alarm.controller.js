@@ -8,8 +8,11 @@ module.exports = {
         try {
             const data = await alarmService.getAlarm(userId)
             const unreadCount = await alarmService.checkunreadCount(userId)
+            const count = await alarmService.checkCount(userId)
+
             res.status(200).send({
                 success: true,
+                count,
                 unreadCount,
                 data,
             })
