@@ -401,7 +401,6 @@ async function sendGroupSMS(
     starttime
 ) {
     try {
-        console.log(phone, nickname)
         const user_phone_number = phone.split('-').join('') // SMS를 수신할 전화번호
         const date = Date.now().toString() // 날짜 string
 
@@ -433,11 +432,9 @@ async function sendGroupSMS(
         hmac.update(sens_access_key)
         const hash = hmac.finalize()
         const signature = hash.toString(CryptoJS.enc.Base64)
-        console.log(groupTitle)
 
         const attendanceURL = await shortenURL('http://localhost:3000/check')
         const evaluationURL = await shortenURL('http://localhost:3000/evaluation')
-        console.log(attendanceURL, evaluationURL)
         let content
         switch (category) {
             case 'Dday':
@@ -559,6 +556,5 @@ async function shortenURL(url) {
         return value
     })
     const result = shorturl
-    console.log('1', result)
     return result
 }
