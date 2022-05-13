@@ -31,6 +31,11 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
                 defaultValue: 0,
             },
+            evaluation: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: 0,
+            },
         },
         {
             sequelize,

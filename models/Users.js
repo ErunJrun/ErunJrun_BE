@@ -16,7 +16,7 @@ module.exports = function (sequelize, DataTypes) {
             },
             bio: {
                 type: DataTypes.STRING(255),
-                allowNull: false,
+                allowNull: true,
             },
             profileUrl: {
                 type: DataTypes.STRING(200),
@@ -27,16 +27,17 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             likeDistance: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.STRING(50),
                 allowNull: true,
             },
-            likeSpeed: {
-                type: DataTypes.INTEGER,
+            userLevel: {
+                type: DataTypes.STRING(50),
                 allowNull: true,
             },
             mannerPoint: {
                 type: DataTypes.FLOAT,
-                allowNull: true,
+                allowNull: false,
+                defaultValue: 50,
             },
             social: {
                 type: DataTypes.STRING(100),
@@ -49,6 +50,11 @@ module.exports = function (sequelize, DataTypes) {
             phone: {
                 type: DataTypes.STRING(100),
                 allowNull: true,
+            },
+            agreeSMS: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false,
             },
         },
         {

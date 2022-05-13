@@ -147,3 +147,4 @@ dist
 config/
 .idea/
 orm.js
+appspec.yml

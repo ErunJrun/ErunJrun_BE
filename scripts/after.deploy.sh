@@ -1,3 +1,4 @@
 #!/bin/bash
-cd /home/ubuntu/Yeollin-Jib/server
+sudo su
+cd /home/ubuntu/ErunJrun_BE
 npm install

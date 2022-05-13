@@ -19,23 +19,23 @@ module.exports = function (sequelize, DataTypes) {
                 },
             },
             mapLatLng: {
-                type: DataTypes.STRING(150),
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
-            thumbnailUrl: {
+            thumbnailUrl1: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            thumbnailUrl2: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            thumbnailUrl3: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },
             title: {
                 type: DataTypes.STRING(150),
-                allowNull: false,
-            },
-            startDate: {
-                type: DataTypes.DATE,
-                allowNull: false,
-            },
-            finishDate: {
-                type: DataTypes.DATE,
                 allowNull: false,
             },
             maxPeople: {
@@ -47,15 +47,19 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
             },
             standbyTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             startTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             finishTime: {
-                type: DataTypes.DATE,
+                type: DataTypes.TIME,
+                allowNull: false,
+            },
+            timecode: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             distance: {
@@ -63,11 +67,15 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
             },
             speed: {
-                type: DataTypes.FLOAT,
+                type: DataTypes.STRING(50),
                 allowNull: false,
             },
             location: {
                 type: DataTypes.STRING(200),
+                allowNull: false,
+            },
+            region: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
             },
             parking: {
@@ -81,6 +89,14 @@ module.exports = function (sequelize, DataTypes) {
             content: {
                 type: DataTypes.TEXT,
                 allowNull: true,
+            },
+            thema: {
+                type: DataTypes.STRING(20),
+                allowNull: false,
+            },
+            chattingRoom: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
             },
         },
         {
