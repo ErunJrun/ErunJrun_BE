@@ -143,7 +143,7 @@ module.exports = {
                             attributes: ['nickname', 'profileUrl'],
                         },
                     ],
-                    order: [['userId', 'desc']]
+                    order: [['userId', 'desc']],
                 }).then((value) => {
                     for (let i = 0; i < attendance.length; i++) {
                         userId.push(value[attendance[i]].dataValues.userId)
