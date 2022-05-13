@@ -428,9 +428,9 @@ async function sendGroupSMS(
         const hash = hmac.finalize()
         const signature = hash.toString(CryptoJS.enc.Base64)
 
-        const attendanceURL = await shortenURL('http://localhost:3000/check')
+        const attendanceURL = await shortenURL('https://erunjrun.com/check')
         const evaluationURL = await shortenURL(
-            'http://localhost:3000/evaluation'
+            'https://erunjrun.com/evaluation'
         )
         let content
         switch (category) {
