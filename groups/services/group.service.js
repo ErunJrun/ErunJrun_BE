@@ -438,6 +438,7 @@ module.exports = {
                 result.dataValues.nickname = user.nickname
                 result.dataValues.profileUrl = user.profileUrl
                 result.dataValues.userLevel = user.userLevel
+                result.dataValues.mannerPoint = user.mannerPoint
 
                 let startDateTime =
                     result.dataValues.date + ' ' + result.dataValues.standbyTime
