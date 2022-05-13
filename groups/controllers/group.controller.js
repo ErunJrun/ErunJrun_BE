@@ -31,16 +31,16 @@ module.exports = {
                     data[`thumbnailUrl${i + 1}`] = req.files[i].location
                 }
             }
-            if (
-                moment(req.body.date).format('YYYY-MM-DD') <=
-                moment().format('YYYY-MM-DD')
-            ) {
-                return next(
-                    new Error(
-                        '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다'
-                    )
-                )
-            }
+            // if (
+            //     moment(req.body.date).format('YYYY-MM-DD') <=
+            //     moment().format('YYYY-MM-DD')
+            // ) {
+            //     return next(
+            //         new Error(
+            //             '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다'
+            //         )
+            //     )
+            // }
 
             if (req.body.standbyTime > req.body.startTime)
                 return next(

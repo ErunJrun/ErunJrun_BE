@@ -515,7 +515,7 @@ module.exports = {
                         applyUser.profileUrl
                 }
 
-                if (result.dataValues.thumbnailUrl === null) {
+                if (result.dataValues.thumbnailUrl1 === null) {
                     switch (result.thema) {
                         case '산':
                             result.dataValues.thumbnailUrl1 =
