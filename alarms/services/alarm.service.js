@@ -242,6 +242,7 @@ module.exports = {
                             })
                                 .then((value) => {
                                     deleteOutdateAlarm(value.dataValues.userId)
+                                    console.log('1', value.dataValues.groupId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
@@ -432,7 +433,7 @@ async function sendGroupSMS(
         const hash = hmac.finalize()
         const signature = hash.toString(CryptoJS.enc.Base64)
 
-        console.log(groupId)
+        console.log('2', groupId)
         const attendanceURL = await shortenURL(
             `https://erunjrun.com/check/${groupId}`
         )
