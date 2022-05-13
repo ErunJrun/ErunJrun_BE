@@ -355,6 +355,7 @@ module.exports = {
                                             category,
                                             role,
                                             value.dataValues.groupTitle,
+                                            value.dataValues.groupId,
                                             user.nickname,
                                             starttime
                                         ).catch((error) => {
@@ -392,6 +393,7 @@ async function sendGroupSMS(
     category,
     role,
     groupTitle,
+    groupId,
     nickname,
     starttime
 ) {
@@ -428,9 +430,9 @@ async function sendGroupSMS(
         const hash = hmac.finalize()
         const signature = hash.toString(CryptoJS.enc.Base64)
 
-        const attendanceURL = await shortenURL('https://erunjrun.com/check')
+        const attendanceURL = await shortenURL(`https://erunjrun.com/check/${groupId}`)
         const evaluationURL = await shortenURL(
-            'https://erunjrun.com/evaluation'
+            `https://erunjrun.com/evaluation/${groupId}`
         )
         let content
         switch (category) {
