@@ -73,8 +73,9 @@ module.exports = {
         let limit
         let applyCondition = {}
 
+        let nowDateTime = moment().add(4, 'hours').format('YYYY-MM-DD HH:mm:ss')
         let nowDate = moment().format('YYYY-MM-DD')
-        let nowTime = moment().format('HH:mm:ss')
+        let nowTime = nowDateTime.split(' ')[1]
 
         try {
             switch (category) {
@@ -91,7 +92,7 @@ module.exports = {
                                     { date: nowDate },
                                     {
                                         standbyTime: {
-                                            [Op.lte]: nowTime,
+                                            [Op.gte]: nowTime,
                                         },
                                     },
                                 ],
@@ -134,6 +135,8 @@ module.exports = {
                         }
                         Object.assign(condition, { region: user.likeLocation })
                         if (query.finish !== '1') {
+                            console.log(nowDate)
+                            console.log(nowTime)
                             Object.assign(condition, {
                                 [Op.or]: [
                                     { date: { [Op.gt]: nowDate } },
@@ -142,7 +145,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.lte]: nowTime,
+                                                    [Op.gte]: nowTime,
                                                 },
                                             },
                                         ],
@@ -185,7 +188,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.lte]: nowTime,
+                                                    [Op.gte]: nowTime,
                                                 },
                                             },
                                         ],
