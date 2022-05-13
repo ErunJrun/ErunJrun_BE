@@ -518,27 +518,27 @@ module.exports = {
                 if (result.dataValues.thumbnailUrl === null) {
                     switch (result.thema) {
                         case '산':
-                            result.dataValues.thumbnailUrl =
+                            result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%EB%B3%B8%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%89%E1%85%A1%E1%86%AB.png'
                             break
                         case '도시':
-                            result.dataValues.thumbnailUrl =
+                            result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%83%E1%85%A9%E1%84%89%E1%85%B5.png'
                             break
                         case '강변':
-                            result.dataValues.thumbnailUrl =
+                            result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%80%E1%85%A1%E1%86%BC%E1%84%87%E1%85%A7%E1%86%AB.png'
                             break
                         case '해변':
-                            result.dataValues.thumbnailUrl =
+                            result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%92%E1%85%A2%E1%84%87%E1%85%A7%E1%86%AB.png'
                             break
                         case '공원':
-                            result.dataValues.thumbnailUrl =
+                            result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%80%E1%85%A9%E1%86%BC%E1%84%8B%E1%85%AF%E1%86%AB.png'
                             break
                         case '트랙':
-                            result.dataValues.thumbnailUrl =
+                            result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%90%E1%85%B3%E1%84%85%E1%85%A2%E1%86%A8.png'
                             break
                     }
