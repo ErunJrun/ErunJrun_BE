@@ -155,6 +155,7 @@ module.exports = {
                                         category,
                                         role,
                                         value.dataValues.title,
+                                        value.dataValues.groupId,
                                         user.nickname,
                                         starttime
                                     ).catch((error) => {
@@ -241,6 +242,7 @@ module.exports = {
                             })
                                 .then((value) => {
                                     deleteOutdateAlarm(value.dataValues.userId)
+                                    console.log('1', value.dataValues.groupId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
@@ -250,6 +252,7 @@ module.exports = {
                                             category,
                                             role,
                                             value.dataValues.groupTitle,
+                                            value.dataValues.groupId,
                                             user.nickname,
                                             starttime
                                         )
@@ -355,6 +358,7 @@ module.exports = {
                                             category,
                                             role,
                                             value.dataValues.groupTitle,
+                                            value.dataValues.groupId,
                                             user.nickname,
                                             starttime
                                         ).catch((error) => {
@@ -392,6 +396,7 @@ async function sendGroupSMS(
     category,
     role,
     groupTitle,
+    groupId,
     nickname,
     starttime
 ) {
@@ -428,11 +433,15 @@ async function sendGroupSMS(
         const hash = hmac.finalize()
         const signature = hash.toString(CryptoJS.enc.Base64)
 
-        const attendanceURL = await shortenURL('http://localhost:3000/check')
+        console.log('2', groupId)
+        const attendanceURL = await shortenURL(
+            `https://erunjrun.com/check/${groupId}`
+        )
         const evaluationURL = await shortenURL(
-            'http://localhost:3000/evaluation'
+            `https://erunjrun.com/evaluation/${groupId}`
         )
         let content
+
         switch (category) {
             case 'Dday':
                 content = `${nickname}님 오늘은[${groupTitle}]러닝이 있습니다`
