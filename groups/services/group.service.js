@@ -315,11 +315,11 @@ module.exports = {
 
                         if (apply && category === 'complete') {
                             if (result[i].userId === myUserId) {
-                                result[i].dataValues.evaluation =
-                                    apply.evaluation
-                            } else {
                                 result[i].dataValues.attendance =
                                     apply.attendance
+                            } else {
+                                result[i].dataValues.evaluation =
+                                    apply.evaluation
                             }
                         }
                     } else {
