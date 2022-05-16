@@ -322,6 +322,12 @@ module.exports = {
                                     apply.evaluation
                             }
                         }
+                        if (apply && category === 'mypage') {
+                            if (result[i].userId === myUserId) {
+                                result[i].dataValues.attendance =
+                                    apply.attendance
+                            }
+                        }
                     } else {
                         result[i].dataValues.applyState = false
                     }
