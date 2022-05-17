@@ -26,7 +26,7 @@ module.exports = () => {
                         done(null, exUser)
                     } else {
                         if(profile.nickname.length > 8) {
-                            let nickname = profile.nickname.substr(0, 8)
+                            const nickname = profile.nickname.substr(0, 8)
                         }
                         console.log(profile.nickname)
                         console.log(profile.nickname.length)
