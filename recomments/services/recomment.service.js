@@ -6,9 +6,13 @@ const {
     Courses,
     Alarms,
 } = require('../../models/index')
+const sequelize = require('sequelize')
+const Op = sequelize.Op
+const moment = require('moment')
 
 module.exports = {
     createRecomment: async (input) => {
+        let condition = []
         await Recomments.create(input)
             .then(async (value) => {
                 await Comments.findOne({
@@ -17,8 +21,24 @@ module.exports = {
                     if (value.dataValues.courseId === null) {
                         await Groups.findOne({
                             where: { groupId: value.dataValues.groupId },
+                            include: [
+                                {
+                                    model: Comments,
+                                    as: 'Comments',
+                                    foreignKey: 'groupId',
+                                },
+                            ],
                         })
                             .then(async (result) => {
+                                for (
+                                    let i = 0;
+                                    i < result.dataValues.Comments.length;
+                                    i++
+                                ) {
+                                    condition.push(
+                                        result.dataValues.Comments[i].commentId
+                                    )
+                                }
                                 // 닉네임 가져오기
                                 const nickname = await Users.findOne({
                                     where: { userId: result.dataValues.userId },
@@ -54,7 +74,23 @@ module.exports = {
                     if (value.dataValues.groupId === null) {
                         await Courses.findOne({
                             where: { courseId: value.dataValues.courseId },
+                            include: [
+                                {
+                                    model: Comments,
+                                    as: 'Comments',
+                                    foreignKey: 'courseId',
+                                },
+                            ],
                         }).then(async (value) => {
+                            for (
+                                let i = 0;
+                                i < value.dataValues.Comments.length;
+                                i++
+                            ) {
+                                condition.push(
+                                    value.dataValues.Comments[i].commentId
+                                )
+                            }
                             // 닉네임 가져오기
                             const nickname = await Users.findOne({
                                 where: { userId: value.dataValues.userId },
@@ -88,11 +124,10 @@ module.exports = {
             })
         try {
             const data = await Recomments.findAll({
-                where: { commentId: input.commentId },
+                where: { commentId: { [Op.in]: condition } },
                 attributes: [
                     'recommentId',
                     'commentId',
-                    'userId',
                     'content',
                     'createdAt',
                 ],
@@ -115,23 +150,48 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
-                    value[i].dataValues.isEdit = false
                 }
                 return value
             })
+
             return data
         } catch (error) {
             throw new Error(error)
         }
     },
-    getRecomment: async (input) => {
+    getRecomment: async (commentId) => {
         try {
+            let condition = []
+            await Comments.findOne({ where: { commentId } }).then(
+                async (value) => {
+                    await Groups.findOne({
+                        where: { groupId: value.dataValues.groupId },
+                        include: [
+                            {
+                                model: Comments,
+                                as: 'Comments',
+                                foreignKey: 'groupId',
+                            },
+                        ],
+                    }).then(async (value) => {
+                        console.log(value.dataValues.Comments.length)
+                        for (
+                            let i = 0;
+                            i < value.dataValues.Comments.length;
+                            i++
+                        ) {
+                            condition.push(
+                                value.dataValues.Comments[i].commentId
+                            )
+                        }
+                    })
+                }
+            )
             const data = await Recomments.findAll({
-                where: input,
+                where: { commentId: { [Op.in]: condition } },
                 attributes: [
                     'recommentId',
                     'commentId',
-                    'userId',
                     'content',
                     'createdAt',
                 ],
@@ -149,19 +209,15 @@ module.exports = {
                     },
                 ],
                 order: [['createdAt', 'desc']],
+            }).then((value) => {
+                for (let i = 0; i < value.length; i++) {
+                    value[i].dataValues.createdAt = timeForToday(
+                        value[i].dataValues.createdAt
+                    )
+                }
+                return value
             })
-                .then((value) => {
-                    for (let i = 0; i < value.length; i++) {
-                        value[i].dataValues.createdAt = timeForToday(
-                            value[i].dataValues.createdAt
-                        )
-                        value[i].dataValues.isEdit = false
-                    }
-                    return value
-                })
-                .catch((error) => {
-                    throw new Error(error)
-                })
+
             return data
         } catch (error) {
             throw new Error(error)
@@ -181,17 +237,43 @@ module.exports = {
     updateRecomment: async (content, recommentId) => {
         try {
             let data
+            let condition = []
+            let groupId
             await Recomments.update({ content }, { where: { recommentId } })
                 .then(async (value) => {
-                    const condition = {
-                        commentId: await Recomments.findOne({
-                            where: { recommentId },
-                        }).then((value) => {
-                            return value.dataValues.commentId
-                        }),
-                    }
+                    await Recomments.findOne({ where: { recommentId } }).then(
+                        async (value) => {
+                            await Comments.findOne({
+                                where: {
+                                    commentId: value.dataValues.commentId,
+                                },
+                            }).then((result) => {
+                                groupId = result.dataValues.groupId
+                            })
+                        }
+                    )
+                    await Groups.findOne({
+                        where: { groupId },
+                        include: [
+                            {
+                                model: Comments,
+                                as: 'Comments',
+                                foreignKey: 'groupId',
+                            },
+                        ],
+                    }).then((value) => {
+                        for (
+                            let i = 0;
+                            i < value.dataValues.Comments.length;
+                            i++
+                        ) {
+                            condition.push(
+                                value.dataValues.Comments[i].commentId
+                            )
+                        }
+                    })
                     data = await Recomments.findAll({
-                        where: condition,
+                        where: { commentId: { [Op.in]: condition } },
                         attributes: [
                             'recommentId',
                             'commentId',
