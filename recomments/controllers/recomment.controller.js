@@ -30,12 +30,11 @@ module.exports = {
     },
     getRecomment: async (req, res, next) => {
         const { commentId } = req.params
-        const input = { commentId }
         if (!(await commentService.checkComment(commentId))) {
             return next(new Error('해당 댓글이 존재하지 않습니다'))
         }
         try {
-            const data = await recommentService.getRecomment(input)
+            const data = await recommentService.getRecomment(commentId)
             res.status(200).send({
                 success: true,
                 data,
