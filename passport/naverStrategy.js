@@ -17,7 +17,6 @@ module.exports = () => {
             async (accessToken, refreshToken, profile, done) => {
                 // console.log('naver profile : ', profile)
                 try {
-                    const nickname = ''
                     const exUser = await Users.findOne({
                         // 네이버 플랫폼에서 로그인 했고 & snsId필드에 네이버 아이디가 일치할경우
                         where: { socialId: profile.id, social: 'naver' },
@@ -27,7 +26,7 @@ module.exports = () => {
                         done(null, exUser)
                     } else {
                         if(profile.nickname.length > 8) {
-                            nickname = profile.nickname.substr(0, 8)
+                            let nickname = profile.nickname.substr(0, 8)
                         }
                         console.log(profile.nickname)
                         console.log(profile.nickname.length)
