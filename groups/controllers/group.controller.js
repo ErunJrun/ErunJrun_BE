@@ -119,10 +119,6 @@ module.exports = {
                     )
             }
             if (category === 'prefer') {
-                if (data.length === 0) {
-                    data = await groupService.getGroupData(userId, 'all', query)
-                }
-
                 preferData = await groupService.getUserbyId(userId)
 
                 switch (preferData.likeDistance) {
@@ -172,6 +168,11 @@ module.exports = {
                     case '9':
                         preferData.likeLocation = '제주특별시'
                         break
+                }
+                preferData.dataValues.state = true
+                if (data.length === 0) {
+                    data = await groupService.getGroupData(userId, 'all', query)
+                    preferData.dataValues.state = false
                 }
             }
 

@@ -315,9 +315,15 @@ module.exports = {
 
                         if (apply && category === 'complete') {
                             if (result[i].userId === myUserId) {
+                                result[i].dataValues.attendance =
+                                    apply.attendance
+                            } else {
                                 result[i].dataValues.evaluation =
                                     apply.evaluation
-                            } else {
+                            }
+                        }
+                        if (apply && category === 'mypage') {
+                            if (result[i].userId === myUserId) {
                                 result[i].dataValues.attendance =
                                     apply.attendance
                             }
@@ -334,9 +340,13 @@ module.exports = {
                     if (result[i].dataValues.applyEndTime === 0) {
                         let time = moment().format('YYYY-MM-DD HH:mm:ss')
 
-                        let minus = moment(time).diff(startDateTime, 'hours')
-                        result[i].dataValues.applyEndTime =
-                            Math.abs(minus) + ' 시간'
+                        let minus = moment(startDateTime).diff(time, 'hours')
+
+                        if (minus < 0) {
+                            result[i].dataValues.applyEndTime = '0 일'
+                        } else {
+                            result[i].dataValues.applyEndTime = minus + ' 시간'
+                        }
                     } else if (result[i].dataValues.applyEndTime > 0) {
                         result[i].dataValues.applyEndTime =
                             result[i].dataValues.applyEndTime + ' 일'
@@ -393,6 +403,7 @@ module.exports = {
             if (limit) {
                 data = data.slice(0, limit)
             }
+
             data.sort((a, b) => {
                 const aTime = a.dataValues.applyEndTime.split(' ')[0]
                 const bTime = b.dataValues.applyEndTime.split(' ')[0]
@@ -474,12 +485,15 @@ module.exports = {
 
                 let startDateTime =
                     result.dataValues.date + ' ' + result.dataValues.standbyTime
-
                 if (result.dataValues.applyEndTime === 0) {
                     let time = moment().format('YYYY-MM-DD HH:mm:ss')
+                    let minus = moment(startDateTime).diff(time, 'hours')
 
-                    let minus = moment(time).diff(startDateTime, 'hours')
-                    result.dataValues.applyEndTime = Math.abs(minus) + ' 시간'
+                    if (minus < 0) {
+                        result.dataValues.applyEndTime = '0 일'
+                    } else {
+                        result.dataValues.applyEndTime = minus + ' 시간'
+                    }
                 } else if (result.dataValues.applyEndTime > 0) {
                     result.dataValues.applyEndTime =
                         result.dataValues.applyEndTime + ' 일'
