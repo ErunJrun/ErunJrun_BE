@@ -145,7 +145,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.gte]: nowTime,
+                                                    [Op.lte]: nowTime,
                                                 },
                                             },
                                         ],
@@ -188,7 +188,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.gte]: nowTime,
+                                                    [Op.lte]: nowTime,
                                                 },
                                             },
                                         ],
