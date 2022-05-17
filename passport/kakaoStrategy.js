@@ -27,7 +27,7 @@ module.exports = () => {
                     if (exUser) {
                         done(null, exUser) // 로그인 인증 완료
                     } else {
-                        let nickname = ''
+                        let nickname = profile._json.properties.nickname
                         if(profile._json.properties.nickname.length > 8) {
                             nickname = profile._json.properties.nickname.substr(0, 8)
                         }

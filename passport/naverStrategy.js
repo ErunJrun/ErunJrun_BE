@@ -25,10 +25,13 @@ module.exports = () => {
                     if (exUser) {
                         done(null, exUser)
                     } else {
-                        let nickname = ''
+                        let nickname = profile.nickname
                         if(profile.nickname.length > 8) {
                             nickname = profile.nickname.substr(0, 8)
                         }
+                        console.log(profile.nickname.length)
+                        console.log(profile.nickname)
+                        console.log(nickname)
                         // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
                         const newUser = await Users.create({
                             social: 'naver',
