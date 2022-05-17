@@ -136,6 +136,7 @@ module.exports = {
                         }
                         const category = 'Dday'
                         // 호스트, 게스트 알람 생성
+                        console.log(value[i].dataValues.Appliers[z].userId)
                         await Alarms.create({
                             category,
                             userId: value[i].dataValues.Appliers[z].userId,
@@ -144,8 +145,9 @@ module.exports = {
                             nickname: user.nickname,
                             role,
                         })
-                            .then(() => {
+                            .then((value) => {
                                 deleteOutdateAlarm(value.dataValues.userId)
+                                
                                 if (
                                     user.phone !== null &&
                                     user.agreeSMS === true
@@ -154,7 +156,7 @@ module.exports = {
                                         user.phone,
                                         category,
                                         role,
-                                        value.dataValues.title,
+                                        value.dataValues.groupTitle,
                                         value.dataValues.groupId,
                                         user.nickname,
                                         starttime
@@ -549,7 +551,6 @@ async function deleteOutdateAlarm(userId) {
                 })
             }
         }
-        console.log(alarms.length)
     } catch (error) {
         console.log(error)
         return error
