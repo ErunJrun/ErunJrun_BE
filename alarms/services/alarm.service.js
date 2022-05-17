@@ -502,7 +502,7 @@ async function sendGroupSMS(
             // `${user_phone_number}`
         })
         let sendPhone
-        if ((type = 'LMS')) {
+        if (type === 'LMS') {
             sendPhone = 2
         } else {
             sendPhone = 1
