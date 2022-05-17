@@ -147,12 +147,13 @@ module.exports = {
                         })
                             .then((value) => {
                                 deleteOutdateAlarm(value.dataValues.userId)
-                                
+
                                 if (
                                     user.phone !== null &&
                                     user.agreeSMS === true
                                 ) {
                                     sendGroupSMS(
+                                        value.dataValues.alarmId,
                                         user.phone,
                                         category,
                                         role,
@@ -250,6 +251,7 @@ module.exports = {
                                         user.agreeSMS === true
                                     ) {
                                         sendGroupSMS(
+                                            value.dataValues.alarmId,
                                             user.phone,
                                             category,
                                             role,
@@ -356,6 +358,7 @@ module.exports = {
                                         user.agreeSMS === true
                                     ) {
                                         sendGroupSMS(
+                                            value.dataValues.alarmId,
                                             user.phone,
                                             category,
                                             role,
@@ -393,7 +396,9 @@ module.exports = {
         return
     },
 }
+
 async function sendGroupSMS(
+    alarmId,
     phone,
     category,
     role,
@@ -496,6 +501,13 @@ async function sendGroupSMS(
 
             // `${user_phone_number}`
         })
+        let sendPhone
+        if ((type = 'LMS')) {
+            sendPhone = 2
+        } else {
+            sendPhone = 1
+        }
+        await Alarms.update({ sendPhone }, { where: { alarmId } })
         const endtime = new Date(moment()).getTime()
         console.log('문자전송완료', (endtime - starttime) / 1000)
         return
