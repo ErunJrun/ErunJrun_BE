@@ -551,7 +551,6 @@ async function deleteOutdateAlarm(userId) {
                 })
             }
         }
-        console.log(alarms.length)
     } catch (error) {
         console.log(error)
         return error
