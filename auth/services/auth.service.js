@@ -152,7 +152,7 @@ module.exports = {
     },
     getUpdateUserInfo: async (userId) => {
         try {
-            let data = Users.findOne({
+            const data = Users.findOne({
                 where: { userId },
                 attributes: [
                     'userId',
@@ -168,7 +168,7 @@ module.exports = {
             }).then((value) => {
                 if (value.dataValues.phone !== null) {
                     value.dataValues.certPhone = true
-                } else{
+                } else {
                     value.dataValues.certPhone = false
                 }
                 return value
