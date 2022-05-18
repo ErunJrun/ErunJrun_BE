@@ -214,6 +214,7 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    value[i].dataValues.isEdit = false
                 }
                 return value
             })
