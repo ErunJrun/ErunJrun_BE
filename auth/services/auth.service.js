@@ -105,7 +105,6 @@ module.exports = {
                     },
                 ],
             }).then((value) => {
-                console.log(value)
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.location =
                         value[i].dataValues.location.split(' ')[0] +
@@ -168,8 +167,8 @@ module.exports = {
                 ],
             }).then((value) => {
                 if (value.dataValues.phone === null) {
-                    value.dataValues.agreePhone = false 
-                } else{
+                    value.dataValues.agreePhone = false
+                } else {
                     value.dataValues.agreePhone = true
                 }
                 return value

@@ -60,6 +60,7 @@ app.use((req, res, next) => {
 })
 
 app.use((err, req, res, next) => {
+    console.log(err)
     Logger.error(`${err.message} \n ${err.stack ? err.stack : ''} `)
     return res.status(400).json({ success: false, message: err.message })
 })
