@@ -207,7 +207,7 @@ module.exports = {
             thema: req.body.thema,
             chattingRoom: req.body.chattingRoom,
         }
-        const nowDate = moment().format('YYYY-MM-DD')
+        const nowDate = moment().format('YYYY-MM-DD HH:mm:ss')
         try {
             const chkGroup = await groupService.getGroupById(groupId)
             if (!chkGroup) {
@@ -216,8 +216,8 @@ module.exports = {
             if (chkGroup.userId !== userId) {
                 return next(new Error('본인이 작성한 글만 수정할 수 있습니다'))
             }
-            const dateTime = chkGroup.date + ' ' + chkGroup.standbyTime
 
+            const dateTime = chkGroup.date + ' ' + chkGroup.standbyTime
             if (dateTime < nowDate) {
                 return next(
                     new Error('이미 지난 그룹러닝은 수정할 수 없습니다')
