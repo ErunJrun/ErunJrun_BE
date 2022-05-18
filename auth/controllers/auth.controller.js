@@ -79,6 +79,7 @@ module.exports = {
             )
                 multer.deleteProfile(currentUrl.profileUrl)
 
+            console.log(req)
             data.profileUrl = req.file.location
 
             await authService.updateUserInfo(userId, data)
