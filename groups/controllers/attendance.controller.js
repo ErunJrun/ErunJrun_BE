@@ -13,7 +13,7 @@ module.exports = {
         try {
             await attendanceService.checkAttendanceTime(groupId)
         } catch (error) {
-            return next(new Error('출석체크 시간이 지났습니다'))
+            return next(new Error('아직 출석체크 시간이 아닙니다'))
         }
         try {
             await attendanceService.checkAttendanceDone(groupId)

@@ -24,10 +24,10 @@ module.exports = {
         // standbytime을 지난 경우, 출석체크 진입 못하게 하기.
         console.log(moment().format('YYYY-MM-DD HH:mm:ss'))
         console.log(attendanceTime)
-        if (moment().format('YYYY-MM-DD HH:mm:ss') < attendanceTime) {
+        if (moment().format('YYYY-MM-DD HH:mm:ss') >= attendanceTime) {
             return
         } else {
-            throw new Error('출석체크 시간이 지났습니다')
+            throw new Error('아직 출석체크 시간이 아닙니다')
         }
     },
     checkAttendanceDone: async (groupId) => {
