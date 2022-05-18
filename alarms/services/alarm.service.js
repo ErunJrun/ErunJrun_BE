@@ -450,7 +450,7 @@ async function sendGroupSMS(
             case 'start':
                 switch (role) {
                     case 'host':
-                        content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다. 출석체크를 해주세요. \n 링크: https://erunjrun.com/check/${groupId}`
+                        content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다. 출석체크를 해주세요. \n 링크: https://www.erunjrun.com/check/${groupId}`
                         break
                     case 'attendance':
                         content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다.`
@@ -463,12 +463,13 @@ async function sendGroupSMS(
                         content = `${nickname}님 [${groupTitle}] 그룹러닝은 어떠셨나요?`
                         break
                     case 'attendance':
-                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: https://erunjrun.com/evaluation/${groupId}`
+                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: https://www.erunjrun.com/evaluation/${groupId}`
                         break
                 }
             default:
                 throw new Error('문자 전송 대상값이 올바르지 않습니다')
         }
+        console.log(content)
         let type
         if (getByteB(content) >= 80) {
             type = 'LMS'
