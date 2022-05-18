@@ -73,13 +73,16 @@ module.exports = {
         let limit
         let applyCondition = {}
 
-        let nowDateTime = moment().add(4, 'hours').format('YYYY-MM-DD HH:mm:ss')
+        let minusDateTime = moment()
+            .add(-4, 'hours')
+            .format('YYYY-MM-DD HH:mm:ss')
         let nowDate = moment().format('YYYY-MM-DD')
-        let nowTime = nowDateTime.split(' ')[1]
+        let minusTime = minusDateTime.split(' ')[1]
+        let nowTime = moment().format('HH:mm:ss')
 
         try {
             switch (category) {
-                case 'mypage':
+                case 'mypage': //진행완료
                     Object.assign(condition, { userId: myUserId })
                     break
                 case 'main':
@@ -92,7 +95,7 @@ module.exports = {
                                     { date: nowDate },
                                     {
                                         standbyTime: {
-                                            [Op.gte]: nowTime,
+                                            [Op.lte]: minusTime,
                                         },
                                     },
                                 ],
@@ -100,9 +103,26 @@ module.exports = {
                         ],
                     })
                     break
-                case 'complete':
+                case 'complete': //참여완료
                     applyCondition = { userId: myUserId }
-                    Object.assign(condition, { date: { [Op.lt]: nowDate } })
+                    Object.assign(condition, {
+                        [Op.or]: [
+                            { date: { [Op.lt]: nowDate } },
+                            {
+                                [Op.and]: [
+                                    { date: nowDate },
+                                    {
+                                        finishTime: {
+                                            [Op.gte]: nowTime,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    })
+                    Object.assign(condition, {
+                        userId: { [Op.not]: myUserId },
+                    })
                     break
                 case 'prefer':
                 case 'all':
@@ -135,8 +155,6 @@ module.exports = {
                         }
                         Object.assign(condition, { region: user.likeLocation })
                         if (query.finish !== '1') {
-                            console.log(nowDate)
-                            console.log(nowTime)
                             Object.assign(condition, {
                                 [Op.or]: [
                                     { date: { [Op.gt]: nowDate } },
@@ -145,7 +163,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.lte]: nowTime,
+                                                    [Op.lte]: minusTime,
                                                 },
                                             },
                                         ],
@@ -188,7 +206,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.lte]: nowTime,
+                                                    [Op.lte]: minusTime,
                                                 },
                                             },
                                         ],
