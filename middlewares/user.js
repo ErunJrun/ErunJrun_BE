@@ -28,6 +28,12 @@ module.exports = {
             res.locals.nickname = currentUser.nickname
             res.locals.profileUrl = currentUser.profileUrl
 
+            if (currentUser.likeLocation) {
+                res.locals.firstLogin = false
+            } else {
+                res.locals.firstLogin = true
+            }
+
             next()
         } catch (error) {
             try {
@@ -126,6 +132,12 @@ module.exports = {
             res.locals.userId = currentUser.userId
             res.locals.nickname = currentUser.nickname
             res.locals.profileUrl = currentUser.profileUrl
+
+            if (currentUser.likeLocation) {
+                res.locals.firstLogin = false
+            } else {
+                res.locals.firstLogin = true
+            }
 
             next()
         } catch (error) {
