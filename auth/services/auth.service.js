@@ -162,6 +162,7 @@ module.exports = {
                     'likeLocation',
                     'likeDistance',
                     'userLevel',
+                    'mannerPoint',
                     'phone',
                     'agreeSMS',
                 ],
