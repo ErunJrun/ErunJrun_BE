@@ -59,9 +59,9 @@ module.exports = {
                                     commentId: value.dataValues.commentId,
                                 })
                                     .then((value) => {
-                                        deleteOutdateAlarm(
-                                            value.dataValues.userId
-                                        )
+                                        // deleteOutdateAlarm(
+                                        //     value.dataValues.userId
+                                        // )
                                     })
                                     .catch((error) => {
                                         throw new Error(error)
@@ -110,7 +110,7 @@ module.exports = {
                                 nickname,
                             })
                                 .then((value) => {
-                                    deleteOutdateAlarm(value.dataValues.userId)
+                                    // deleteOutdateAlarm(value.dataValues.userId)
                                 })
                                 .catch((error) => {
                                     throw new Error(error)
@@ -350,21 +350,21 @@ function timeForToday(createdAt) {
     }월 ${timeValue.getDate()}일` // 365일 이상이면 년 월 일
 }
 
-async function deleteOutdateAlarm(userId) {
-    const alarms = await Alarms.findAll({
-        where: { userId },
-        order: [['createdAt', 'desc']],
-    })
-    try {
-        if (alarms.length > 20) {
-            for (let i = 20; i < alarms.length; i++) {
-                await Alarms.destroy({
-                    where: { alarmId: alarms[i].dataValues.alarmId },
-                })
-            }
-        }
-    } catch (error) {
-        throw new Error(error)
-    }
-    return
-}
+// async function deleteOutdateAlarm(userId) {
+//     const alarms = await Alarms.findAll({
+//         where: { userId },
+//         order: [['createdAt', 'desc']],
+//     })
+//     try {
+//         if (alarms.length > 20) {
+//             for (let i = 20; i < alarms.length; i++) {
+//                 await Alarms.destroy({
+//                     where: { alarmId: alarms[i].dataValues.alarmId },
+//                 })
+//             }
+//         }
+//     } catch (error) {
+//         throw new Error(error)
+//     }
+//     return
+// }

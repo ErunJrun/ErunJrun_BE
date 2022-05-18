@@ -598,7 +598,7 @@ module.exports = {
                 groupTitle,
                 userId: user[i].userId,
             }).then((result) => {
-                alarmService.deleteOutdateAlarm(result.userId)
+                // alarmService.deleteOutdateAlarm(result.userId)
             })
         }
     },
