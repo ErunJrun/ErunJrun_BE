@@ -47,7 +47,11 @@ module.exports = {
     getUpdateUserInfo: async (req, res, next) => {
         const { userId } = res.locals
         try {
-            const data = await authService.getUpdateUserInfo(userId).then((value) => {return value.dataValues})
+            const data = await authService
+                .getUpdateUserInfo(userId)
+                .then((value) => {
+                    return value.dataValues
+                })
             console.log(data)
             res.status(200).send({
                 success: true,
