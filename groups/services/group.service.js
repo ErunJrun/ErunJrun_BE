@@ -74,12 +74,11 @@ module.exports = {
         let applyCondition = {}
 
         let minusDateTime = moment()
-            .add(-4, 'hours')
+            .add(4, 'hours')
             .format('YYYY-MM-DD HH:mm:ss')
-        let nowDate = moment().format('YYYY-MM-DD')
+        let nowDate = minusDateTime.split(' ')[0]
         let minusTime = minusDateTime.split(' ')[1]
         let nowTime = moment().format('HH:mm:ss')
-
         try {
             switch (category) {
                 case 'mypage': //진행완료
@@ -95,7 +94,7 @@ module.exports = {
                                     { date: nowDate },
                                     {
                                         standbyTime: {
-                                            [Op.lte]: minusTime,
+                                            [Op.gte]: minusTime,
                                         },
                                     },
                                 ],
@@ -163,7 +162,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.lte]: minusTime,
+                                                    [Op.gte]: minusTime,
                                                 },
                                             },
                                         ],
@@ -206,7 +205,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.lte]: minusTime,
+                                                    [Op.gte]: minusTime,
                                                 },
                                             },
                                         ],
@@ -525,17 +524,17 @@ module.exports = {
                     .format('YYYY년 MM월 DD일 dddd HH시 mm분')
                 result.dataValues.datetime = DateTime
 
-                let standbyTime = result.standbyTime.split(':')
-                result.dataValues.standbyTime =
-                    standbyTime[0] + '시 ' + standbyTime[1] + '분'
+                // let standbyTime = result.standbyTime.split(':')
+                // result.dataValues.standbyTime =
+                //     standbyTime[0] + '시 ' + standbyTime[1] + '분'
 
-                let startTime = result.startTime.split(':')
-                result.dataValues.startTime =
-                    startTime[0] + '시 ' + startTime[1] + '분'
+                // let startTime = result.startTime.split(':')
+                // result.dataValues.startTime =
+                //     startTime[0] + '시 ' + startTime[1] + '분'
 
-                let finishTime = result.finishTime.split(':')
-                result.dataValues.finishTime =
-                    finishTime[0] + '시 ' + finishTime[1] + '분'
+                // let finishTime = result.finishTime.split(':')
+                // result.dataValues.finishTime =
+                //     finishTime[0] + '시 ' + finishTime[1] + '분'
 
                 result.dataValues.mapLatLng = JSON.parse(result.mapLatLng)
 
