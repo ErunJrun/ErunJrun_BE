@@ -146,7 +146,7 @@ module.exports = {
                             role,
                         })
                             .then((value) => {
-                                deleteOutdateAlarm(value.dataValues.userId)
+                                // deleteOutdateAlarm(value.dataValues.userId)
 
                                 if (
                                     user.phone !== null &&
@@ -244,7 +244,7 @@ module.exports = {
                                 role,
                             })
                                 .then((value) => {
-                                    deleteOutdateAlarm(value.dataValues.userId)
+                                    // deleteOutdateAlarm(value.dataValues.userId)
                                     console.log('1', value.dataValues.groupId)
                                     if (
                                         user.phone !== null &&
@@ -351,8 +351,8 @@ module.exports = {
                                 nickname: user.nickname,
                                 role,
                             })
-                                .then(() => {
-                                    deleteOutdateAlarm(value.dataValues.userId)
+                                .then((value) => {
+                                    // deleteOutdateAlarm(value.dataValues.userId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
@@ -550,25 +550,25 @@ function getByteB(str) {
     return byte
 }
 
-async function deleteOutdateAlarm(userId) {
-    const alarms = await Alarms.findAll({
-        where: { userId },
-        order: [['createdAt', 'desc']],
-    })
-    try {
-        if (alarms.length > 20) {
-            for (let i = 20; i < alarms.length; i++) {
-                await Alarms.destroy({
-                    where: { alarmId: alarms[i].dataValues.alarmId },
-                })
-            }
-        }
-    } catch (error) {
-        console.log(error)
-        return error
-    }
-    return
-}
+// async function deleteOutdateAlarm(userId) {
+//     const alarms = await Alarms.findAll({
+//         where: { userId },
+//         order: [['createdAt', 'desc']],
+//     })
+//     try {
+//         if (alarms.length > 20) {
+//             for (let i = 20; i < alarms.length; i++) {
+//                 await Alarms.destroy({
+//                     where: { alarmId: alarms[i].dataValues.alarmId },
+//                 })
+//             }
+//         }
+//     } catch (error) {
+//         console.log(error)
+//         return error
+//     }
+//     return
+// }
 
 async function shortenURL(url) {
     let shorturl = await TinyURL.shorten(url).then((value) => {
