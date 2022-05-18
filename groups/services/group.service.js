@@ -71,6 +71,7 @@ module.exports = {
     getGroupData: async (myUserId, category, query) => {
         let condition = {}
         let limit
+        let size, page
         let applyCondition = {}
 
         let minusDateTime = moment()
@@ -79,6 +80,7 @@ module.exports = {
         let nowDate = minusDateTime.split(' ')[0]
         let minusTime = minusDateTime.split(' ')[1]
         let nowTime = moment().format('HH:mm:ss')
+
         try {
             switch (category) {
                 case 'mypage': //진행완료
@@ -125,6 +127,11 @@ module.exports = {
                     break
                 case 'prefer':
                 case 'all':
+                    if (query.size && query.page) {
+                        size = query.size
+                        page = query.page
+                    }
+
                     if (category === 'prefer') {
                         const user = await Users.findOne({
                             where: { userId: myUserId },
@@ -419,6 +426,9 @@ module.exports = {
             })
             if (limit) {
                 data = data.slice(0, limit)
+            }
+            if (page && size) {
+                data = data.slice((page - 1) * size, size * page)
             }
 
             data.sort((a, b) => {
