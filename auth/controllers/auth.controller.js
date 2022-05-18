@@ -71,16 +71,17 @@ module.exports = {
             agreeSMS: req.body.agreeSMS,
         }
         try {
-            const currentUrl = await authService.getUserUrl(userId)
+            if (req.file) {
+                const currentUrl = await authService.getUserUrl(userId)
 
-            if (
-                currentUrl.profileUrl.split('/')[2] !== 'ssl.pstatic.net' ||
-                'k.kakaocdn.net'
-            )
-                multer.deleteProfile(currentUrl.profileUrl)
+                if (
+                    currentUrl.profileUrl.split('/')[2] !== 'ssl.pstatic.net' ||
+                    'k.kakaocdn.net'
+                )
+                    multer.deleteProfile(currentUrl.profileUrl)
 
-            console.log(req)
-            data.profileUrl = req.file.location
+                data.profileUrl = req.file.location
+            }
 
             await authService.updateUserInfo(userId, data)
             res.status(200).send({
