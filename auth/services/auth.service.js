@@ -166,10 +166,10 @@ module.exports = {
                     'agreeSMS',
                 ],
             }).then((value) => {
-                if (value.dataValues.phone === null) {
-                    value.dataValues.agreePhone = false
-                } else {
-                    value.dataValues.agreePhone = true
+                if (value.dataValues.phone !== null) {
+                    value.dataValues.certPhone = true
+                } else{
+                    value.dataValues.certPhone = false
                 }
                 return value
             })
