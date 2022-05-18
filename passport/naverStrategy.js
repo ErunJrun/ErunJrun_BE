@@ -26,7 +26,7 @@ module.exports = () => {
                         done(null, exUser)
                     } else {
                         let nickname = profile.nickname
-                        if(profile.nickname.length > 8) {
+                        if (profile.nickname.length > 8) {
                             nickname = profile.nickname.substr(0, 8)
                         }
                         // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
