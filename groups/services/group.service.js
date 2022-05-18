@@ -79,7 +79,6 @@ module.exports = {
         let nowDate = minusDateTime.split(' ')[0]
         let minusTime = minusDateTime.split(' ')[1]
         let nowTime = moment().format('HH:mm:ss')
-        console.log(minusTime)
         try {
             switch (category) {
                 case 'mypage': //진행완료
