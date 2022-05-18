@@ -83,12 +83,14 @@ async function checkMyInfo(req, res) {
     const userId = res.locals.userId
     const nickname = res.locals.nickname
     const profileUrl = res.locals.profileUrl
+    const firstLogin = res.locals.firstLogin
 
     res.send({
         success: true,
         userId,
         nickname,
         profileUrl,
+        firstLogin,
     })
 }
 

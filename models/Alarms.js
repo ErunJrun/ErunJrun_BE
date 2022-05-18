@@ -55,6 +55,11 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(150),
                 allowNull: true,
             },
+            sendPhone: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
         },
         {
             sequelize,

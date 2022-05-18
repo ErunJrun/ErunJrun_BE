@@ -145,7 +145,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.gte]: nowTime,
+                                                    [Op.lte]: nowTime,
                                                 },
                                             },
                                         ],
@@ -188,7 +188,7 @@ module.exports = {
                                             { date: nowDate },
                                             {
                                                 standbyTime: {
-                                                    [Op.gte]: nowTime,
+                                                    [Op.lte]: nowTime,
                                                 },
                                             },
                                         ],
@@ -598,7 +598,7 @@ module.exports = {
                 groupTitle,
                 userId: user[i].userId,
             }).then((result) => {
-                alarmService.deleteOutdateAlarm(result.userId)
+                // alarmService.deleteOutdateAlarm(result.userId)
             })
         }
     },

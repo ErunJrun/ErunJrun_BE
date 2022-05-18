@@ -93,7 +93,6 @@ const deleteImg = (url) => {
 }
 
 const deleteProfile = (url) => {
-    console.log(url)
     const filename = url.split('/')[4]
 
     s3.deleteObject(

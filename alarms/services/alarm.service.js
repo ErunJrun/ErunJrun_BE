@@ -146,13 +146,14 @@ module.exports = {
                             role,
                         })
                             .then((value) => {
-                                deleteOutdateAlarm(value.dataValues.userId)
-                                
+                                // deleteOutdateAlarm(value.dataValues.userId)
+
                                 if (
                                     user.phone !== null &&
                                     user.agreeSMS === true
                                 ) {
                                     sendGroupSMS(
+                                        value.dataValues.alarmId,
                                         user.phone,
                                         category,
                                         role,
@@ -243,13 +244,14 @@ module.exports = {
                                 role,
                             })
                                 .then((value) => {
-                                    deleteOutdateAlarm(value.dataValues.userId)
+                                    // deleteOutdateAlarm(value.dataValues.userId)
                                     console.log('1', value.dataValues.groupId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
                                     ) {
                                         sendGroupSMS(
+                                            value.dataValues.alarmId,
                                             user.phone,
                                             category,
                                             role,
@@ -349,13 +351,14 @@ module.exports = {
                                 nickname: user.nickname,
                                 role,
                             })
-                                .then(() => {
-                                    deleteOutdateAlarm(value.dataValues.userId)
+                                .then((value) => {
+                                    // deleteOutdateAlarm(value.dataValues.userId)
                                     if (
                                         user.phone !== null &&
                                         user.agreeSMS === true
                                     ) {
                                         sendGroupSMS(
+                                            value.dataValues.alarmId,
                                             user.phone,
                                             category,
                                             role,
@@ -393,7 +396,9 @@ module.exports = {
         return
     },
 }
+
 async function sendGroupSMS(
+    alarmId,
     phone,
     category,
     role,
@@ -436,12 +441,6 @@ async function sendGroupSMS(
         const signature = hash.toString(CryptoJS.enc.Base64)
 
         console.log('2', groupId)
-        const attendanceURL = await shortenURL(
-            `https://erunjrun.com/check/${groupId}`
-        )
-        const evaluationURL = await shortenURL(
-            `https://erunjrun.com/evaluation/${groupId}`
-        )
         let content
 
         switch (category) {
@@ -451,7 +450,7 @@ async function sendGroupSMS(
             case 'start':
                 switch (role) {
                     case 'host':
-                        content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다. 출석체크를 해주세요. \n 링크: ${attendanceURL}`
+                        content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다. 출석체크를 해주세요. \n 링크: https://erunjrun.com/check/${groupId}`
                         break
                     case 'attendance':
                         content = `${nickname}님 30분 뒤 [${groupTitle}]러닝이 시작합니다.`
@@ -464,7 +463,7 @@ async function sendGroupSMS(
                         content = `${nickname}님 [${groupTitle}] 그룹러닝은 어떠셨나요?`
                         break
                     case 'attendance':
-                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: ${evaluationURL}`
+                        content = `${nickname}님 [${groupTitle}]러닝은 어떠셨나요? 크루장평가를 해주세요. \n 링크: https://erunjrun.com/evaluation/${groupId}`
                         break
                 }
             default:
@@ -496,6 +495,13 @@ async function sendGroupSMS(
 
             // `${user_phone_number}`
         })
+        let sendPhone
+        if (type === 'LMS') {
+            sendPhone = 2
+        } else {
+            sendPhone = 1
+        }
+        await Alarms.update({ sendPhone }, { where: { alarmId } })
         const endtime = new Date(moment()).getTime()
         console.log('문자전송완료', (endtime - starttime) / 1000)
         return
@@ -538,30 +544,30 @@ function getByteB(str) {
     return byte
 }
 
-async function deleteOutdateAlarm(userId) {
-    const alarms = await Alarms.findAll({
-        where: { userId },
-        order: [['createdAt', 'desc']],
-    })
-    try {
-        if (alarms.length > 20) {
-            for (let i = 20; i < alarms.length; i++) {
-                await Alarms.destroy({
-                    where: { alarmId: alarms[i].dataValues.alarmId },
-                })
-            }
-        }
-    } catch (error) {
-        console.log(error)
-        return error
-    }
-    return
-}
+// async function deleteOutdateAlarm(userId) {
+//     const alarms = await Alarms.findAll({
+//         where: { userId },
+//         order: [['createdAt', 'desc']],
+//     })
+//     try {
+//         if (alarms.length > 20) {
+//             for (let i = 20; i < alarms.length; i++) {
+//                 await Alarms.destroy({
+//                     where: { alarmId: alarms[i].dataValues.alarmId },
+//                 })
+//             }
+//         }
+//     } catch (error) {
+//         console.log(error)
+//         return error
+//     }
+//     return
+// }
 
-async function shortenURL(url) {
-    let shorturl = await TinyURL.shorten(url).then((value) => {
-        return value
-    })
-    const result = shorturl
-    return result
-}
+// async function shortenURL(url) {
+//     let shorturl = await TinyURL.shorten(url).then((value) => {
+//         return value
+//     })
+//     const result = shorturl
+//     return result
+// }

@@ -20,7 +20,6 @@ module.exports = {
                     'mannerPoint',
                 ],
             })
-
             switch (userInfo.likeLocation) {
                 case '1':
                     userInfo.likeLocation = '서울'
@@ -106,7 +105,6 @@ module.exports = {
                     },
                 ],
             }).then((value) => {
-                console.log(value)
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.location =
                         value[i].dataValues.location.split(' ')[0] +
@@ -154,7 +152,7 @@ module.exports = {
     },
     getUpdateUserInfo: async (userId) => {
         try {
-            return Users.findOne({
+            const data = Users.findOne({
                 where: { userId },
                 attributes: [
                     'userId',
@@ -164,10 +162,19 @@ module.exports = {
                     'likeLocation',
                     'likeDistance',
                     'userLevel',
+                    'mannerPoint',
                     'phone',
                     'agreeSMS',
                 ],
+            }).then((value) => {
+                if (value.dataValues.phone !== null) {
+                    value.dataValues.certPhone = true
+                } else {
+                    value.dataValues.certPhone = false
+                }
+                return value
             })
+            return data
         } catch (error) {
             throw new Error(error)
         }
