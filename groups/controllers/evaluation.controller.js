@@ -10,21 +10,21 @@ module.exports = {
             await evaluationService.checkHost(groupId, userId)
         } catch (error) {
             console.log(error)
-            return next(new Error('호스트는 호스트 평가에 참여할 수 없습니다'))
+            return next(new Error('크루장은 크루장 평가에 참여할 수 없습니다'))
         }
         // 유저가 Group의 Applier인지 체크할 필요도 있을 것 같다.
         try {
             await evaluationService.checkApplier(groupId, userId)
         } catch (error) {
             return next(
-                new Error('호스트 평가는 그룹러닝 참가자만 할 수 있습니다')
+                new Error('크루장 평가는 그룹러닝 참가자만 할 수 있습니다')
             )
         }
         // 이미 평가가 완료되면 재진입해서는 안된다.
         try {
             await evaluationService.checkEvaluationDone(groupId, userId)
         } catch (error) {
-            return next(new Error('이미 호스트 평가에 참여했습니다'))
+            return next(new Error('이미 크루장 평가에 참여했습니다'))
         }
         try {
             const hostUser = await evaluationService.getEvaluation(groupId)
@@ -43,14 +43,35 @@ module.exports = {
         const { groupId } = req.params
         const { userId } = res.locals
         const hostId = req.body.hostId
-        const { point } = req.body
+        const { point, evaluationCategory } = req.body
+        try {
+            await evaluationService.checkHost(groupId, userId)
+        } catch (error) {
+            console.log(error)
+            return next(new Error('크루장은 크루장 평가에 참여할 수 없습니다'))
+        }
+        // 유저가 Group의 Applier인지 체크할 필요도 있을 것 같다.
+        try {
+            await evaluationService.checkApplier(groupId, userId)
+        } catch (error) {
+            return next(
+                new Error('크루장 평가는 그룹러닝 참가자만 할 수 있습니다')
+            )
+        }
+        // 이미 평가가 완료되면 재진입해서는 안된다.
+        try {
+            await evaluationService.checkEvaluationDone(groupId, userId)
+        } catch (error) {
+            return next(new Error('이미 크루장 평가에 참여했습니다'))
+        }
 
         try {
             await evaluationService.updateEvaluation(
                 groupId,
                 userId,
                 hostId,
-                point
+                point,
+                evaluationCategory
             )
             res.status(200).send({
                 success: true,
