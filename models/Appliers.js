@@ -32,7 +32,7 @@ module.exports = function (sequelize, DataTypes) {
                 defaultValue: 0,
             },
             evaluation: {
-                type: DataTypes.BOOLEAN,
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
             },
