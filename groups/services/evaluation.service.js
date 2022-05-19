@@ -11,7 +11,7 @@ module.exports = {
             },
         })
         if (host !== null) {
-            throw new Error('호스트는 호스트 평가에 참여할 수 없습니다')
+            throw new Error('크루장은 크루장 평가에 참여할 수 없습니다')
         }
         return
     },
@@ -22,7 +22,7 @@ module.exports = {
             },
         })
         if (user === null) {
-            throw new Error('호스트 평가는 그룹러닝 참가자만 할 수 있습니다')
+            throw new Error('크루장 평가는 그룹러닝 참가자만 할 수 있습니다')
         }
         return
     },
@@ -34,9 +34,10 @@ module.exports = {
         }).then((value) => {
             return value.dataValues.evaluation
         })
+        console.log(checkDone)
 
-        if (checkDone === true) {
-            throw new Error('이미 호스트 평가에 참여했습니다')
+        if (checkDone !== 0) {
+            throw new Error('이미 크루장 평가에 참여했습니다')
         }
         return
     },
@@ -67,16 +68,26 @@ module.exports = {
             throw new Error(error)
         }
     },
-    updateEvaluation: async (groupId, userId, hostId, point) => {
+    updateEvaluation: async (
+        groupId,
+        userId,
+        hostId,
+        point,
+        evaluationCategory
+    ) => {
         try {
+            console.log(evaluationCategory)
+            // 크루장 평가 카테고리 업데이트
             await Appliers.update(
-                { evaluation: true },
+                { evaluation: evaluationCategory },
                 {
                     where: {
                         [Op.and]: [{ groupId }, { userId }],
                     },
                 }
+                // 크루장의 매너점수 업데이트
             ).then(async (value) => {
+                console.log(value)
                 await Users.findOne({ where: { userId: hostId } })
                     .then(async (value) => {
                         const newPoint = value.dataValues.mannerPoint + point
