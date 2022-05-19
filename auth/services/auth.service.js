@@ -164,6 +164,53 @@ module.exports = {
             waitingGroup.sort((a, b) => {
                 return a.dataValues.dDay - b.dataValues.dDay
             })
+
+            // 크루장 평가 카테고리
+            // 유저가 만든 그룹들의 그룹ID를 가져온다
+            let evaluation = {
+                evaluationCategory1 : 0,
+                evaluationCategory2 : 0,
+                evaluationCategory3 : 0,
+                evaluationCategory4 : 0,
+                evaluationCategory5 : 0,
+                evaluationCategory6 : 0,
+                evaluationCategory7 : 0,
+                evaluationCategory8 : 0,
+                evaluationCategory9 : 0,
+                evaluationCategory10 : 0,
+            }
+            let criteria = []
+
+            for (let i =0; i <Object.keys(evaluation).length; i ++  ){
+                criteria.push(Object.keys(evaluation)[i])
+            }
+            let groups = []
+            await Groups.findAll({ where: input }).then((value) => {
+                for (let i =0; i < value.length; i++){
+                    groups.push(value[i].dataValues.groupId)
+                }
+            })
+            //  Appliers에서 해당 그룹ID를 조건으로 evaluation들을 가져온다.
+            await Appliers.findAll({
+                where: {
+                    groupId: { [Op.in]: groups },
+                    }
+                }).then((value) => {
+                    for (let i =0; i < value.length; i++){
+                        console.log(value[i].dataValues.evaluation)
+                        for (let z =0; z < criteria.length; z++){
+                            if(value[i].dataValues.evaluation === Number(criteria[z].split('y')[1])){
+                                evaluation[`${criteria[z]}`] += 1
+                                break
+                            }
+                        }    
+                        }
+                    })
+            
+                
+            //  evaluation들의 개수를 세준다.
+            //
+            data.evaluation = evaluation
             data.userInfo = userInfo
             data.waiting = waitingGroup
             // user가 Applier로 포함된 Group의 정보를 가져오기

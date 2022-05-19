@@ -68,7 +68,13 @@ module.exports = {
             throw new Error(error)
         }
     },
-    updateEvaluation: async (groupId, userId, hostId, point, evaluationCategory) => {
+    updateEvaluation: async (
+        groupId,
+        userId,
+        hostId,
+        point,
+        evaluationCategory
+    ) => {
         try {
             console.log(evaluationCategory)
             // 크루장 평가 카테고리 업데이트
