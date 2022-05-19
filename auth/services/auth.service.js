@@ -166,48 +166,50 @@ module.exports = {
             })
 
             // 크루장 평가 카테고리
-            // 유저가 만든 그룹들의 그룹ID를 가져온다
             let evaluation = {
-                evaluationCategory1 : 0,
-                evaluationCategory2 : 0,
-                evaluationCategory3 : 0,
-                evaluationCategory4 : 0,
-                evaluationCategory5 : 0,
-                evaluationCategory6 : 0,
-                evaluationCategory7 : 0,
-                evaluationCategory8 : 0,
-                evaluationCategory9 : 0,
-                evaluationCategory10 : 0,
+                evaluationCategory1: 0,
+                evaluationCategory2: 0,
+                evaluationCategory3: 0,
+                evaluationCategory4: 0,
+                evaluationCategory5: 0,
+                evaluationCategory6: 0,
+                evaluationCategory7: 0,
+                evaluationCategory8: 0,
+                evaluationCategory9: 0,
+                evaluationCategory10: 0,
             }
+            // 카테고리들의 key값 배열
             let criteria = []
 
-            for (let i =0; i <Object.keys(evaluation).length; i ++  ){
+            for (let i = 0; i < Object.keys(evaluation).length; i++) {
                 criteria.push(Object.keys(evaluation)[i])
             }
+            // 유저가 만든 그룹들의 그룹ID를 가져온다
             let groups = []
             await Groups.findAll({ where: input }).then((value) => {
-                for (let i =0; i < value.length; i++){
+                for (let i = 0; i < value.length; i++) {
                     groups.push(value[i].dataValues.groupId)
                 }
             })
-            //  Appliers에서 해당 그룹ID를 조건으로 evaluation들을 가져온다.
+            //  Appliers에서 해당 그룹ID를 조건으로 evaluation들을 가져와서, evaluation의 key값과 동일하면 value +1.
             await Appliers.findAll({
                 where: {
                     groupId: { [Op.in]: groups },
-                    }
-                }).then((value) => {
-                    for (let i =0; i < value.length; i++){
-                        console.log(value[i].dataValues.evaluation)
-                        for (let z =0; z < criteria.length; z++){
-                            if(value[i].dataValues.evaluation === Number(criteria[z].split('y')[1])){
-                                evaluation[`${criteria[z]}`] += 1
-                                break
-                            }
-                        }    
+                },
+            }).then((value) => {
+                for (let i = 0; i < value.length; i++) {
+                    for (let z = 0; z < criteria.length; z++) {
+                        if (
+                            value[i].dataValues.evaluation ===
+                            Number(criteria[z].split('y')[1])
+                        ) {
+                            evaluation[`${criteria[z]}`] += 1
+                            break
                         }
-                    })
-            
-                
+                    }
+                }
+            })
+
             //  evaluation들의 개수를 세준다.
             //
             data.evaluation = evaluation
