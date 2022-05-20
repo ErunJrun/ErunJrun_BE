@@ -58,6 +58,14 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.FLOAT,
                 allowNull: true,
             },
+            parking: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            baggage: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
         },
         {
             sequelize,
