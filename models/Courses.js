@@ -34,13 +34,21 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.FLOAT,
                 allowNull: false,
             },
-            finishTime: {
+            totalTime: {
                 type: DataTypes.DATE,
                 allowNull: false,
             },
-            courseImageUrl: {
+            courseImageUrl1: {
                 type: DataTypes.STRING(255),
                 allowNull: false,
+            },
+            courseImageUrl2: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            courseImageUrl3: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
             },
             mapLatLng: {
                 type: DataTypes.STRING(150),
