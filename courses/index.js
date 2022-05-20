@@ -11,10 +11,10 @@ const authmiddleware = require('../middlewares/user')
 //validator
 const validation = require('./validators/post.validator')
 
-// router.post(
-//     '/',
-//     multer.upload.array('thumbnail', 3),
-//     courseController.createPost
-// )
+router.post(
+    '/',
+    multer.upload.array('courseImage', 3),
+    courseController.createPost
+)
 
 module.exports = router
