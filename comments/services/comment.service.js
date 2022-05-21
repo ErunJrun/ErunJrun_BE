@@ -11,11 +11,11 @@ const moment = require('moment')
 module.exports = {
     createComment: async (input) => {
         await Comments.create(input)
-            .then(async (value) => {
-                if (value.dataValues.groupId !== undefined) {
+            .then(async (result) => {
+                if (result.dataValues.groupId !== undefined) {
                     // 그룹러닝 게시판 알람 케이스
                     await Groups.findOne({
-                        where: { groupId: value.dataValues.groupId },
+                        where: { groupId: result.dataValues.groupId },
                     }).then(async (value) => {
                         // 닉네임 가져오기
                         const nickname = await Users.findOne({
@@ -27,7 +27,8 @@ module.exports = {
                             .catch((error) => {
                                 throw new Error(error)
                             })
-                        // 알람 생성
+                        // 내가 작성한 게시물에 내가 댓글 단 경우가 아니면 알람 생성
+                        if (result.dataValues.userId !== value.dataValues.userId){
                         await Alarms.create({
                             userId: value.dataValues.userId,
                             groupId: value.dataValues.groupId,
@@ -35,12 +36,10 @@ module.exports = {
                             category: 'comment',
                             nickname,
                         })
-                            .then((value) => {
-                                // deleteOutdateAlarm(value.dataValues.userId)
-                            })
                             .catch((error) => {
                                 throw new Error(error)
                             })
+                        }
                     })
                 } else if (value.dataValues.courseId !== undefined) {
                     // 코스추천 게시판 알람 케이스
@@ -57,7 +56,9 @@ module.exports = {
                             .catch((error) => {
                                 throw new Error(error)
                             })
-                        // 알람 생성
+                        // 내가 작성한 게시물에 내가 댓글 단 경우가 아니면 알람 생성
+
+                        if (result.dataValues.userId !== value.dataValues.userId){
                         await Alarms.create({
                             userId: value.dataValues.userId,
                             courseId: value.dataValues.courseId,
@@ -65,12 +66,10 @@ module.exports = {
                             category: 'comment',
                             nickname,
                         })
-                            .then((value) => {
-                                // deleteOutdateAlarm(value.dataValues.userId)
-                            })
                             .catch((error) => {
                                 throw new Error(error)
                             })
+                        }
                     })
                 }
             })
