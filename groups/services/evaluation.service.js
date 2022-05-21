@@ -60,7 +60,8 @@ module.exports = {
                 value.dataValues.date = moment
                     .utc(GroupDate)
                     .lang('ko')
-                    .format('YYYY.MM.DD (dd) HH:mm')
+                    .format('YYYY년 MM월 DD일 dddd HH시 mm분')
+                delete value.dataValues.standbyTime
                 return value
             })
             return hostUser
