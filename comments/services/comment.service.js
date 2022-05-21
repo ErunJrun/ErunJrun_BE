@@ -105,6 +105,11 @@ module.exports = {
                             'userLevel',
                         ],
                     },
+                    {
+                        model: Recomments,
+                        as: 'Recomments',
+                        foreignKey: 'commentId',
+                    },
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
@@ -112,7 +117,10 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    value[i].dataValues.recommentCount = value[i].dataValues.Recomments.length
+                    delete value[i].dataValues.Recomments 
                 }
+                
                 return value
             })
             return data
@@ -151,6 +159,11 @@ module.exports = {
                             'userLevel',
                         ],
                     },
+                    {
+                        model: Recomments,
+                        as: 'Recomments',
+                        foreignKey: 'commentId'
+                    }
                 ],
                 order: [['createdAt', 'desc']],
             }).then((value) => {
@@ -158,6 +171,8 @@ module.exports = {
                     value[i].dataValues.createdAt = timeForToday(
                         value[i].dataValues.createdAt
                     )
+                    value[i].dataValues.recommentCount = value[i].dataValues.Recomments.length
+                    delete value[i].dataValues.Recomments 
                 }
                 return value
             })
@@ -214,6 +229,11 @@ module.exports = {
                                     'userLevel',
                                 ],
                             },
+                            {
+                                model: Recomments,
+                                as: 'Recomments',
+                                foreignKey: 'commentId'
+                            }
                         ],
                         order: [['createdAt', 'desc']],
                     })
@@ -222,6 +242,8 @@ module.exports = {
                                 value[i].dataValues.createdAt = timeForToday(
                                     value[i].dataValues.createdAt
                                 )
+                                value[i].dataValues.recommentCount = value[i].dataValues.Recomments.length
+                                delete value[i].dataValues.Recomments 
                             }
                             return value
                         })

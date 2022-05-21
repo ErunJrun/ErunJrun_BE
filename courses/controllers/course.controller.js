@@ -3,6 +3,7 @@ const multer = require('../../middlewares/multers/multer')
 const moment = require('moment')
 
 module.exports = {
+    // TODO: S3서버 COURSEIMAGE로 하나 파야함.
     createPost: async (req, res, next) => {
         const { userId } = res.locals
 
