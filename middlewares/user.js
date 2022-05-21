@@ -27,6 +27,7 @@ module.exports = {
             res.locals.userId = currentUser.userId
             res.locals.nickname = currentUser.nickname
             res.locals.profileUrl = currentUser.profileUrl
+            res.locals.agreeSMS = currentUser.agreeSMS
 
             if (currentUser.likeLocation) {
                 res.locals.firstLogin = false
@@ -132,6 +133,7 @@ module.exports = {
             res.locals.userId = currentUser.userId
             res.locals.nickname = currentUser.nickname
             res.locals.profileUrl = currentUser.profileUrl
+            res.locals.agreeSMS = currentUser.agreeSMS
 
             if (currentUser.likeLocation) {
                 res.locals.firstLogin = false

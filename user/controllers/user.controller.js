@@ -37,6 +37,7 @@ const kakaoCallback = (req, res, next) => {
                 nickname: currentUser.nickname,
                 profileUrl: currentUser.profileUrl,
                 firstLogin,
+                agreeSMS: currentUser.agreeSMS
             })
         }
     )(req, res, next)
@@ -74,6 +75,7 @@ const naverCallback = (req, res, next) => {
                 nickname: currentUser.nickname,
                 profileUrl: currentUser.profileUrl,
                 firstLogin,
+                agreeSMS: currentUser.agreeSMS
             })
         }
     )(req, res, next)
@@ -84,6 +86,7 @@ async function checkMyInfo(req, res) {
     const nickname = res.locals.nickname
     const profileUrl = res.locals.profileUrl
     const firstLogin = res.locals.firstLogin
+    const agreeSMS = res.locals.agreeSMS
 
     res.send({
         success: true,
@@ -91,6 +94,7 @@ async function checkMyInfo(req, res) {
         nickname,
         profileUrl,
         firstLogin,
+        agreeSMS
     })
 }
 
