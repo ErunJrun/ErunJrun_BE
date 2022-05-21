@@ -53,10 +53,10 @@ module.exports = {
             throw new Error(error)
         }
     },
-    getPostDetail: async (courseId,userId) => {
+    getPostDetail: async (courseId, userId) => {
         const data = await Courses.findOne({
-            where: {courseId},
-            attributes:[
+            where: { courseId },
+            attributes: [
                 'courseId',
                 'title',
                 'content',
@@ -69,7 +69,7 @@ module.exports = {
                 'mapLatLng',
                 'parking',
                 'baggage',
-                'createdAt'
+                'createdAt',
             ],
             include: [
                 {
@@ -81,32 +81,32 @@ module.exports = {
                         'nickname',
                         'profileUrl',
                         'userLevel',
-                        'mannerPoint'
+                        'mannerPoint',
                     ],
                     include: [
                         {
                             model: Bookmarks,
                             as: 'Bookmarks',
-                            foreignKey: 'userId'
-                        }
-                    ]
+                            foreignKey: 'userId',
+                        },
+                    ],
                 },
-            ]
+            ],
         }).then(async (value) => {
-           value.dataValues.mapLatLng = JSON.parse(value.dataValues.mapLatLng)
-           const bookmarkDone = await Bookmarks.findOne({
-            where: {
-                [Op.and]: [{ courseId }, { userId }],
-            },
-           })
-            if (bookmarkDone === null){
+            value.dataValues.mapLatLng = JSON.parse(value.dataValues.mapLatLng)
+            const bookmarkDone = await Bookmarks.findOne({
+                where: {
+                    [Op.and]: [{ courseId }, { userId }],
+                },
+            })
+            if (bookmarkDone === null) {
                 value.dataValues.bookmark = false
-            } else{
+            } else {
                 value.dataValues.bookmark = true
             }
             delete value.dataValues.Bookmarks
-            return value    
+            return value
         })
         return data
-    }
+    },
 }

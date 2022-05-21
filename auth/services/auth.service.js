@@ -191,6 +191,7 @@ module.exports = {
                     groups.push(value[i].dataValues.groupId)
                 }
             })
+            let totalEvaluationCount = 0
             //  Appliers에서 해당 그룹ID를 조건으로 evaluation들을 가져와서, evaluation의 key값과 동일하면 value +1.
             await Appliers.findAll({
                 where: {
@@ -204,14 +205,16 @@ module.exports = {
                             Number(criteria[z].split('y')[1])
                         ) {
                             evaluation[`${criteria[z]}`] += 1
+                            totalEvaluationCount += 1
                             break
                         }
+                        
                     }
                 }
             })
-
             //  evaluation들의 개수를 세준다.
             //
+            data.totalEvaluationCount = totalEvaluationCount
             data.evaluation = evaluation
             data.userInfo = userInfo
             data.waiting = waitingGroup

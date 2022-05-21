@@ -20,5 +20,9 @@ router.post(
 )
 
 router.get('/:category', authmiddleware.checkUsers, courseController.getPost)
-router.get('/detail/:courseId', authmiddleware.checkUsers, courseController.getPostDetail)
+router.get(
+    '/detail/:courseId',
+    authmiddleware.checkUsers,
+    courseController.getPostDetail
+)
 module.exports = router
