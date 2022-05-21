@@ -14,9 +14,9 @@ module.exports = {
     createRecomment: async (input) => {
         let condition = []
         await Recomments.create(input)
-            .then(async (value) => {
+            .then(async (output) => {
                 await Comments.findOne({
-                    where: { commentId: value.dataValues.commentId },
+                    where: { commentId: output.dataValues.commentId },
                 }).then(async (value) => {
                     if (value.dataValues.courseId === null) {
                         await Groups.findOne({
@@ -30,14 +30,8 @@ module.exports = {
                             ],
                         })
                             .then(async (result) => {
-                                for (
-                                    let i = 0;
-                                    i < result.dataValues.Comments.length;
-                                    i++
-                                ) {
-                                    condition.push(
-                                        result.dataValues.Comments[i].commentId
-                                    )
+                                for ( let i = 0; i < result.dataValues.Comments.length; i++) {
+                                    condition.push(result.dataValues.Comments[i].commentId)
                                 }
                                 // 닉네임 가져오기
                                 const nickname = await Users.findOne({
@@ -50,6 +44,7 @@ module.exports = {
                                         throw new Error(error)
                                     })
                                 // 알람 생성
+                                if (output.dataValues.userId !== value.dataValues.userId){
                                 await Alarms.create({
                                     userId: result.dataValues.userId,
                                     groupId: result.dataValues.groupId,
@@ -66,6 +61,7 @@ module.exports = {
                                     .catch((error) => {
                                         throw new Error(error)
                                     })
+                                }
                             })
                             .catch((error) => {
                                 throw new Error(error)
@@ -101,6 +97,8 @@ module.exports = {
                                 .catch((error) => {
                                     throw new Error(error)
                                 })
+
+                            if (output.dataValues.userId !== value.dataValues.userId){
                             // 알람 생성
                             await Alarms.create({
                                 userId: value.dataValues.userId,
@@ -115,6 +113,7 @@ module.exports = {
                                 .catch((error) => {
                                     throw new Error(error)
                                 })
+                            }
                         })
                     }
                 })
