@@ -30,8 +30,14 @@ module.exports = {
                             ],
                         })
                             .then(async (result) => {
-                                for ( let i = 0; i < result.dataValues.Comments.length; i++) {
-                                    condition.push(result.dataValues.Comments[i].commentId)
+                                for (
+                                    let i = 0;
+                                    i < result.dataValues.Comments.length;
+                                    i++
+                                ) {
+                                    condition.push(
+                                        result.dataValues.Comments[i].commentId
+                                    )
                                 }
                                 // 닉네임 가져오기
                                 const nickname = await Users.findOne({
@@ -44,23 +50,26 @@ module.exports = {
                                         throw new Error(error)
                                     })
                                 // 알람 생성
-                                if (output.dataValues.userId !== value.dataValues.userId){
-                                await Alarms.create({
-                                    userId: result.dataValues.userId,
-                                    groupId: result.dataValues.groupId,
-                                    groupTitle: result.dataValues.title,
-                                    category: 'recomment',
-                                    nickname,
-                                    commentId: value.dataValues.commentId,
-                                })
-                                    .then((value) => {
-                                        // deleteOutdateAlarm(
-                                        //     value.dataValues.userId
-                                        // )
+                                if (
+                                    output.dataValues.userId !==
+                                    value.dataValues.userId
+                                ) {
+                                    await Alarms.create({
+                                        userId: result.dataValues.userId,
+                                        groupId: result.dataValues.groupId,
+                                        groupTitle: result.dataValues.title,
+                                        category: 'recomment',
+                                        nickname,
+                                        commentId: value.dataValues.commentId,
                                     })
-                                    .catch((error) => {
-                                        throw new Error(error)
-                                    })
+                                        .then((value) => {
+                                            // deleteOutdateAlarm(
+                                            //     value.dataValues.userId
+                                            // )
+                                        })
+                                        .catch((error) => {
+                                            throw new Error(error)
+                                        })
                                 }
                             })
                             .catch((error) => {
@@ -98,21 +107,24 @@ module.exports = {
                                     throw new Error(error)
                                 })
 
-                            if (output.dataValues.userId !== value.dataValues.userId){
-                            // 알람 생성
-                            await Alarms.create({
-                                userId: value.dataValues.userId,
-                                courseId: value.dataValues.courseId,
-                                courseTitle: value.dataValues.title,
-                                category: 'recomment',
-                                nickname,
-                            })
-                                .then((value) => {
-                                    // deleteOutdateAlarm(value.dataValues.userId)
+                            if (
+                                output.dataValues.userId !==
+                                value.dataValues.userId
+                            ) {
+                                // 알람 생성
+                                await Alarms.create({
+                                    userId: value.dataValues.userId,
+                                    courseId: value.dataValues.courseId,
+                                    courseTitle: value.dataValues.title,
+                                    category: 'recomment',
+                                    nickname,
                                 })
-                                .catch((error) => {
-                                    throw new Error(error)
-                                })
+                                    .then((value) => {
+                                        // deleteOutdateAlarm(value.dataValues.userId)
+                                    })
+                                    .catch((error) => {
+                                        throw new Error(error)
+                                    })
                             }
                         })
                     }

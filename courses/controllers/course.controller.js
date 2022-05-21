@@ -1,6 +1,7 @@
 const courseService = require('../services/course.service')
 const multer = require('../../middlewares/multers/multer')
 const moment = require('moment')
+const { Courses } = require('../../models')
 
 module.exports = {
     // TODO: S3서버 COURSEIMAGE로 하나 파야함.
@@ -39,5 +40,34 @@ module.exports = {
     },
     getPost: async (req, res, next) => {
         let { category } = req.params
+        const query = req.query
+        let data
+        let userId = ''
+
+        if ( (category === 'mypage') && query.userId) {
+            userId = query.userId
+        } else if (res.locals.userId) {
+            userId = res.locals.userId
+        }
+
     },
+    getPostDetail: async (req, res, next) =>{
+        const { courseId } = req.params
+        let userId = ''
+        if (res.locals.userId){
+            userId = res.locals.userId
+        }
+        try{
+            const data = await courseService.getPostDetail(courseId, userId)
+            res.status(200).send({
+                success: true,
+                data
+            })
+        } catch(error){
+            return next({
+            message: '코스추천 게시글 불러오기를 실패하였습니다',
+            stack: error
+        })
+        }
+    }
 }

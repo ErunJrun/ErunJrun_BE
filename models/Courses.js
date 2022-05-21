@@ -51,7 +51,7 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             mapLatLng: {
-                type: DataTypes.STRING(150),
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             starPoint: {
