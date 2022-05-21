@@ -25,4 +25,9 @@ router.get(
     authmiddleware.checkUsers,
     courseController.getPostDetail
 )
+router.delete(
+    '/:courseId',
+    authmiddleware.checkTokens,
+    courseController.deletePost
+)
 module.exports = router
