@@ -1,6 +1,6 @@
 const sequelize = require('sequelize')
 const Op = sequelize.Op
-const { Courses, Appliers, Users, Alarms } = require('../../models')
+const { Courses, Appliers, Users, Alarms, Bookmarks } = require('../../models')
 const moment = require('moment')
 
 module.exports = {
@@ -46,10 +46,67 @@ module.exports = {
                 region = 0
                 break
         }
+        data.region = region
         try {
             Courses.create(data)
         } catch (error) {
             throw new Error(error)
         }
     },
+    getPostDetail: async (courseId,userId) => {
+        const data = await Courses.findOne({
+            where: {courseId},
+            attributes:[
+                'courseId',
+                'title',
+                'content',
+                'location',
+                'distance',
+                'totalTime',
+                'courseImageUrl1',
+                'courseImageUrl2',
+                'courseImageUrl3',
+                'mapLatLng',
+                'parking',
+                'baggage',
+                'createdAt'
+            ],
+            include: [
+                {
+                    model: Users,
+                    as: 'user',
+                    foreignKey: 'userId',
+                    attributes: [
+                        'userId',
+                        'nickname',
+                        'profileUrl',
+                        'userLevel',
+                        'mannerPoint'
+                    ],
+                    include: [
+                        {
+                            model: Bookmarks,
+                            as: 'Bookmarks',
+                            foreignKey: 'userId'
+                        }
+                    ]
+                },
+            ]
+        }).then(async (value) => {
+           value.dataValues.mapLatLng = JSON.parse(value.dataValues.mapLatLng)
+           const bookmarkDone = await Bookmarks.findOne({
+            where: {
+                [Op.and]: [{ courseId }, { userId }],
+            },
+           })
+            if (bookmarkDone === null){
+                value.dataValues.bookmark = false
+            } else{
+                value.dataValues.bookmark = true
+            }
+            delete value.dataValues.Bookmarks
+            return value    
+        })
+        return data
+    }
 }

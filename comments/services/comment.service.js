@@ -28,15 +28,16 @@ module.exports = {
                                 throw new Error(error)
                             })
                         // 내가 작성한 게시물에 내가 댓글 단 경우가 아니면 알람 생성
-                        if (result.dataValues.userId !== value.dataValues.userId){
-                        await Alarms.create({
-                            userId: value.dataValues.userId,
-                            groupId: value.dataValues.groupId,
-                            groupTitle: value.dataValues.title,
-                            category: 'comment',
-                            nickname,
-                        })
-                            .catch((error) => {
+                        if (
+                            result.dataValues.userId !== value.dataValues.userId
+                        ) {
+                            await Alarms.create({
+                                userId: value.dataValues.userId,
+                                groupId: value.dataValues.groupId,
+                                groupTitle: value.dataValues.title,
+                                category: 'comment',
+                                nickname,
+                            }).catch((error) => {
                                 throw new Error(error)
                             })
                         }
@@ -58,15 +59,16 @@ module.exports = {
                             })
                         // 내가 작성한 게시물에 내가 댓글 단 경우가 아니면 알람 생성
 
-                        if (result.dataValues.userId !== value.dataValues.userId){
-                        await Alarms.create({
-                            userId: value.dataValues.userId,
-                            courseId: value.dataValues.courseId,
-                            courseTitle: value.dataValues.title,
-                            category: 'comment',
-                            nickname,
-                        })
-                            .catch((error) => {
+                        if (
+                            result.dataValues.userId !== value.dataValues.userId
+                        ) {
+                            await Alarms.create({
+                                userId: value.dataValues.userId,
+                                courseId: value.dataValues.courseId,
+                                courseTitle: value.dataValues.title,
+                                category: 'comment',
+                                nickname,
+                            }).catch((error) => {
                                 throw new Error(error)
                             })
                         }
