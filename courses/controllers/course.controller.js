@@ -44,30 +44,29 @@ module.exports = {
         let data
         let userId = ''
 
-        if ( (category === 'mypage') && query.userId) {
+        if (category === 'mypage' && query.userId) {
             userId = query.userId
         } else if (res.locals.userId) {
             userId = res.locals.userId
         }
-
     },
-    getPostDetail: async (req, res, next) =>{
+    getPostDetail: async (req, res, next) => {
         const { courseId } = req.params
         let userId = ''
-        if (res.locals.userId){
+        if (res.locals.userId) {
             userId = res.locals.userId
         }
-        try{
+        try {
             const data = await courseService.getPostDetail(courseId, userId)
             res.status(200).send({
                 success: true,
-                data
+                data,
             })
-        } catch(error){
+        } catch (error) {
             return next({
-            message: '코스추천 게시글 불러오기를 실패하였습니다',
-            stack: error
-        })
+                message: '코스추천 게시글 불러오기를 실패하였습니다',
+                stack: error,
+            })
         }
-    }
+    },
 }
