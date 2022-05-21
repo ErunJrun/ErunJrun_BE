@@ -13,8 +13,12 @@ const validation = require('./validators/post.validator')
 
 router.post(
     '/',
+    authmiddleware.checkTokens,
     multer.upload.array('courseImage', 3),
+    validation.postValidation,
     courseController.createPost
 )
+
+router.get('/:category', authmiddleware.checkUsers, courseController.getPost)
 
 module.exports = router
