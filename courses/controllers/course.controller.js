@@ -69,4 +69,25 @@ module.exports = {
             })
         }
     },
+    deletePost: async (req, res, next) => {
+        const { courseId } = req.params
+        const { userId } = res.locals
+        try {
+            await courseService.checkWriter(courseId, userId)
+        } catch (error) {
+            return next(new Error('게시물은 본인만 삭제할 수 있습니다'))
+        }
+        try {
+            await courseService.deletePost(courseId, userId)
+            res.status(200).send({
+                success: true,
+                message: '게시물 삭제에 성공하였습니다',
+            })
+        } catch (error) {
+            return next({
+                message: '게시물 삭제에 실패하였습니다',
+                stack: error,
+            })
+        }
+    },
 }

@@ -208,7 +208,6 @@ module.exports = {
                             totalEvaluationCount += 1
                             break
                         }
-                        
                     }
                 }
             })

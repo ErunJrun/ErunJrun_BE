@@ -109,4 +109,22 @@ module.exports = {
         })
         return data
     },
+    checkWriter: async (courseId, userId) => {
+        const writer = await Courses.findOne({where: {courseId}}).then((value) => {return value.dataValues.userId})
+        if (writer !== userId){
+            throw new Error('게시물은 본인만 삭제할 수 있습니다')
+        } else{
+        return
+    }
+    },
+    deletePost: async (courseId, userId) => {
+        try{
+            await Courses.destroy({where: {
+                [Op.and]: [{courseId}, {userId}]
+            }})
+            return
+        } catch(error){
+            throw new Error(error)
+z        }
+    }
 }
