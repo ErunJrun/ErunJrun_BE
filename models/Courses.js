@@ -69,7 +69,7 @@ module.exports = function (sequelize, DataTypes) {
             clickCnt: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
-                defaultValue: 0
+                defaultValue: 0,
             },
             region: {
                 type: DataTypes.INTEGER,

@@ -245,6 +245,7 @@ module.exports = {
                     } else{
                         value[i].dataValues.bookmark = true
                     }
+                    value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
                 }
                     return value
                 })
@@ -308,6 +309,7 @@ module.exports = {
                     } else{
                         value[i].dataValues.bookmark = true
                     }
+                    value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
                 }
                     return value
                 })
@@ -368,17 +370,17 @@ module.exports = {
                         },
                     })
                 }
-                    if (bookmarkDone === null || userId === undefined){
-                        value[i].dataValues.bookmark = false
-                    } else{
-                        value[i].dataValues.bookmark = true
-                    }
+                if (bookmarkDone === null || userId === undefined){
+                    value[i].dataValues.bookmark = false
+                } else{
+                    value[i].dataValues.bookmark = true
+                }
+                value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
             }
                 return value
             })
         }
-        // 정렬 맞추기:
-        console.log(query.sort)
+        // 정렬 맞추기: 최신순, 별점순, 댓글개수 순, 조회순
         switch(query.sort){
             case 'new':
                 data.feed.sort((a,b) => {return new Date(b.dataValues.createdAt) - new Date(a.dataValues.createdAt)})
@@ -389,12 +391,66 @@ module.exports = {
             case 'comment':
                 data.feed.sort((a,b) => {return b.dataValues.commentCnt - a.dataValues.commentCnt})
                 break
+            case 'clickCnt':
+                data.feed.sort((a,b) => {return b.dataValues.clickCnt - a.dataValues.clickCnt})
+                break
             default:
-                console.log('hi')
                 data.feed.sort((a,b) => {return new Date(b.dataValues.createdAt) - new Date(a.dataValues.createdAt)})
                 break
         }
+        // 랭킹 피드 기준:  조회수 + 댓글 수 + 평점
+        data.rankingFeed = await Courses.findAll({
+            attributes: [
+                'courseId',
+                'title',
+                'location',
+                'distance',
+                'courseId',
+                'courseImageUrl1',
+                'clickCnt',
+                'createdAt',
+                'region'
+            ],
+            include: [
+                {
+                    model: Comments,
+                    as: 'Comments',
+                    foreignKey: 'courseId'
+                },
+                {
+                    model: starpoint,
+                    as: 'starpoints',
+                    foreignKey: 'courseId'
+                }
+            ],
+        }).then((value) => {
+            for (let i =0 ; i < value.length; i ++){
+                // 지역 이름 쪼개기
+                value[i].dataValues.location =
+                value[i].dataValues.location.split(' ')[0] +
+                ' ' +
+                value[i].dataValues.location.split(' ')[1]
+                // 댓글 개수 구하기
+                value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
+                delete value[i].dataValues.Comments
+                // 총 평점 평균 구하기
+                value[i].dataValues.starPoint = 0
+                if (value[i].dataValues.starpoints.length !== 0){
+                for (let z =0; z < value[i].dataValues.starpoints.length; z++){
+                    value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
+                }
+                value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
+            }
+                delete value[i].dataValues.starpoints
+                // 랭킹 점수
+                value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
+            }
+            return value
+        })
+        data.rankingFeed.sort((a,b) => {return b.dataValues.rankPoint - a.dataValues.rankPoint})
+        data.rankingFeed = data.rankingFeed.slice(0,3)
         }
+
         return data
     },
 
