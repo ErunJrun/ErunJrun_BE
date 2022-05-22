@@ -40,14 +40,25 @@ module.exports = {
     },
     getPost: async (req, res, next) => {
         let { category } = req.params
-        const query = req.query
-        let data
-        let userId = ''
+        let query
+        const {userId} = res.locals
 
-        if (category === 'mypage' && query.userId) {
-            userId = query.userId
-        } else if (res.locals.userId) {
-            userId = res.locals.userId
+        if (req.query) {
+            query = req.query
+        } else {
+            query = null
+        }
+        try {
+            const data = await courseService.getPost(category, query, userId)
+            res.status(200).send({
+                success: true,
+                data,
+            })
+        } catch (error) {
+            return next({
+                message: '코스 추천 게시물 불러오기 실패하였습니다',
+                stack: error,
+            })
         }
     },
     getPostDetail: async (req, res, next) => {
