@@ -80,6 +80,23 @@ module.exports = {
             })
         }
     },
+    // TODO: 이미지 업데이트 케이스 중, 기존 사진 삭제 시 S3서버에서도 삭제되게 하기
+    updatePost: async (req, res, next) => {
+        const { courseId } = req.params
+        const { userId } = res.locals
+        let data = {
+            userId,
+            title: req.body.title,
+            totalTime: req.body.totalTime,
+            distance: req.body.distance,
+            location: req.body.location,
+            parking: req.body.parking,
+            baggage: req.body.baggage,
+            content: req.body.content,
+        }
+        // 현재 남은 이미지가 없는 경우
+        // 업로드한 이미지가 없는 경우
+    },
     deletePost: async (req, res, next) => {
         const { courseId } = req.params
         const { userId } = res.locals

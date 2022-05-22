@@ -1,6 +1,14 @@
 const sequelize = require('sequelize')
 const Op = sequelize.Op
-const { Courses, Appliers, Users, Alarms, Bookmarks, Comments, starpoint } = require('../../models')
+const {
+    Courses,
+    Appliers,
+    Users,
+    Alarms,
+    Bookmarks,
+    Comments,
+    starpoint,
+} = require('../../models')
 const moment = require('moment')
 
 module.exports = {
@@ -66,257 +74,75 @@ module.exports = {
                     'courseId',
                     'courseImageUrl1',
                     'clickCnt',
-                    'createdAt'
+                    'createdAt',
                 ],
                 include: [
                     {
                         model: Comments,
                         as: 'Comments',
-                        foreignKey: 'courseId'
+                        foreignKey: 'courseId',
                     },
                     {
                         model: starpoint,
                         as: 'starpoints',
-                        foreignKey: 'courseId'
-                    }
+                        foreignKey: 'courseId',
+                    },
                 ],
                 limit: 3,
-                order: [['createdAt', 'desc']]
+                order: [['createdAt', 'desc']],
             }).then(async (value) => {
-                for (let i =0; i < value.length; i++){
-                // 지역 이름 쪼개기
-                value[i].dataValues.location =
-                value[i].dataValues.location.split(' ')[0] +
-                ' ' +
-                value[i].dataValues.location.split(' ')[1]
-                // 댓글 수 구하기
-                value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
-                delete value[i].dataValues.Comments
-                // 총 평점 평균 구하기
-                value[i].dataValues.starPoint = 0
-                if (value[i].dataValues.starpoints.length !== 0){
-                for (let z =0; z < value[i].dataValues.starpoints.length; z++){
-                    value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
+                for (let i = 0; i < value.length; i++) {
+                    // 지역 이름 쪼개기
+                    value[i].dataValues.location =
+                        value[i].dataValues.location.split(' ')[0] +
+                        ' ' +
+                        value[i].dataValues.location.split(' ')[1]
+                    // 댓글 수 구하기
+                    value[i].dataValues.commentCnt =
+                        value[i].dataValues.Comments.length
+                    delete value[i].dataValues.Comments
+                    // 총 평점 평균 구하기
+                    value[i].dataValues.starPoint = 0
+                    if (value[i].dataValues.starpoints.length !== 0) {
+                        for (
+                            let z = 0;
+                            z < value[i].dataValues.starpoints.length;
+                            z++
+                        ) {
+                            value[i].dataValues.starPoint +=
+                                value[i].dataValues.starpoints[z].myStarPoint
+                        }
+                        value[i].dataValues.starPoint =
+                            value[i].dataValues.starPoint /
+                            value[i].dataValues.starpoints.length
+                    }
+                    delete value[i].dataValues.starpoints
+
+                    // 북마크 여부 체크하기
+                    let bookmarkDone
+                    if (userId !== undefined) {
+                        bookmarkDone = await Bookmarks.findOne({
+                            where: {
+                                [Op.and]: [
+                                    { courseId: value[i].dataValues.courseId },
+                                    { userId },
+                                ],
+                            },
+                        })
+                    }
+                    if (bookmarkDone === null || userId === undefined) {
+                        value[i].dataValues.bookmark = false
+                    } else {
+                        value[i].dataValues.bookmark = true
+                    }
                 }
-                value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
-                }
-                delete value[i].dataValues.starpoints
-                
-                // 북마크 여부 체크하기
-                let bookmarkDone
-                if (userId !== undefined){
-                    bookmarkDone = await Bookmarks.findOne({
-                        where: {
-                            [Op.and]: [{ courseId: value[i].dataValues.courseId }, { userId }],
-                        },
-                    })
-                }
-                if (bookmarkDone === null || userId === undefined){
-                    value[i].dataValues.bookmark = false
-                } else{
-                    value[i].dataValues.bookmark = true
-                }
-            }
                 return value
             })
         }
         // 내가 작성한 코스추천 표출
-        if (category === 'mypage' && userId !== undefined){
+        if (category === 'mypage' && userId !== undefined) {
             data.feed = await Courses.findAll({
-                where: {userId},
-                attributes: [
-                    'courseId',
-                    'title',
-                    'location',
-                    'distance',
-                    'courseId',
-                    'courseImageUrl1',
-                    'clickCnt',
-                    'createdAt'
-                ],
-                include: [
-                    {
-                        model: Comments,
-                        as: 'Comments',
-                        foreignKey: 'courseId'
-                    },
-                    {
-                        model: starpoint,
-                        as: 'starpoints',
-                        foreignKey: 'courseId'
-                    }
-                ],
-                order: [['createdAt', 'desc']]
-            }).then(async (value) => {
-                for (let i =0; i < value.length; i++){
-                // 지역 이름 쪼개기
-                value[i].dataValues.location =
-                value[i].dataValues.location.split(' ')[0] +
-                ' ' +
-                value[i].dataValues.location.split(' ')[1]
-                // 댓글 수 구하기
-                value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
-                delete value[i].dataValues.Comments
-                // 총 평점 평균 구하기
-                value[i].dataValues.starPoint = 0
-                if (value[i].dataValues.starpoints.length !== 0){
-                for (let z =0; z < value[i].dataValues.starpoints.length; z++){
-                    value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
-                }
-                value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
-                }
-                delete value[i].dataValues.starpoints
-                
-                // 북마크 여부 체크하기
-                let bookmarkDone
-                if (userId !== undefined){
-                    bookmarkDone = await Bookmarks.findOne({
-                        where: {
-                            [Op.and]: [{ courseId: value[i].dataValues.courseId }, { userId }],
-                        },
-                    })
-                }
-                if (bookmarkDone === null || userId === undefined){
-                    value[i].dataValues.bookmark = false
-                } else{
-                    value[i].dataValues.bookmark = true
-                }
-            }
-                return value
-            })
-        }
-        // 코스추천 리스트 페이지 표출
-        if (category === 'all'){
-            // 가입한 유저의 경우
-            if (userId !== undefined){
-                const preferRegion = await Users.findOne({where: {userId}}).then((value) => {return value.likeLocation})
-                data.feed = await Courses.findAll({
-                    attributes: [
-                        'courseId',
-                        'title',
-                        'location',
-                        'distance',
-                        'courseId',
-                        'courseImageUrl1',
-                        'clickCnt',
-                        'createdAt',
-                        'region'
-                    ],
-                    where: {[Op.or]:[{region: preferRegion}] },
-                    include: [
-                        {
-                            model: Comments,
-                            as: 'Comments',
-                            foreignKey: 'courseId'
-                        },
-                        {
-                            model: starpoint,
-                            as: 'starpoints',
-                            foreignKey: 'courseId'
-                        }
-                    ],
-                }).then(async (value) => {
-                    for (let i =0; i < value.length; i++){
-                    // 지역 이름 쪼개기
-                    value[i].dataValues.location =
-                    value[i].dataValues.location.split(' ')[0] +
-                    ' ' +
-                    value[i].dataValues.location.split(' ')[1]
-                    // 댓글 수 구하기
-                    value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
-                    delete value[i].dataValues.Comments
-                    // 총 평점 평균 구하기
-                    value[i].dataValues.starPoint = 0
-                    if (value[i].dataValues.starpoints.length !== 0){
-                    for (let z =0; z < value[i].dataValues.starpoints.length; z++){
-                        value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
-                    }
-                    value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
-                    }
-                    delete value[i].dataValues.starpoints
-                    // 북마크 여부 체크하기
-                    const bookmarkDone = await Bookmarks.findOne({
-                        where: {
-                            [Op.and]: [{ courseId: value[i].dataValues.courseId }, { userId }],
-                        },
-                    })
-                    if (bookmarkDone === null){
-                        value[i].dataValues.bookmark = false
-                    } else{
-                        value[i].dataValues.bookmark = true
-                    }
-                    value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
-                }
-                    return value
-                })
-            }
-            // 비회원일 경우
-            else{
-                data.feed = await Courses.findAll({
-                    attributes: [
-                        'courseId',
-                        'title',
-                        'location',
-                        'distance',
-                        'courseId',
-                        'courseImageUrl1',
-                        'clickCnt',
-                        'createdAt',
-                        'region'
-                    ],
-                    include: [
-                        {
-                            model: Comments,
-                            as: 'Comments',
-                            foreignKey: 'courseId'
-                        },
-                        {
-                            model: starpoint,
-                            as: 'starpoints',
-                            foreignKey: 'courseId'
-                        }
-                    ],
-                }).then(async (value) => {
-                    for (let i =0; i < value.length; i++){
-                    // 지역 이름 쪼개기
-                    value[i].dataValues.location =
-                    value[i].dataValues.location.split(' ')[0] +
-                    ' ' +
-                    value[i].dataValues.location.split(' ')[1]
-                    // 댓글 수 구하기
-                    value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
-                    delete value[i].dataValues.Comments
-                    // 총 평점 평균 구하기
-                    value[i].dataValues.starPoint = 0
-                    if (value[i].dataValues.starpoints.length !== 0){
-                    for (let z =0; z < value[i].dataValues.starpoints.length; z++){
-                        value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
-                    }
-                    value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
-                    }
-                    delete value[i].dataValues.starpoints
-                    // 북마크 여부 체크하기\
-                    let bookmarkDone
-                if (userId !== undefined){
-                    bookmarkDone = await Bookmarks.findOne({
-                        where: {
-                            [Op.and]: [{ courseId: value[i].dataValues.courseId }, { userId }],
-                        },
-                    })
-                }
-                    if (bookmarkDone === null || userId === undefined){
-                        value[i].dataValues.bookmark = false
-                    } else{
-                        value[i].dataValues.bookmark = true
-                    }
-                    value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
-                }
-                    return value
-                })
-            }
-        // 지역 필터로 검색한 경우
-        if (query.region !== undefined){
-            data.feed = await Courses.findAll({
+                where: { userId },
                 attributes: [
                     'courseId',
                     'title',
@@ -326,129 +152,420 @@ module.exports = {
                     'courseImageUrl1',
                     'clickCnt',
                     'createdAt',
-                    'region'
                 ],
-                where: {[Op.or]:[{region: query.region}] },
                 include: [
                     {
                         model: Comments,
                         as: 'Comments',
-                        foreignKey: 'courseId'
+                        foreignKey: 'courseId',
                     },
                     {
                         model: starpoint,
                         as: 'starpoints',
-                        foreignKey: 'courseId'
-                    }
+                        foreignKey: 'courseId',
+                    },
                 ],
-                order: [['createdAt', 'desc']]
+                order: [['createdAt', 'desc']],
             }).then(async (value) => {
-                for (let i =0; i < value.length; i++){
-                // 지역 이름 쪼개기
-                value[i].dataValues.location =
-                value[i].dataValues.location.split(' ')[0] +
-                ' ' +
-                value[i].dataValues.location.split(' ')[1]
-                // 댓글 수 구하기
-                value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
-                delete value[i].dataValues.Comments
-                // 총 평점 평균 구하기
-                value[i].dataValues.starPoint = 0
-                if (value[i].dataValues.starpoints.length !== 0){
-                for (let z =0; z < value[i].dataValues.starpoints.length; z++){
-                    value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
+                for (let i = 0; i < value.length; i++) {
+                    // 지역 이름 쪼개기
+                    value[i].dataValues.location =
+                        value[i].dataValues.location.split(' ')[0] +
+                        ' ' +
+                        value[i].dataValues.location.split(' ')[1]
+                    // 댓글 수 구하기
+                    value[i].dataValues.commentCnt =
+                        value[i].dataValues.Comments.length
+                    delete value[i].dataValues.Comments
+                    // 총 평점 평균 구하기
+                    value[i].dataValues.starPoint = 0
+                    if (value[i].dataValues.starpoints.length !== 0) {
+                        for (
+                            let z = 0;
+                            z < value[i].dataValues.starpoints.length;
+                            z++
+                        ) {
+                            value[i].dataValues.starPoint +=
+                                value[i].dataValues.starpoints[z].myStarPoint
+                        }
+                        value[i].dataValues.starPoint =
+                            value[i].dataValues.starPoint /
+                            value[i].dataValues.starpoints.length
+                    }
+                    delete value[i].dataValues.starpoints
+
+                    // 북마크 여부 체크하기
+                    let bookmarkDone
+                    if (userId !== undefined) {
+                        bookmarkDone = await Bookmarks.findOne({
+                            where: {
+                                [Op.and]: [
+                                    { courseId: value[i].dataValues.courseId },
+                                    { userId },
+                                ],
+                            },
+                        })
+                    }
+                    if (bookmarkDone === null || userId === undefined) {
+                        value[i].dataValues.bookmark = false
+                    } else {
+                        value[i].dataValues.bookmark = true
+                    }
                 }
-                value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
-            }
-                delete value[i].dataValues.starpoints
-                // 북마크 여부 체크하기
-                let bookmarkDone
-                if (userId !== undefined){
-                    bookmarkDone = await Bookmarks.findOne({
-                        where: {
-                            [Op.and]: [{ courseId: value[i].dataValues.courseId }, { userId }],
-                        },
-                    })
-                }
-                if (bookmarkDone === null || userId === undefined){
-                    value[i].dataValues.bookmark = false
-                } else{
-                    value[i].dataValues.bookmark = true
-                }
-                value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
-            }
                 return value
             })
         }
-        // 정렬 맞추기: 최신순, 별점순, 댓글개수 순, 조회순
-        switch(query.sort){
-            case 'new':
-                data.feed.sort((a,b) => {return new Date(b.dataValues.createdAt) - new Date(a.dataValues.createdAt)})
-                break
-            case 'starPoint':
-                data.feed.sort((a,b) => {return b.dataValues.starPoint - a.dataValues.starPoint})
-                break
-            case 'comment':
-                data.feed.sort((a,b) => {return b.dataValues.commentCnt - a.dataValues.commentCnt})
-                break
-            case 'clickCnt':
-                data.feed.sort((a,b) => {return b.dataValues.clickCnt - a.dataValues.clickCnt})
-                break
-            default:
-                data.feed.sort((a,b) => {return new Date(b.dataValues.createdAt) - new Date(a.dataValues.createdAt)})
-                break
-        }
-        // 랭킹 피드 기준:  조회수 + 댓글 수 + 평점
-        data.rankingFeed = await Courses.findAll({
-            attributes: [
-                'courseId',
-                'title',
-                'location',
-                'distance',
-                'courseId',
-                'courseImageUrl1',
-                'clickCnt',
-                'createdAt',
-                'region'
-            ],
-            include: [
-                {
-                    model: Comments,
-                    as: 'Comments',
-                    foreignKey: 'courseId'
-                },
-                {
-                    model: starpoint,
-                    as: 'starpoints',
-                    foreignKey: 'courseId'
-                }
-            ],
-        }).then((value) => {
-            for (let i =0 ; i < value.length; i ++){
-                // 지역 이름 쪼개기
-                value[i].dataValues.location =
-                value[i].dataValues.location.split(' ')[0] +
-                ' ' +
-                value[i].dataValues.location.split(' ')[1]
-                // 댓글 개수 구하기
-                value[i].dataValues.commentCnt = value[i].dataValues.Comments.length
-                delete value[i].dataValues.Comments
-                // 총 평점 평균 구하기
-                value[i].dataValues.starPoint = 0
-                if (value[i].dataValues.starpoints.length !== 0){
-                for (let z =0; z < value[i].dataValues.starpoints.length; z++){
-                    value[i].dataValues.starPoint += value[i].dataValues.starpoints[z].myStarPoint
-                }
-                value[i].dataValues.starPoint = value[i].dataValues.starPoint/value[i].dataValues.starpoints.length
+        // 코스추천 리스트 페이지 표출
+        if (category === 'all') {
+            // 가입한 유저의 경우
+            if (userId !== undefined) {
+                const preferRegion = await Users.findOne({
+                    where: { userId },
+                }).then((value) => {
+                    return value.likeLocation
+                })
+                data.feed = await Courses.findAll({
+                    attributes: [
+                        'courseId',
+                        'title',
+                        'location',
+                        'distance',
+                        'courseId',
+                        'courseImageUrl1',
+                        'clickCnt',
+                        'createdAt',
+                        'region',
+                    ],
+                    where: { [Op.or]: [{ region: preferRegion }] },
+                    include: [
+                        {
+                            model: Comments,
+                            as: 'Comments',
+                            foreignKey: 'courseId',
+                        },
+                        {
+                            model: starpoint,
+                            as: 'starpoints',
+                            foreignKey: 'courseId',
+                        },
+                    ],
+                }).then(async (value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        // 지역 이름 쪼개기
+                        value[i].dataValues.location =
+                            value[i].dataValues.location.split(' ')[0] +
+                            ' ' +
+                            value[i].dataValues.location.split(' ')[1]
+                        // 댓글 수 구하기
+                        value[i].dataValues.commentCnt =
+                            value[i].dataValues.Comments.length
+                        delete value[i].dataValues.Comments
+                        // 총 평점 평균 구하기
+                        value[i].dataValues.starPoint = 0
+                        if (value[i].dataValues.starpoints.length !== 0) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.starpoints.length;
+                                z++
+                            ) {
+                                value[i].dataValues.starPoint +=
+                                    value[i].dataValues.starpoints[
+                                        z
+                                    ].myStarPoint
+                            }
+                            value[i].dataValues.starPoint =
+                                value[i].dataValues.starPoint /
+                                value[i].dataValues.starpoints.length
+                        }
+                        delete value[i].dataValues.starpoints
+                        // 북마크 여부 체크하기
+                        const bookmarkDone = await Bookmarks.findOne({
+                            where: {
+                                [Op.and]: [
+                                    { courseId: value[i].dataValues.courseId },
+                                    { userId },
+                                ],
+                            },
+                        })
+                        if (bookmarkDone === null) {
+                            value[i].dataValues.bookmark = false
+                        } else {
+                            value[i].dataValues.bookmark = true
+                        }
+                        value[i].dataValues.rankPoint =
+                            value[i].dataValues.commentCnt +
+                            value[i].dataValues.starPoint +
+                            value[i].dataValues.clickCnt
+                    }
+                    return value
+                })
             }
-                delete value[i].dataValues.starpoints
-                // 랭킹 점수
-                value[i].dataValues.rankPoint = value[i].dataValues.commentCnt + value[i].dataValues.starPoint + value[i].dataValues.clickCnt
+            // 비회원일 경우
+            else {
+                data.feed = await Courses.findAll({
+                    attributes: [
+                        'courseId',
+                        'title',
+                        'location',
+                        'distance',
+                        'courseId',
+                        'courseImageUrl1',
+                        'clickCnt',
+                        'createdAt',
+                        'region',
+                    ],
+                    include: [
+                        {
+                            model: Comments,
+                            as: 'Comments',
+                            foreignKey: 'courseId',
+                        },
+                        {
+                            model: starpoint,
+                            as: 'starpoints',
+                            foreignKey: 'courseId',
+                        },
+                    ],
+                }).then(async (value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        // 지역 이름 쪼개기
+                        value[i].dataValues.location =
+                            value[i].dataValues.location.split(' ')[0] +
+                            ' ' +
+                            value[i].dataValues.location.split(' ')[1]
+                        // 댓글 수 구하기
+                        value[i].dataValues.commentCnt =
+                            value[i].dataValues.Comments.length
+                        delete value[i].dataValues.Comments
+                        // 총 평점 평균 구하기
+                        value[i].dataValues.starPoint = 0
+                        if (value[i].dataValues.starpoints.length !== 0) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.starpoints.length;
+                                z++
+                            ) {
+                                value[i].dataValues.starPoint +=
+                                    value[i].dataValues.starpoints[
+                                        z
+                                    ].myStarPoint
+                            }
+                            value[i].dataValues.starPoint =
+                                value[i].dataValues.starPoint /
+                                value[i].dataValues.starpoints.length
+                        }
+                        delete value[i].dataValues.starpoints
+                        // 북마크 여부 체크하기\
+                        let bookmarkDone
+                        if (userId !== undefined) {
+                            bookmarkDone = await Bookmarks.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        {
+                                            courseId:
+                                                value[i].dataValues.courseId,
+                                        },
+                                        { userId },
+                                    ],
+                                },
+                            })
+                        }
+                        if (bookmarkDone === null || userId === undefined) {
+                            value[i].dataValues.bookmark = false
+                        } else {
+                            value[i].dataValues.bookmark = true
+                        }
+                        value[i].dataValues.rankPoint =
+                            value[i].dataValues.commentCnt +
+                            value[i].dataValues.starPoint +
+                            value[i].dataValues.clickCnt
+                    }
+                    return value
+                })
             }
-            return value
-        })
-        data.rankingFeed.sort((a,b) => {return b.dataValues.rankPoint - a.dataValues.rankPoint})
-        data.rankingFeed = data.rankingFeed.slice(0,3)
+            // 지역 필터로 검색한 경우
+            if (query.region !== undefined) {
+                data.feed = await Courses.findAll({
+                    attributes: [
+                        'courseId',
+                        'title',
+                        'location',
+                        'distance',
+                        'courseId',
+                        'courseImageUrl1',
+                        'clickCnt',
+                        'createdAt',
+                        'region',
+                    ],
+                    where: { [Op.or]: [{ region: query.region }] },
+                    include: [
+                        {
+                            model: Comments,
+                            as: 'Comments',
+                            foreignKey: 'courseId',
+                        },
+                        {
+                            model: starpoint,
+                            as: 'starpoints',
+                            foreignKey: 'courseId',
+                        },
+                    ],
+                    order: [['createdAt', 'desc']],
+                }).then(async (value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        // 지역 이름 쪼개기
+                        value[i].dataValues.location =
+                            value[i].dataValues.location.split(' ')[0] +
+                            ' ' +
+                            value[i].dataValues.location.split(' ')[1]
+                        // 댓글 수 구하기
+                        value[i].dataValues.commentCnt =
+                            value[i].dataValues.Comments.length
+                        delete value[i].dataValues.Comments
+                        // 총 평점 평균 구하기
+                        value[i].dataValues.starPoint = 0
+                        if (value[i].dataValues.starpoints.length !== 0) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.starpoints.length;
+                                z++
+                            ) {
+                                value[i].dataValues.starPoint +=
+                                    value[i].dataValues.starpoints[
+                                        z
+                                    ].myStarPoint
+                            }
+                            value[i].dataValues.starPoint =
+                                value[i].dataValues.starPoint /
+                                value[i].dataValues.starpoints.length
+                        }
+                        delete value[i].dataValues.starpoints
+                        // 북마크 여부 체크하기
+                        let bookmarkDone
+                        if (userId !== undefined) {
+                            bookmarkDone = await Bookmarks.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        {
+                                            courseId:
+                                                value[i].dataValues.courseId,
+                                        },
+                                        { userId },
+                                    ],
+                                },
+                            })
+                        }
+                        if (bookmarkDone === null || userId === undefined) {
+                            value[i].dataValues.bookmark = false
+                        } else {
+                            value[i].dataValues.bookmark = true
+                        }
+                        value[i].dataValues.rankPoint =
+                            value[i].dataValues.commentCnt +
+                            value[i].dataValues.starPoint +
+                            value[i].dataValues.clickCnt
+                    }
+                    return value
+                })
+            }
+            // 정렬 맞추기: 최신순, 별점순, 댓글개수 순, 조회순
+            switch (query.sort) {
+                case 'new':
+                    data.feed.sort((a, b) => {
+                        return (
+                            new Date(b.dataValues.createdAt) -
+                            new Date(a.dataValues.createdAt)
+                        )
+                    })
+                    break
+                case 'starPoint':
+                    data.feed.sort((a, b) => {
+                        return b.dataValues.starPoint - a.dataValues.starPoint
+                    })
+                    break
+                case 'comment':
+                    data.feed.sort((a, b) => {
+                        return b.dataValues.commentCnt - a.dataValues.commentCnt
+                    })
+                    break
+                case 'clickCnt':
+                    data.feed.sort((a, b) => {
+                        return b.dataValues.clickCnt - a.dataValues.clickCnt
+                    })
+                    break
+                default:
+                    data.feed.sort((a, b) => {
+                        return (
+                            new Date(b.dataValues.createdAt) -
+                            new Date(a.dataValues.createdAt)
+                        )
+                    })
+                    break
+            }
+            // 랭킹 피드 기준:  조회수 + 댓글 수 + 평점
+            data.rankingFeed = await Courses.findAll({
+                attributes: [
+                    'courseId',
+                    'title',
+                    'location',
+                    'distance',
+                    'courseId',
+                    'courseImageUrl1',
+                    'clickCnt',
+                    'createdAt',
+                    'region',
+                ],
+                include: [
+                    {
+                        model: Comments,
+                        as: 'Comments',
+                        foreignKey: 'courseId',
+                    },
+                    {
+                        model: starpoint,
+                        as: 'starpoints',
+                        foreignKey: 'courseId',
+                    },
+                ],
+            }).then((value) => {
+                for (let i = 0; i < value.length; i++) {
+                    // 지역 이름 쪼개기
+                    value[i].dataValues.location =
+                        value[i].dataValues.location.split(' ')[0] +
+                        ' ' +
+                        value[i].dataValues.location.split(' ')[1]
+                    // 댓글 개수 구하기
+                    value[i].dataValues.commentCnt =
+                        value[i].dataValues.Comments.length
+                    delete value[i].dataValues.Comments
+                    // 총 평점 평균 구하기
+                    value[i].dataValues.starPoint = 0
+                    if (value[i].dataValues.starpoints.length !== 0) {
+                        for (
+                            let z = 0;
+                            z < value[i].dataValues.starpoints.length;
+                            z++
+                        ) {
+                            value[i].dataValues.starPoint +=
+                                value[i].dataValues.starpoints[z].myStarPoint
+                        }
+                        value[i].dataValues.starPoint =
+                            value[i].dataValues.starPoint /
+                            value[i].dataValues.starpoints.length
+                    }
+                    delete value[i].dataValues.starpoints
+                    // 랭킹 점수
+                    value[i].dataValues.rankPoint =
+                        value[i].dataValues.commentCnt +
+                        value[i].dataValues.starPoint +
+                        value[i].dataValues.clickCnt
+                }
+                return value
+            })
+            data.rankingFeed.sort((a, b) => {
+                return b.dataValues.rankPoint - a.dataValues.rankPoint
+            })
+            data.rankingFeed = data.rankingFeed.slice(0, 3)
         }
 
         return data
@@ -472,7 +589,7 @@ module.exports = {
                 'parking',
                 'baggage',
                 'createdAt',
-                'clickCnt'
+                'clickCnt',
             ],
             include: [
                 {
@@ -489,10 +606,13 @@ module.exports = {
                 },
             ],
         }).then(async (value) => {
-            await Courses.update({clickCnt: value.dataValues.clickCnt +=1}, {where: {courseId}})
+            await Courses.update(
+                { clickCnt: (value.dataValues.clickCnt += 1) },
+                { where: { courseId } }
+            )
             value.dataValues.mapLatLng = JSON.parse(value.dataValues.mapLatLng)
             let bookmarkDone
-            if (userId !== undefined){
+            if (userId !== undefined) {
                 bookmarkDone = await Bookmarks.findOne({
                     where: {
                         [Op.and]: [{ courseId }, { userId }],
