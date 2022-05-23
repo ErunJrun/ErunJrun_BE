@@ -693,40 +693,55 @@ module.exports = {
             throw new Error(error)
         }
     },
-    updatestarPoint: async (courseId, userId, myStarPoint) =>{
-        try{
+    updatestarPoint: async (courseId, userId, myStarPoint) => {
+        try {
             let data = {}
             data.starPoint = 0
             data.starPeople = 0
             data.myStarPoint = myStarPoint
-            const existPoint = starpoint.findOne({where: {[Op.and]: [{courseId} , {userId}]}})
-            if (existPoint){
-                await starpoint.update({myStarPoint}, {where:  {[Op.and]: [{courseId} , {userId}]}}).then(async (value) => {
-                    await starpoint.findAll({where: {courseId}}).then((value) => {
-                        for (let i =0 ; i < value.length; i++){
-                            data.starPoint += value[i].dataValues.myStarPoint
-                            data.starPeople += 1
-                        }
+            const existPoint = starpoint.findOne({
+                where: { [Op.and]: [{ courseId }, { userId }] },
+            })
+            if (existPoint) {
+                await starpoint
+                    .update(
+                        { myStarPoint },
+                        { where: { [Op.and]: [{ courseId }, { userId }] } }
+                    )
+                    .then(async (value) => {
+                        await starpoint
+                            .findAll({ where: { courseId } })
+                            .then((value) => {
+                                for (let i = 0; i < value.length; i++) {
+                                    data.starPoint +=
+                                        value[i].dataValues.myStarPoint
+                                    data.starPeople += 1
+                                }
+                                return value
+                            })
                         return value
                     })
-                    return value
-                })
-            }else{
-                await starpoint.create({courseId, userId, myStarPoint}).then(async (value) =>{
-                    await starpoint.findAll({where: {courseId}}).then((value) => {
-                        for (let i =0 ; i < value.length; i++){
-                            data.starPoint += value[i].dataValues.myStarPoint
-                            data.starPeople += 1
-                        }
+            } else {
+                await starpoint
+                    .create({ courseId, userId, myStarPoint })
+                    .then(async (value) => {
+                        await starpoint
+                            .findAll({ where: { courseId } })
+                            .then((value) => {
+                                for (let i = 0; i < value.length; i++) {
+                                    data.starPoint +=
+                                        value[i].dataValues.myStarPoint
+                                    data.starPeople += 1
+                                }
+                                return value
+                            })
                         return value
                     })
-                    return value
-                })
             }
             console.log(data)
             return data
-        } catch(error){
+        } catch (error) {
             throw new Error(error)
         }
-    }
+    },
 }
