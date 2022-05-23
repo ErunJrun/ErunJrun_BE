@@ -247,4 +247,26 @@ module.exports = {
             })
         }
     },
+    getStarPoint: async (req, res, next) => {
+        const { courseId } = req.params
+        const {userId} = res.locals
+        console.log(userId)
+        const existPost = await courseService.checkPost(courseId)
+        if (!existPost) {
+            return next(new Error('해당 게시물이 존재하지 않습니다'))
+        }
+        try {
+            const data = await courseService.getStarPoint(courseId, userId)
+            console.log(data)
+            res.status(200).send({
+                success: true,
+                data,
+            })
+        } catch (error) {
+            return next({
+                message: '평점 불러오기에에 실패했습니다',
+                stack: error,
+            })
+        }
+    },
 }
