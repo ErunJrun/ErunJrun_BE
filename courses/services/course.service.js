@@ -193,7 +193,6 @@ module.exports = {
                             value[i].dataValues.starpoints.length
                     }
                     delete value[i].dataValues.starpoints
-
                     // 북마크 여부 체크하기
                     let bookmarkDone
                     if (userId !== undefined) {
@@ -629,6 +628,9 @@ module.exports = {
         })
         return data
     },
+    checkPost: async (courseId) => {
+        return await Courses.findOne({ where: { courseId } })
+    },
     checkWriter: async (courseId, userId) => {
         const writer = await Courses.findOne({ where: { courseId } }).then(
             (value) => {
@@ -639,6 +641,15 @@ module.exports = {
             throw new Error('게시물은 본인만 삭제할 수 있습니다')
         } else {
             return
+        }
+    },
+    updatePost: async (courseId, data) => {
+        console.log(data)
+        try {
+            Courses.update(data, { where: { courseId } })
+            return
+        } catch (error) {
+            throw new Error(error)
         }
     },
     deletePost: async (courseId, userId) => {

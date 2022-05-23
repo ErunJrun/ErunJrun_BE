@@ -28,6 +28,7 @@ router.get(
 router.patch(
     '/:courseId',
     authmiddleware.checkTokens,
+    multer.uploadCourse.array('courseImage', 3),
     courseController.updatePost
 )
 router.delete(
