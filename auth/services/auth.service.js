@@ -249,19 +249,19 @@ module.exports = {
             }).then((value) => {
                 switch (value.dataValues.userLevel){
                     case '오렌지':
-                        value.dataValues.userLevel = 0
+                        value.dataValues.userLevel = "0"
                         break
                     case '퍼플':
-                        value.dataValues.userLevel = 1
+                        value.dataValues.userLevel = "1"
                         break
                     case '블루':
-                        value.dataValues.userLevel = 2
+                        value.dataValues.userLevel = "2"
                         break
                     case '레드':
-                        value.dataValues.userLevel = 3
+                        value.dataValues.userLevel = "3"
                         break
                     case '블랙':
-                        value.dataValues.userLevel = 4
+                        value.dataValues.userLevel = "4"
                         break
                 }
                 if (value.dataValues.phone !== null) {
