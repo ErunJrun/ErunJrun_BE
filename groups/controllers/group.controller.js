@@ -256,14 +256,16 @@ module.exports = {
                 if (req.files) {
                     for (let i = 0; i < req.files.length; i++) {
                         data[`thumbnailUrl${i + 1}`] = req.files[i].location
-                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
-                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        if (chkGroup[`thumbnailUrl${i + 1}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i + 1}`])
                         }
                     }
                 } else {
-                    data[`thumbnailUrl${i + 1}`] = null
-                    if (chkGroup[`thumbnailUrl${i}`] !== null) {
-                        multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                    for (let i = 1; i <= 3; i++) {
+                        data[`thumbnailUrl${i}`] = null
+                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        }
                     }
                 }
             }
