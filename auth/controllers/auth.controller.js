@@ -76,19 +76,19 @@ module.exports = {
             agreeSMS: req.body.agreeSMS,
         }
         switch (data.userLevel) {
-            case "0":
+            case '0':
                 data.userLevel = '오렌지'
                 break
-            case "1":
+            case '1':
                 data.userLevel = '퍼플'
                 break
-            case "2":
+            case '2':
                 data.userLevel = '블루'
                 break
-            case "3":
+            case '3':
                 data.userLevel = '레드'
                 break
-            case "4":
+            case '4':
                 data.userLevel = '블랙'
                 break
         }
