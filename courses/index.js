@@ -36,4 +36,14 @@ router.delete(
     authmiddleware.checkTokens,
     courseController.deletePost
 )
+router.patch(
+    '/:courseId/bookmark',
+    authmiddleware.checkTokens,
+    courseController.updateBookmark
+)
+router.patch(
+    '/:courseId/starPoint',
+    authmiddleware.checkTokens,
+    courseController.updatestarPoint
+)
 module.exports = router
