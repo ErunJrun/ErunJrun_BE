@@ -387,7 +387,7 @@ module.exports = {
                 // 전국 필터의 경우
                 console.log(query.region)
                 console.log(typeof query.region)
-                if (query.region === "0") {
+                if (query.region === '0') {
                     data.feed = await Courses.findAll({
                         attributes: [
                             'courseId',
@@ -843,5 +843,27 @@ module.exports = {
         } catch (error) {
             throw new Error(error)
         }
+    },
+    getStarPoint: async (courseId, userId) => {
+        let data = {}
+        data.starPoint = 0
+        data.starPeople = 0
+        if (userId !== undefined) {
+            data.myStarPoint = await starpoint
+                .findOne({ where: { [Op.and]: [{ courseId }, { userId }] } })
+                .then(async (value) => {
+                    return value.dataValues.myStarPoint
+                })
+        } else {
+            data.myStarPoint = 0
+        }
+        await starpoint.findAll({ where: { courseId } }).then((value) => {
+            for (let i = 0; i < value.length; i++) {
+                data.starPoint += value[i].dataValues.myStarPoint
+                data.starPeople += 1
+            }
+            return value
+        })
+        return data
     },
 }

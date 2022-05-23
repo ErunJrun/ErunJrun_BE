@@ -46,4 +46,9 @@ router.patch(
     authmiddleware.checkTokens,
     courseController.updatestarPoint
 )
+router.get(
+    '/:courseId/starPoint',
+    authmiddleware.checkUsers,
+    courseController.getStarPoint
+)
 module.exports = router
