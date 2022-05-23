@@ -665,4 +665,68 @@ module.exports = {
             z
         }
     },
+    updateBookmark: async (courseId, userId) => {
+        try {
+            let data = { bookmark: false }
+            // 북마크에서 courseId, userId를 찾는다.
+            let bookmarkDone
+            if (userId !== undefined) {
+                bookmarkDone = await Bookmarks.findOne({
+                    where: {
+                        [Op.and]: [{ courseId }, { userId }],
+                    },
+                })
+            }
+            if (bookmarkDone === null) {
+                await Bookmarks.create({ courseId, userId })
+                data.bookmark = true
+            }
+            if (bookmarkDone !== null) {
+                await Bookmarks.destroy({
+                    where: { [Op.and]: [{ courseId }, { userId }] },
+                })
+            }
+            return data
+            // 없으면 북마크를 생성한다.
+            // 있으면 삭제시킨다.
+        } catch (error) {
+            throw new Error(error)
+        }
+    },
+    updatestarPoint: async (courseId, userId, myStarPoint) =>{
+        try{
+            let data = {}
+            data.starPoint = 0
+            data.starPeople = 0
+            data.myStarPoint = myStarPoint
+            const existPoint = starpoint.findOne({where: {[Op.and]: [{courseId} , {userId}]}})
+            if (existPoint){
+                await starpoint.update({myStarPoint}, {where:  {[Op.and]: [{courseId} , {userId}]}}).then(async (value) => {
+                    await starpoint.findAll({where: {courseId}}).then((value) => {
+                        for (let i =0 ; i < value.length; i++){
+                            data.starPoint += value[i].dataValues.myStarPoint
+                            data.starPeople += 1
+                        }
+                        return value
+                    })
+                    return value
+                })
+            }else{
+                await starpoint.create({courseId, userId, myStarPoint}).then(async (value) =>{
+                    await starpoint.findAll({where: {courseId}}).then((value) => {
+                        for (let i =0 ; i < value.length; i++){
+                            data.starPoint += value[i].dataValues.myStarPoint
+                            data.starPeople += 1
+                        }
+                        return value
+                    })
+                    return value
+                })
+            }
+            console.log(data)
+            return data
+        } catch(error){
+            throw new Error(error)
+        }
+    }
 }

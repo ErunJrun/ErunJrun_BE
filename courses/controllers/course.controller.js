@@ -201,4 +201,46 @@ module.exports = {
             })
         }
     },
+    updateBookmark: async (req, res, next) => {
+        const { courseId } = req.params
+        const { userId } = res.locals
+        const existPost = await courseService.checkPost(courseId)
+        if (!existPost) {
+            return next(new Error('해당 게시물이 존재하지 않습니다'))
+        }
+        try {
+            const data = await courseService.updateBookmark(courseId, userId)
+            res.status(200).send({
+                success: true,
+                data,
+            })
+        } catch (error) {
+            return next({
+                message: '북마크 입력에 실패했습니다',
+                stack: error,
+            })
+        }
+    },
+    updatestarPoint: async (req, res, next) =>{
+        const {courseId} = req.params
+        const {userId} = res.locals
+        const {myStarPoint} = req.body
+        const existPost = await courseService.checkPost(courseId)
+        if (!existPost) {
+            return next(new Error('해당 게시물이 존재하지 않습니다'))
+        }
+        try {
+            const data = await courseService.updatestarPoint(courseId, userId, myStarPoint)
+            console.log(data)
+            res.status(200).send({
+                success: true,
+                data
+            })
+        } catch (error){
+            return next({
+                message: '평점 입력에 실패했습니다',
+                stack: error
+            })
+        }
+    }
 }
