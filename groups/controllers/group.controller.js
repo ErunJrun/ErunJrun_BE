@@ -31,16 +31,16 @@ module.exports = {
                     data[`thumbnailUrl${i + 1}`] = req.files[i].location
                 }
             }
-            // if (
-            //     moment(req.body.date).format('YYYY-MM-DD') <=
-            //     moment().format('YYYY-MM-DD')
-            // ) {
-            //     return next(
-            //         new Error(
-            //             '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다'
-            //         )
-            //     )
-            // }
+            if (
+                moment(req.body.date).format('YYYY-MM-DD') <=
+                moment().format('YYYY-MM-DD')
+            ) {
+                return next(
+                    new Error(
+                        '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다'
+                    )
+                )
+            }
 
             if (req.body.standbyTime > req.body.startTime)
                 return next(
@@ -256,14 +256,16 @@ module.exports = {
                 if (req.files) {
                     for (let i = 0; i < req.files.length; i++) {
                         data[`thumbnailUrl${i + 1}`] = req.files[i].location
-                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
-                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        if (chkGroup[`thumbnailUrl${i + 1}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i + 1}`])
                         }
                     }
                 } else {
-                    data[`thumbnailUrl${i + 1}`] = null
-                    if (chkGroup[`thumbnailUrl${i}`] !== null) {
-                        multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                    for (let i = 1; i <= 3; i++) {
+                        data[`thumbnailUrl${i}`] = null
+                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        }
                     }
                 }
             }

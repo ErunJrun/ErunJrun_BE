@@ -14,9 +14,9 @@ module.exports = {
     createRecomment: async (input) => {
         let condition = []
         await Recomments.create(input)
-            .then(async (value) => {
+            .then(async (output) => {
                 await Comments.findOne({
-                    where: { commentId: value.dataValues.commentId },
+                    where: { commentId: output.dataValues.commentId },
                 }).then(async (value) => {
                     if (value.dataValues.courseId === null) {
                         await Groups.findOne({
@@ -50,22 +50,27 @@ module.exports = {
                                         throw new Error(error)
                                     })
                                 // 알람 생성
-                                await Alarms.create({
-                                    userId: result.dataValues.userId,
-                                    groupId: result.dataValues.groupId,
-                                    groupTitle: result.dataValues.title,
-                                    category: 'recomment',
-                                    nickname,
-                                    commentId: value.dataValues.commentId,
-                                })
-                                    .then((value) => {
-                                        // deleteOutdateAlarm(
-                                        //     value.dataValues.userId
-                                        // )
+                                if (
+                                    output.dataValues.userId !==
+                                    value.dataValues.userId
+                                ) {
+                                    await Alarms.create({
+                                        userId: result.dataValues.userId,
+                                        groupId: result.dataValues.groupId,
+                                        groupTitle: result.dataValues.title,
+                                        category: 'recomment',
+                                        nickname,
+                                        commentId: value.dataValues.commentId,
                                     })
-                                    .catch((error) => {
-                                        throw new Error(error)
-                                    })
+                                        .then((value) => {
+                                            // deleteOutdateAlarm(
+                                            //     value.dataValues.userId
+                                            // )
+                                        })
+                                        .catch((error) => {
+                                            throw new Error(error)
+                                        })
+                                }
                             })
                             .catch((error) => {
                                 throw new Error(error)
@@ -101,20 +106,26 @@ module.exports = {
                                 .catch((error) => {
                                     throw new Error(error)
                                 })
-                            // 알람 생성
-                            await Alarms.create({
-                                userId: value.dataValues.userId,
-                                courseId: value.dataValues.courseId,
-                                courseTitle: value.dataValues.title,
-                                category: 'recomment',
-                                nickname,
-                            })
-                                .then((value) => {
-                                    // deleteOutdateAlarm(value.dataValues.userId)
+
+                            if (
+                                output.dataValues.userId !==
+                                value.dataValues.userId
+                            ) {
+                                // 알람 생성
+                                await Alarms.create({
+                                    userId: value.dataValues.userId,
+                                    courseId: value.dataValues.courseId,
+                                    courseTitle: value.dataValues.title,
+                                    category: 'recomment',
+                                    nickname,
                                 })
-                                .catch((error) => {
-                                    throw new Error(error)
-                                })
+                                    .then((value) => {
+                                        // deleteOutdateAlarm(value.dataValues.userId)
+                                    })
+                                    .catch((error) => {
+                                        throw new Error(error)
+                                    })
+                            }
                         })
                     }
                 })

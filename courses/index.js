@@ -13,8 +13,42 @@ const validation = require('./validators/post.validator')
 
 router.post(
     '/',
-    multer.upload.array('courseImage', 3),
+    authmiddleware.checkTokens,
+    multer.uploadCourse.array('courseImage', 3),
+    validation.postValidation,
     courseController.createPost
 )
 
+router.get('/:category', authmiddleware.checkUsers, courseController.getPost)
+router.get(
+    '/detail/:courseId',
+    authmiddleware.checkUsers,
+    courseController.getPostDetail
+)
+router.patch(
+    '/:courseId',
+    authmiddleware.checkTokens,
+    multer.uploadCourse.array('courseImage', 3),
+    courseController.updatePost
+)
+router.delete(
+    '/:courseId',
+    authmiddleware.checkTokens,
+    courseController.deletePost
+)
+router.patch(
+    '/:courseId/bookmark',
+    authmiddleware.checkTokens,
+    courseController.updateBookmark
+)
+router.patch(
+    '/:courseId/starPoint',
+    authmiddleware.checkTokens,
+    courseController.updatestarPoint
+)
+router.get(
+    '/:courseId/starPoint',
+    authmiddleware.checkUsers,
+    courseController.getStarPoint
+)
 module.exports = router

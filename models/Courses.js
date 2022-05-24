@@ -51,12 +51,29 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             mapLatLng: {
-                type: DataTypes.STRING(150),
+                type: DataTypes.TEXT,
                 allowNull: false,
             },
             starPoint: {
                 type: DataTypes.FLOAT,
                 allowNull: true,
+            },
+            parking: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            baggage: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            clickCnt: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
+            region: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
             },
         },
         {

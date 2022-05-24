@@ -155,7 +155,7 @@ module.exports = {
                                 break
                             case '4':
                                 Object.assign(condition, {
-                                    distance: { [Op.get]: 15 },
+                                    distance: { [Op.gte]: 15 },
                                 })
                                 break
                         }
@@ -257,11 +257,14 @@ module.exports = {
                         //러닝거리 필터
                         if (query.distance) {
                             const distanceQuery = query.distance.split('/')
+
                             if (distanceQuery.includes('0')) {
                                 Object.assign(condition, {
                                     distance: { [Op.gte]: 0 },
                                 })
-                            } else {
+                            } else if (distanceQuery.includes('')) {
+                                distanceQuery.pop()
+
                                 Object.assign(condition, {
                                     distance: {
                                         [Op.between]: [
@@ -274,7 +277,7 @@ module.exports = {
                         }
                     }
             }
-
+            console.log(condition)
             let data = await Groups.findAll({
                 where: condition,
                 attributes: [
