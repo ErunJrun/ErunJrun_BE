@@ -5,7 +5,6 @@ const moment = require('moment')
 module.exports = {
     createPost: async (req, res, next) => {
         const { userId } = res.locals
-
         const data = {
             userId,
             title: req.body.title,
@@ -31,13 +30,19 @@ module.exports = {
                     data[`thumbnailUrl${i + 1}`] = req.files[i].location
                 }
             }
-            if (
-                moment(req.body.date).format('YYYY-MM-DD') <=
-                moment().format('YYYY-MM-DD')
-            ) {
+
+            const dateTime = moment(
+                moment(req.body.date).format('YYYY-MM-DD') +
+                    ' ' +
+                    req.body.standbyTime
+            )
+                .add(-6, 'hours')
+                .format('YYYY-MM-DD HH:mm:ss')
+
+            if (dateTime <= moment().format('YYYY-MM-DD HH:mm:ss')) {
                 return next(
                     new Error(
-                        '현재 날짜보다 이전의 그룹러닝을 등록할 수 없습니다'
+                        '그룹러닝등록은 현재시간보다 6시간 이후부터 등록할 수 있습니다'
                     )
                 )
             }
@@ -263,8 +268,8 @@ module.exports = {
                 } else {
                     for (let i = 1; i <= 3; i++) {
                         data[`thumbnailUrl${i}`] = null
-                        if (chkGroup[`thumbnailUrl${i}`] !== null) {
-                            multer.deleteImg(chkGroup[`thumbnailUrl${i}`])
+                        if (chkGroup[`thumbnailUrl${i + 1}`] !== null) {
+                            multer.deleteImg(chkGroup[`thumbnailUrl${i + 1}`])
                         }
                     }
                 }
