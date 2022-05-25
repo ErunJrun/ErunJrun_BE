@@ -369,7 +369,7 @@ module.exports = {
 
                         let minus = moment(startDateTime).diff(time, 'hours')
 
-                        if (minus < 0) {
+                        if (minus <= 0) {
                             result[i].dataValues.applyEndTime = '0 일'
                         } else {
                             result[i].dataValues.applyEndTime = minus + ' 시간'
@@ -519,7 +519,7 @@ module.exports = {
                     let time = moment().format('YYYY-MM-DD HH:mm:ss')
                     let minus = moment(startDateTime).diff(time, 'hours')
 
-                    if (minus < 0) {
+                    if (minus <= 0) {
                         result.dataValues.applyEndTime = '0 일'
                     } else {
                         result.dataValues.applyEndTime = minus + ' 시간'
@@ -536,18 +536,6 @@ module.exports = {
                     .lang('ko')
                     .format('YYYY년 MM월 DD일 dddd HH시 mm분')
                 result.dataValues.datetime = DateTime
-
-                // let standbyTime = result.standbyTime.split(':')
-                // result.dataValues.standbyTime =
-                //     standbyTime[0] + '시 ' + standbyTime[1] + '분'
-
-                // let startTime = result.startTime.split(':')
-                // result.dataValues.startTime =
-                //     startTime[0] + '시 ' + startTime[1] + '분'
-
-                // let finishTime = result.finishTime.split(':')
-                // result.dataValues.finishTime =
-                //     finishTime[0] + '시 ' + finishTime[1] + '분'
 
                 result.dataValues.mapLatLng = JSON.parse(result.mapLatLng)
 
