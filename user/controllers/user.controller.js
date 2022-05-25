@@ -213,7 +213,8 @@ async function verifyCode(req, res) {
 
     const key = process.env.CRYPTO_KEY
     const encrypt = crypto.createCipher('des', key)
-    const encryptResult = encrypt.update(tel, 'utf8', 'base64') + encrypt.final('base64')
+    const encryptResult =
+        encrypt.update(tel, 'utf8', 'base64') + encrypt.final('base64')
 
     const data = { phone: encryptResult }
 
