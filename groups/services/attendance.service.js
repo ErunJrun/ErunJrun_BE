@@ -21,8 +21,14 @@ module.exports = {
         }).then((value) => {
             return value.dataValues.date + ' ' + value.dataValues.standbyTime
         })
-        // standbytime을 지난 경우, 출석체크 진입 못하게 하기.        
-        if (moment().format('YYYY-MM-DD HH:mm:ss') >=  moment.utc(attendanceTime).add('-30', 'm').format('YYYY-MM-DD HH:mm:ss')) {
+        // standbytime을 지난 경우, 출석체크 진입 못하게 하기.
+        if (
+            moment().format('YYYY-MM-DD HH:mm:ss') >=
+            moment
+                .utc(attendanceTime)
+                .add('-30', 'm')
+                .format('YYYY-MM-DD HH:mm:ss')
+        ) {
             return
         } else {
             throw new Error('아직 출석체크 시간이 아닙니다')

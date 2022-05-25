@@ -2,6 +2,7 @@ const { Users, Groups, Appliers } = require('../../models/index')
 const sequelize = require('sequelize')
 const Op = sequelize.Op
 const moment = require('moment')
+const crypto = require('crypto')
 
 module.exports = {
     getUserInfo: async (input) => {
@@ -79,10 +80,10 @@ module.exports = {
             const waitingGroup = await Groups.findAll({
                 where: {
                     [Op.and]: [
-                    {groupId: { [Op.in]: appliedGroupId }},
-                    {date: { [Op.gte]: nowDate }},
-                    {finishTime: { [Op.gte]: nowTime}}
-                ]
+                        { groupId: { [Op.in]: appliedGroupId } },
+                        { date: { [Op.gte]: nowDate } },
+                        { finishTime: { [Op.gte]: nowTime } },
+                    ],
                 },
                 attributes: [
                     [sequelize.literal('datediff(date, now())'), 'dDay'],
@@ -252,6 +253,10 @@ module.exports = {
                     'agreeSMS',
                 ],
             }).then((value) => {
+                const key = process.env.CRYPTO_KEY
+                const decode = crypto.createDecipher('des', key)
+                value.dataValues.phone = decode.update(value.dataValues.phone, 'base64', 'utf8') + decode.final('utf8')
+
                 switch (value.dataValues.userLevel) {
                     case '오렌지':
                         value.dataValues.userLevel = '0'
