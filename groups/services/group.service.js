@@ -114,7 +114,7 @@ module.exports = {
                                     { date: nowDate },
                                     {
                                         finishTime: {
-                                            [Op.gte]: nowTime,
+                                            [Op.lte]: nowTime,
                                         },
                                     },
                                 ],
