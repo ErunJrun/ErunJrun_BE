@@ -317,6 +317,7 @@ module.exports = {
                     },
                 ],
                 group: ['groupId'],
+                order: [['date', 'DESC']],
             }).then(async (result) => {
                 for (let i = 0; i < result.length; i++) {
                     const user = await Users.findOne({
@@ -430,15 +431,26 @@ module.exports = {
             if (limit) {
                 data = data.slice(0, limit)
             }
-            if (page && size) {
-                data = data.slice((page - 1) * size, size * page)
-            }
 
             data.sort((a, b) => {
                 const aTime = a.dataValues.applyEndTime.split(' ')[0]
                 const bTime = b.dataValues.applyEndTime.split(' ')[0]
                 return aTime - bTime
             })
+
+            if (page && size) {
+                let start, end
+
+                if (page !== '1') {
+                    start = (page - 1) * size - 1
+                    end = size * page
+                } else {
+                    start = (page - 1) * size
+                    end = size * page
+                }
+                console.log(start, end)
+                data = data.slice((page - 1) * size, size * page)
+            }
 
             return data
         } catch (error) {
