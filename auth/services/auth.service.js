@@ -253,10 +253,11 @@ module.exports = {
                     'agreeSMS',
                 ],
             }).then((value) => {
+                if (value.dataValues.phone !== null){
                 const key = process.env.CRYPTO_KEY
                 const decode = crypto.createDecipher('des', key)
                 value.dataValues.phone = decode.update(value.dataValues.phone, 'base64', 'utf8') + decode.final('utf8')
-
+            }
                 switch (value.dataValues.userLevel) {
                     case '오렌지':
                         value.dataValues.userLevel = '0'
