@@ -1,6 +1,7 @@
 const groupService = require('../services/group.service')
 const multer = require('../../middlewares/multers/multer')
 const moment = require('moment')
+const redis = require('../../config/redis')
 
 module.exports = {
     createPost: async (req, res, next) => {
@@ -55,6 +56,15 @@ module.exports = {
                 return next(
                     new Error('종료시간은 시작시간보다 빠를 수 없습니다')
                 )
+
+            const doubleChk = await redis.get(userId + 'create')
+            if (doubleChk === null) {
+                await redis.set(userId + 'create', true, { EX: 10 })
+            } else {
+                return next(
+                    new Error('짧은시간내에 연속으로 글을 작성할 수 없습니다')
+                )
+            }
 
             await groupService.createPost(data)
 
