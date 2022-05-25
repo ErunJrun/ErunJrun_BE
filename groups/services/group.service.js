@@ -114,7 +114,7 @@ module.exports = {
                                     { date: nowDate },
                                     {
                                         finishTime: {
-                                            [Op.gte]: nowTime,
+                                            [Op.lte]: nowTime,
                                         },
                                     },
                                 ],
@@ -277,7 +277,7 @@ module.exports = {
                         }
                     }
             }
-            console.log(condition)
+
             let data = await Groups.findAll({
                 where: condition,
                 attributes: [
