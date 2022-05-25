@@ -277,7 +277,7 @@ module.exports = {
                         }
                     }
             }
-            console.log(condition)
+
             let data = await Groups.findAll({
                 where: condition,
                 attributes: [
