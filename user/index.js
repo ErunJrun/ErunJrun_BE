@@ -20,4 +20,6 @@ router.delete('/delete', checkTokens, userController.deleteUser)
 router.post('/message', checkTokens, userController.sendVerificationSMS)
 router.post('/verify', checkTokens, userController.verifyCode)
 
+// router.get('/decodePhone', checkTokens, userController.decodePhone)
+
 module.exports = router

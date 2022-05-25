@@ -3,7 +3,9 @@ const jwt = require('jsonwebtoken')
 const userService = require('../services/user.service')
 require('dotenv').config()
 const CryptoJS = require('crypto-js')
+const crypto = require('crypto')
 const axios = require('axios')
+const { getUser } = require('../services/user.service')
 
 const kakaoCallback = (req, res, next) => {
     passport.authenticate(
@@ -208,7 +210,12 @@ async function sendVerificationSMS(req, res) {
 async function verifyCode(req, res) {
     const userId = res.locals.userId
     const { tel, code } = req.body
-    const data = { phone: tel }
+
+    const key = process.env.CRYPTO_KEY
+    const encrypt = crypto.createCipher('des', key)
+    const encryptResult = encrypt.update(tel, 'utf8', 'base64') + encrypt.final('base64')
+
+    const data = { phone: encryptResult }
 
     const dbCode = await userService.getRedis(userId)
 
@@ -224,6 +231,17 @@ async function verifyCode(req, res) {
             .json({ success: false, message: '인증번호가 다릅니다.' })
 }
 
+// async function decodePhone(req, res) {
+//     const userId = res.locals.userId
+//     const currentUser = await getUser(userId)
+
+//     const key = process.env.CRYPTO_KEY
+//     const decode = crypto.createDecipher('des', key)
+//     const decodeResult = decode.update(currentUser.phone, 'base64', 'utf8') + decode.final('utf8')
+
+//     return res.status(200).json({ phone: decodeResult })
+// }
+
 module.exports = {
     kakaoCallback,
     naverCallback,
@@ -232,4 +250,5 @@ module.exports = {
     deleteUser,
     sendVerificationSMS,
     verifyCode,
+    // decodePhone
 }

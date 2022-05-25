@@ -249,7 +249,7 @@ module.exports = {
     },
     getStarPoint: async (req, res, next) => {
         const { courseId } = req.params
-        const {userId} = res.locals
+        const { userId } = res.locals
         console.log(userId)
         const existPost = await courseService.checkPost(courseId)
         if (!existPost) {

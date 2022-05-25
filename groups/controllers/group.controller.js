@@ -74,7 +74,7 @@ module.exports = {
         const query = req.query
         let data
         let userId = ''
-        let preferData
+        let preferData = ''
 
         if (
             (category === 'mypage' || category === 'complete') &&
@@ -189,12 +189,7 @@ module.exports = {
             })
         }
     },
-    /**
-     * TODO: 이미지 수정/삭제시 S3에서도 이미지 삭제하도록 로직 추가
-     * @param {*} req
-     * @param {*} res
-     * @returns
-     */
+
     updatePost: async (req, res, next) => {
         const { groupId } = req.params
         const { userId } = res.locals
@@ -274,6 +269,31 @@ module.exports = {
                     }
                 }
             }
+
+            const bodyDateTime = moment(
+                moment(req.body.date).format('YYYY-MM-DD') +
+                    ' ' +
+                    req.body.standbyTime
+            )
+                .add(-6, 'hours')
+                .format('YYYY-MM-DD HH:mm:ss')
+
+            if (bodyDateTime <= moment().format('YYYY-MM-DD HH:mm:ss')) {
+                return next(
+                    new Error(
+                        '그룹러닝수정은 현재시간보다 6시간 이후로만 수정할 수 있습니다'
+                    )
+                )
+            }
+
+            if (req.body.standbyTime > req.body.startTime)
+                return next(
+                    new Error('시작시간은 스탠바이 시간보다 빠를수 없습니다')
+                )
+            if (req.body.startTime > req.body.finishTime)
+                return next(
+                    new Error('종료시간은 시작시간보다 빠를 수 없습니다')
+                )
 
             await groupService.addAlarm(groupId, chkGroup.title, 'update')
             groupService.updatePost(groupId, data)
