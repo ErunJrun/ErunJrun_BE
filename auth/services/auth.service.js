@@ -73,11 +73,16 @@ module.exports = {
             }).then((value) => {
                 return value.map((item) => item.groupId)
             })
+            let nowTime = moment().format('HH:mm:ss')
+            let nowDate = moment().format('YYYY-MM-DD')
             // applier 숫자 세서 보여주기( applier에서 groupId의 개수 세면 됨)
             const waitingGroup = await Groups.findAll({
                 where: {
-                    groupId: { [Op.in]: appliedGroupId },
-                    date: { [Op.gte]: sequelize.literal('now()') },
+                    [Op.and]: [
+                    {groupId: { [Op.in]: appliedGroupId }},
+                    {date: { [Op.gte]: nowDate }},
+                    {finishTime: { [Op.gte]: nowTime}}
+                ]
                 },
                 attributes: [
                     [sequelize.literal('datediff(date, now())'), 'dDay'],
