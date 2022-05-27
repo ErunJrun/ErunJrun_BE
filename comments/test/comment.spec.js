@@ -2,20 +2,20 @@ const request = require('supertest')
 const app = require('../../app')
 const category = 'group'
 const errorCategory = 'ererer'
-const groupId = 'ec39a070-12ef-4afc-9939-02456c90524c'
+const groupId = '23e84dd6-cc90-47e6-8b26-374491976fe5'
 
 describe('댓글 테스트', () => {
     let token, commentId, otherToken
     beforeAll(async () => {
         const data = await request(app).post('/testlogin').send({
-            nickname: 'test',
-            password: 'test123',
+            nickname: '오지우',
+            password: 'kakao',
         })
         token = 'Bearer' + ' ' + data._body.token
 
         const otherdata = await request(app).post('/testlogin').send({
-            nickname: 'testother',
-            password: 'test123',
+            nickname: '유현준',
+            password: 'kakao',
         })
         otherToken = 'Bearer' + ' ' + otherdata._body.token
     })
@@ -131,27 +131,27 @@ describe('댓글 테스트', () => {
     })
 
     describe('4.댓글 삭제 테스트', () => {
-        test('1) 댓글이 존재하지 않을 경우 에러', async() => {
+        test('1) 댓글이 존재하지 않을 경우 에러', async () => {
             const output = await request(app)
-            .delete(`/comment/${commentId}123`)
-            .set({ authorization: token })
-        expect(output._body.message).toEqual(
-            '해당 댓글이 존재하지 않습니다'
-        )
+                .delete(`/comment/${commentId}123`)
+                .set({ authorization: token })
+            expect(output._body.message).toEqual(
+                '해당 댓글이 존재하지 않습니다'
+            )
         })
-        test('2) 작성자가 본인이 아닐 경우, 에러', async() => {
-        const output = await request(app)
-            .delete(`/comment/${commentId}`)
-            .set({ authorization: otherToken })
-        expect(output._body.message).toEqual(
-            '본인이 작성한 댓글만 삭제할 수 있습니다'
-        )
+        test('2) 작성자가 본인이 아닐 경우, 에러', async () => {
+            const output = await request(app)
+                .delete(`/comment/${commentId}`)
+                .set({ authorization: otherToken })
+            expect(output._body.message).toEqual(
+                '본인이 작성한 댓글만 삭제할 수 있습니다'
+            )
         })
-        test('3) 댓글이 존재하고, 작성자가 본인인 경우 삭제 성공', async() => {
-        const output = await request(app)
-            .delete(`/comment/${commentId}`)
-            .set({ authorization: token })
-        expect(output._body.success).toEqual(true)
+        test('3) 댓글이 존재하고, 작성자가 본인인 경우 삭제 성공', async () => {
+            const output = await request(app)
+                .delete(`/comment/${commentId}`)
+                .set({ authorization: token })
+            expect(output._body.success).toEqual(true)
         })
     })
 })
