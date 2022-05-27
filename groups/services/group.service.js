@@ -87,7 +87,7 @@ module.exports = {
                     Object.assign(condition, { userId: myUserId })
                     break
                 case 'main':
-                    limit = 6
+                    limit = 3
                     Object.assign(condition, {
                         [Op.or]: [
                             { date: { [Op.gt]: nowDate } },
@@ -157,7 +157,7 @@ module.exports = {
                         size = query.size
                         page = query.page
                     }
-                    if (query.finish !== '1') {
+                    if (query.finish !== '1/') {
                         Object.assign(condition, {
                             [Op.or]: [
                                 { date: { [Op.gt]: nowDate } },
@@ -201,7 +201,7 @@ module.exports = {
                     }
 
                     //모집마감 필터
-                    if (query.finish !== '1') {
+                    if (query.finish !== '1/') {
                         Object.assign(condition, {
                             [Op.or]: [
                                 { date: { [Op.gt]: nowDate } },
@@ -271,7 +271,6 @@ module.exports = {
                                     ],
                                 },
                             })
-                            console.log(distanceQuery)
                         }
                     }
             }
@@ -581,6 +580,7 @@ module.exports = {
             })
             return data
         } catch (error) {
+            console.log(error)
             throw new Error(error)
         }
     },
