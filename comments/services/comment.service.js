@@ -5,7 +5,7 @@ const {
     Groups,
     Courses,
     Recomments,
-} = require('../../models/index')
+} = require('../../models/')
 
 const moment = require('moment')
 module.exports = {
@@ -112,7 +112,7 @@ module.exports = {
                         foreignKey: 'commentId',
                     },
                 ],
-                order: [['createdAt', 'desc']],
+                order: [['createdAt', 'asc']]
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
@@ -167,7 +167,7 @@ module.exports = {
                         foreignKey: 'commentId',
                     },
                 ],
-                order: [['createdAt', 'desc']],
+                order: [['createdAt', 'asc']]
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
@@ -238,7 +238,7 @@ module.exports = {
                                 foreignKey: 'commentId',
                             },
                         ],
-                        order: [['createdAt', 'desc']],
+                        order: [['createdAt', 'asc']]
                     })
                         .then((value) => {
                             for (let i = 0; i < value.length; i++) {

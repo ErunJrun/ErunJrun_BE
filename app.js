@@ -11,6 +11,7 @@ const passportConfig = require('./passport')
 const moment = require('moment')
 const { Logger, stream } = require('./middlewares/loggers/logger')
 const path = require('path')
+
 require('moment-timezone')
 moment.tz.setDefault('Asia/Seoul')
 
@@ -56,7 +57,7 @@ app.use(passport.session()) // req.session 객체에 passport정보를 추가 �
 app.use('/', Router)
 
 app.use((req, res, next) => {
-    res.status(404).send('요청하신 페이지를 찾을 수 없습니다')
+    res.status(200).send('테스트 성공')
 })
 
 app.use((err, req, res, next) => {
