@@ -30,7 +30,11 @@ function initModels(sequelize) {
     Courses.hasMany(Comments, { as: 'Comments', foreignKey: 'courseId' })
     starpoint.belongsTo(Courses, { as: 'course', foreignKey: 'courseId' })
     Courses.hasMany(starpoint, { as: 'starpoints', foreignKey: 'courseId' })
-    Appliers.belongsTo(Groups, { as: 'group', foreignKey: 'groupId' })
+    Appliers.belongsTo(Groups, {
+        as: 'group',
+        foreignKey: 'groupId',
+        onDelete: 'CASCADE',
+    })
     Groups.hasMany(Appliers, { as: 'Appliers', foreignKey: 'groupId' })
     Comments.belongsTo(Groups, { as: 'group', foreignKey: 'groupId' })
     Groups.hasMany(Comments, { as: 'Comments', foreignKey: 'groupId' })
@@ -46,7 +50,11 @@ function initModels(sequelize) {
     Users.hasMany(Comments, { as: 'Comments', foreignKey: 'userId' })
     Courses.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
     Users.hasMany(Courses, { as: 'Courses', foreignKey: 'userId' })
-    Groups.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
+    Groups.belongsTo(Users, {
+        as: 'user',
+        foreignKey: 'userId',
+        onDelete: 'CASCADE',
+    })
     Users.hasMany(Groups, { as: 'Groups', foreignKey: 'userId' })
     Recomments.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
     Users.hasMany(Recomments, { as: 'Recomments', foreignKey: 'userId' })

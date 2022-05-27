@@ -89,6 +89,11 @@ module.exports = {
                         return next(new Error('잘못된 유저입니다'))
                     }
                     userId = query.userId
+
+                    const chkUser = await groupService.getUserbyId(userId)
+                    if (!chkUser) {
+                        return next(new Error('잘못된 유저입니다'))
+                    }
                     break
                 case 'all':
                 case 'main':
