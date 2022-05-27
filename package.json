@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "test": "cross-env NODE_ENV=test jest --detectOpenHandles --forceExit ",
+        "test": "cross-env NODE_ENV=test jest --forceExit ",
         "prettify": "prettier --write *.js **/*.js **/**/*.js",
         "nodemon": "nodemon server.js",
         "start:all": "run-s prettify nodemon",

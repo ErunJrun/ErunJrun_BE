@@ -112,7 +112,7 @@ module.exports = {
                         foreignKey: 'commentId',
                     },
                 ],
-                order: [['createdAt', 'asc']]
+                order: [['createdAt', 'asc']],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
@@ -130,7 +130,17 @@ module.exports = {
             throw new Error(error)
         }
     },
-
+    checkPostById: async (category, input) => {
+        let data
+        if (input.groupId) {
+            condition = { groupId: input.groupId }
+            data = await Groups.findOne({ where: condition })
+        } else {
+            condition = { courseId: input.courseId }
+            data = await Courses.findOne({ where: condition })
+        }
+        return data
+    },
     getComments: async (category, input) => {
         let condition
         // comment를 보여줄 특정 게시물 지정
@@ -167,7 +177,7 @@ module.exports = {
                         foreignKey: 'commentId',
                     },
                 ],
-                order: [['createdAt', 'asc']]
+                order: [['createdAt', 'asc']],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
@@ -238,7 +248,7 @@ module.exports = {
                                 foreignKey: 'commentId',
                             },
                         ],
-                        order: [['createdAt', 'asc']]
+                        order: [['createdAt', 'asc']],
                     })
                         .then((value) => {
                             for (let i = 0; i < value.length; i++) {

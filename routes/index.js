@@ -10,6 +10,8 @@ const course = require('../courses')
 const { Users } = require('../models')
 const jwt = require('jsonwebtoken')
 const { Op } = require('sequelize')
+require('dotenv').config()
+
 router.use('/group', group)
 router.use('/comment', comment)
 router.use('/recomment', recomment)
@@ -32,10 +34,11 @@ router.post('/testlogin', async (req, res) => {
     const data = await Users.findOne({
         where: { [Op.and]: [{ nickname }, { social: password }] },
     }).then((value) => {
-        return value.dataValues.nickname
+        return value.dataValues.userId
     })
+    console.log(data)
     if (data !== null) {
-        const token = jwt.sign({ nickname: data }, process.env.TOKENKEY)
+        const token = jwt.sign({ userId: data }, process.env.TOKENKEY)
         res.status(200).send({
             success: true,
             token,

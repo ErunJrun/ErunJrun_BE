@@ -155,7 +155,7 @@ module.exports = {
                         ],
                     },
                 ],
-                order: [['createdAt', 'asc']]
+                order: [['createdAt', 'asc']],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
@@ -219,7 +219,7 @@ module.exports = {
                         ],
                     },
                 ],
-                order: [['createdAt', 'asc']]
+                order: [['createdAt', 'asc']],
             }).then((value) => {
                 for (let i = 0; i < value.length; i++) {
                     value[i].dataValues.createdAt = timeForToday(
@@ -306,7 +306,7 @@ module.exports = {
                                 ],
                             },
                         ],
-                        order: [['createdAt', 'asc']]
+                        order: [['createdAt', 'asc']],
                     })
                         .then((value) => {
                             for (let i = 0; i < value.length; i++) {
