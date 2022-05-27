@@ -30,9 +30,6 @@ const postValidation = [
     body('standbyTime')
         .notEmpty()
         .withMessage('스탠바이 시간은 반드시 입력해주셔야 합니다'),
-    body('startTime')
-        .notEmpty()
-        .withMessage('시작 시간은 반드시 입력해주셔야 합니다'),
     body('finishTime')
         .notEmpty()
         .withMessage('종료 시간은 반드시 입력해주셔야 합니다'),
@@ -72,9 +69,6 @@ const updateValidation = [
     body('standbyTime')
         .notEmpty()
         .withMessage('스탠바이 시간은 반드시 입력해주셔야 합니다'),
-    body('startTime')
-        .notEmpty()
-        .withMessage('시작 시간은 반드시 입력해주셔야 합니다'),
     body('finishTime')
         .notEmpty()
         .withMessage('종료 시간은 반드시 입력해주셔야 합니다'),
