@@ -2,14 +2,14 @@ const express = require('express')
 const router = express.Router()
 const commentController = require('./controllers/comment.controller')
 const commentvalidator = require('./validators/comment.validator')
-const { checkTokens } = require('../middlewares/user')
+const { checkTokens, checkUsers } = require('../middlewares/user')
 router.post(
     '/:category/:categoryId',
     checkTokens,
     commentvalidator.commentValidation,
     commentController.createComment
 )
-router.get('/:category/:categoryId', commentController.getComments)
+router.get('/:category/:categoryId', checkUsers, commentController.getComments)
 router.patch(
     '/:commentId',
     checkTokens,

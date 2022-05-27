@@ -60,6 +60,13 @@ module.exports = {
                         new Error('불러오기 상태값이 올바르지 않습니다')
                     )
             }
+            const checkPost = await commentService.checkPostById(
+                category,
+                input
+            )
+            if (!checkPost) {
+                return next(new Error('해당 게시물이 존재하지 않습니다'))
+            }
             const data = await commentService.getComments(category, input)
             res.status(200).send({
                 success: true,
