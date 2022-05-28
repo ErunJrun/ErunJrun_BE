@@ -67,35 +67,35 @@ module.exports = {
             data = await Users.findOne({ where: { userId } }).then((value) => {
                 return value.dataValues.likeLocation
             })
-        switch(data){
-            case '1':
-                data = '서울'
-                break
-            case '2':
-                data = '경기도'
-                break
-            case '3':
-                data = '인천광역시'
-                break
-            case '4':
-                data = '강원도'
-                break
-            case '5':
-                data = '충청도/세종특별시/대전광역시'
-                break
-            case '6':
-                data = '경상북도/대구광역시'
-                break
-            case '7':
-                data = '경상남도/부산광역시/울산광역시'
-                break
-            case '8':
-                data = '전라도/광주광역시'
-                break
-            case '9':
-                data = '제주특별시'
-                break
-        }
+            switch (data) {
+                case '1':
+                    data = '서울'
+                    break
+                case '2':
+                    data = '경기도'
+                    break
+                case '3':
+                    data = '인천광역시'
+                    break
+                case '4':
+                    data = '강원도'
+                    break
+                case '5':
+                    data = '충청도/세종특별시/대전광역시'
+                    break
+                case '6':
+                    data = '경상북도/대구광역시'
+                    break
+                case '7':
+                    data = '경상남도/부산광역시/울산광역시'
+                    break
+                case '8':
+                    data = '전라도/광주광역시'
+                    break
+                case '9':
+                    data = '제주특별시'
+                    break
+            }
         }
         return data
     },
@@ -960,7 +960,7 @@ module.exports = {
                 'baggage',
                 'createdAt',
                 'clickCnt',
-                'thema'
+                'thema',
             ],
             include: [
                 {
