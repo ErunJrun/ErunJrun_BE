@@ -1071,7 +1071,6 @@ module.exports = {
             let data = {}
             data.starPoint = 0
             data.starPeople = 0
-            data.myStarPoint = myStarPoint
             const existPoint = await starpoint.findOne({
                 where: { [Op.and]: [{ courseId }, { userId }] },
             })
@@ -1087,10 +1086,14 @@ module.exports = {
                             .findAll({ where: { courseId } })
                             .then((value) => {
                                 for (let i = 0; i < value.length; i++) {
+                                    data.myStarPoint =
+                                        value[i].dataValues.myStarPoint
                                     data.starPoint +=
                                         value[i].dataValues.myStarPoint
                                     data.starPeople += 1
                                 }
+                                data.starPoint =
+                                    data.starPoint / data.starPeople
                                 return value
                             })
                         return value
@@ -1103,10 +1106,14 @@ module.exports = {
                             .findAll({ where: { courseId } })
                             .then((value) => {
                                 for (let i = 0; i < value.length; i++) {
+                                    data.myStarPoint =
+                                        value[i].dataValues.myStarPoint
                                     data.starPoint +=
                                         value[i].dataValues.myStarPoint
                                     data.starPeople += 1
                                 }
+                                data.starPoint =
+                                    data.starPoint / data.starPeople
                                 return value
                             })
                         return value
@@ -1123,11 +1130,12 @@ module.exports = {
         data.starPoint = 0
         data.starPeople = 0
         if (userId !== undefined) {
-            let point = await starpoint
-                .findOne({ where: { [Op.and]: [{ courseId }, { userId }] } })
+            let point = await starpoint.findOne({
+                where: { [Op.and]: [{ courseId }, { userId }] },
+            })
             if (point === null) {
                 data.myStarPoint = 0
-            } else{
+            } else {
                 data.myStarPoint = point.myStarPoint
             }
         } else {
@@ -1138,6 +1146,7 @@ module.exports = {
                 data.starPoint += value[i].dataValues.myStarPoint
                 data.starPeople += 1
             }
+            data.starPoint = data.starPoint / data.starPeople
             return value
         })
         return data
