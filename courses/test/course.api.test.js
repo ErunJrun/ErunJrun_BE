@@ -9,7 +9,7 @@ const { Op } = require('sequelize')
 
 describe('코스추천 테스트', () => {
     let token, courseId, userId
-    
+
     beforeAll(async () => {
         await sequelize.sync({ force: true })
         await Users.create(createUserData)
@@ -17,12 +17,10 @@ describe('코스추천 테스트', () => {
         userId = await Users.findOne({
             where: { userId: createUserData.userId },
         }).then(async (value) => {
-            const data = await request(app)
-                .post('/testlogin')
-                .send({
-                    nickname: value.dataValues.nickname,
-                    password: value.dataValues.social,
-                })
+            const data = await request(app).post('/testlogin').send({
+                nickname: value.dataValues.nickname,
+                password: value.dataValues.social,
+            })
             token = 'Bearer' + ' ' + data._body.token
             return value.dataValues.userId
         })

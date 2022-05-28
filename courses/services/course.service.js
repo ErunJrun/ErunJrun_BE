@@ -339,6 +339,11 @@ module.exports = {
                             as: 'starpoints',
                             foreignKey: 'courseId',
                         },
+                        {
+                            model: Bookmarks,
+                            as: 'Bookmarks',
+                            foreignKey: 'courseId'
+                        }
                     ],
                 }).then(async (value) => {
                     for (let i = 0; i < value.length; i++) {
@@ -387,6 +392,8 @@ module.exports = {
                             value[i].dataValues.commentCnt +
                             value[i].dataValues.starPoint +
                             value[i].dataValues.clickCnt
+                        value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                        delete value[i].dataValues.Bookmarks
                     }
                     return value
                 })
@@ -416,8 +423,14 @@ module.exports = {
                             as: 'starpoints',
                             foreignKey: 'courseId',
                         },
+                        {
+                            model: Bookmarks,
+                            as: 'Bookmarks',
+                            foreignKey: 'courseId'
+                        }
                     ],
                 }).then(async (value) => {
+                    console.log(value)
                     for (let i = 0; i < value.length; i++) {
                         // 지역 이름 쪼개기
                         value[i].dataValues.location =
@@ -470,6 +483,8 @@ module.exports = {
                             value[i].dataValues.commentCnt +
                             value[i].dataValues.starPoint +
                             value[i].dataValues.clickCnt
+                        value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                        delete value[i].dataValues.Bookmarks
                     }
                     return value
                 })
@@ -503,6 +518,11 @@ module.exports = {
                                 as: 'starpoints',
                                 foreignKey: 'courseId',
                             },
+                            {
+                                model: Bookmarks,
+                                as: 'Bookmarks',
+                                foreignKey: 'courseId'
+                            }
                         ],
                         order: [['createdAt', 'desc']],
                     }).then(async (value) => {
@@ -559,6 +579,8 @@ module.exports = {
                                 value[i].dataValues.commentCnt +
                                 value[i].dataValues.starPoint +
                                 value[i].dataValues.clickCnt
+                            value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                            delete value[i].dataValues.Bookmarks
                         }
                         return value
                     })
@@ -588,6 +610,11 @@ module.exports = {
                                 as: 'starpoints',
                                 foreignKey: 'courseId',
                             },
+                            {
+                                model: Bookmarks,
+                                as: 'Bookmarks',
+                                foreignKey: 'courseId'
+                            }
                         ],
                         order: [['createdAt', 'desc']],
                     }).then(async (value) => {
@@ -644,6 +671,8 @@ module.exports = {
                                 value[i].dataValues.commentCnt +
                                 value[i].dataValues.starPoint +
                                 value[i].dataValues.clickCnt
+                            value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                            delete value[i].dataValues.Bookmarks
                         }
                         return value
                     })
@@ -681,6 +710,10 @@ module.exports = {
                 case 'clickCnt':
                     data.feed.sort((a, b) => {
                         return b.dataValues.clickCnt - a.dataValues.clickCnt
+                    })
+                case 'bookmark':
+                    data.feed.sort((a, b) => {
+                        return b.dataValues.bookmarkCnt - a.dataValues.bookmarkCnt
                     })
                     break
                 default:
