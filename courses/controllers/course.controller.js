@@ -18,7 +18,7 @@ module.exports = {
             baggage: req.body.baggage,
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
-            thema: req.body.thema
+            thema: req.body.thema,
         }
         if (req.files.length === 0) {
             return next(new Error('이미지는 최소 1개 이상 등록해주세요'))
@@ -56,9 +56,11 @@ module.exports = {
         }
         try {
             const data = await courseService.getPost(category, query, userId)
+            const preferData = await courseService.getPreferData(userId)
             res.status(200).send({
                 success: true,
                 data,
+                preferdata,
             })
         } catch (error) {
             return next({
@@ -99,7 +101,7 @@ module.exports = {
             parking: req.body.parking,
             baggage: req.body.baggage,
             content: req.body.content,
-            thema: req.body.thema
+            thema: req.body.thema,
         }
         const existPost = await courseService.checkPost(courseId)
         if (!existPost) {
