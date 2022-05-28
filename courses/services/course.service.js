@@ -61,6 +61,44 @@ module.exports = {
             throw new Error(error)
         }
     },
+    getPreferData: async (userId) => {
+        let data
+        if (userId !== undefined) {
+            data = await Users.findOne({ where: { userId } }).then((value) => {
+                return value.dataValues.likeLocation
+            })
+        switch(data){
+            case '1':
+                data = '서울'
+                break
+            case '2':
+                data = '경기도'
+                break
+            case '3':
+                data = '인천광역시'
+                break
+            case '4':
+                data = '강원도'
+                break
+            case '5':
+                data = '충청도/세종특별시/대전광역시'
+                break
+            case '6':
+                data = '경상북도/대구광역시'
+                break
+            case '7':
+                data = '경상남도/부산광역시/울산광역시'
+                break
+            case '8':
+                data = '전라도/광주광역시'
+                break
+            case '9':
+                data = '제주특별시'
+                break
+        }
+        }
+        return data
+    },
     getPost: async (category, query, userId) => {
         let data = {}
         // 메인페이지 코스 추천 표출
@@ -309,11 +347,12 @@ module.exports = {
         // 코스추천 리스트 페이지 표출
         if (category === 'all') {
             // 가입한 유저의 경우
+            console.log(userId)
             if (userId !== undefined) {
                 const preferRegion = await Users.findOne({
                     where: { userId },
                 }).then((value) => {
-                    return value.likeLocation
+                    return value.dataValues.likeLocation
                 })
                 data.feed = await Courses.findAll({
                     attributes: [
@@ -327,7 +366,6 @@ module.exports = {
                         'createdAt',
                         'region',
                     ],
-                    where: { [Op.or]: [{ region: preferRegion }] },
                     include: [
                         {
                             model: Comments,
@@ -342,8 +380,8 @@ module.exports = {
                         {
                             model: Bookmarks,
                             as: 'Bookmarks',
-                            foreignKey: 'courseId'
-                        }
+                            foreignKey: 'courseId',
+                        },
                     ],
                 }).then(async (value) => {
                     for (let i = 0; i < value.length; i++) {
@@ -392,8 +430,90 @@ module.exports = {
                             value[i].dataValues.commentCnt +
                             value[i].dataValues.starPoint +
                             value[i].dataValues.clickCnt
-                        value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                        value[i].dataValues.bookmarkCnt =
+                            value[i].dataValues.Bookmarks.length
                         delete value[i].dataValues.Bookmarks
+                    }
+                    return value
+                })
+                data.rankingFeed = await Courses.findAll({
+                    attributes: [
+                        'courseId',
+                        'title',
+                        'location',
+                        'distance',
+                        'courseId',
+                        'courseImageUrl1',
+                        'clickCnt',
+                        'createdAt',
+                        'region',
+                    ],
+                    where: { [Op.or]: [{ region: preferRegion }] },
+                    include: [
+                        {
+                            model: Comments,
+                            as: 'Comments',
+                            foreignKey: 'courseId',
+                        },
+                        {
+                            model: starpoint,
+                            as: 'starpoints',
+                            foreignKey: 'courseId',
+                        },
+                    ],
+                }).then(async (value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        // 지역 이름 쪼개기
+                        value[i].dataValues.location =
+                            value[i].dataValues.location.split(' ')[0] +
+                            ' ' +
+                            value[i].dataValues.location.split(' ')[1]
+                        // 댓글 개수 구하기
+                        value[i].dataValues.commentCnt =
+                            value[i].dataValues.Comments.length
+                        delete value[i].dataValues.Comments
+                        // 총 평점 평균 구하기
+                        value[i].dataValues.starPoint = 0
+                        if (value[i].dataValues.starpoints.length !== 0) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.starpoints.length;
+                                z++
+                            ) {
+                                value[i].dataValues.starPoint +=
+                                    value[i].dataValues.starpoints[
+                                        z
+                                    ].myStarPoint
+                            }
+                            value[i].dataValues.starPoint =
+                                value[i].dataValues.starPoint /
+                                value[i].dataValues.starpoints.length
+                        }
+                        delete value[i].dataValues.starpoints
+                        // 랭킹 점수
+                        value[i].dataValues.rankPoint =
+                            value[i].dataValues.commentCnt +
+                            value[i].dataValues.starPoint +
+                            value[i].dataValues.clickCnt
+                        let bookmarkDone
+                        if (userId !== undefined) {
+                            bookmarkDone = await Bookmarks.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        {
+                                            courseId:
+                                                value[i].dataValues.courseId,
+                                        },
+                                        { userId },
+                                    ],
+                                },
+                            })
+                        }
+                        if (bookmarkDone === null || userId === undefined) {
+                            value[i].dataValues.bookmark = false
+                        } else {
+                            value[i].dataValues.bookmark = true
+                        }
                     }
                     return value
                 })
@@ -426,11 +546,10 @@ module.exports = {
                         {
                             model: Bookmarks,
                             as: 'Bookmarks',
-                            foreignKey: 'courseId'
-                        }
+                            foreignKey: 'courseId',
+                        },
                     ],
                 }).then(async (value) => {
-                    console.log(value)
                     for (let i = 0; i < value.length; i++) {
                         // 지역 이름 쪼개기
                         value[i].dataValues.location =
@@ -483,8 +602,89 @@ module.exports = {
                             value[i].dataValues.commentCnt +
                             value[i].dataValues.starPoint +
                             value[i].dataValues.clickCnt
-                        value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                        value[i].dataValues.bookmarkCnt =
+                            value[i].dataValues.Bookmarks.length
                         delete value[i].dataValues.Bookmarks
+                    }
+                    return value
+                })
+                data.rankingFeed = await Courses.findAll({
+                    attributes: [
+                        'courseId',
+                        'title',
+                        'location',
+                        'distance',
+                        'courseId',
+                        'courseImageUrl1',
+                        'clickCnt',
+                        'createdAt',
+                        'region',
+                    ],
+                    include: [
+                        {
+                            model: Comments,
+                            as: 'Comments',
+                            foreignKey: 'courseId',
+                        },
+                        {
+                            model: starpoint,
+                            as: 'starpoints',
+                            foreignKey: 'courseId',
+                        },
+                    ],
+                }).then(async (value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        // 지역 이름 쪼개기
+                        value[i].dataValues.location =
+                            value[i].dataValues.location.split(' ')[0] +
+                            ' ' +
+                            value[i].dataValues.location.split(' ')[1]
+                        // 댓글 개수 구하기
+                        value[i].dataValues.commentCnt =
+                            value[i].dataValues.Comments.length
+                        delete value[i].dataValues.Comments
+                        // 총 평점 평균 구하기
+                        value[i].dataValues.starPoint = 0
+                        if (value[i].dataValues.starpoints.length !== 0) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.starpoints.length;
+                                z++
+                            ) {
+                                value[i].dataValues.starPoint +=
+                                    value[i].dataValues.starpoints[
+                                        z
+                                    ].myStarPoint
+                            }
+                            value[i].dataValues.starPoint =
+                                value[i].dataValues.starPoint /
+                                value[i].dataValues.starpoints.length
+                        }
+                        delete value[i].dataValues.starpoints
+                        // 랭킹 점수
+                        value[i].dataValues.rankPoint =
+                            value[i].dataValues.commentCnt +
+                            value[i].dataValues.starPoint +
+                            value[i].dataValues.clickCnt
+                        let bookmarkDone
+                        if (userId !== undefined) {
+                            bookmarkDone = await Bookmarks.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        {
+                                            courseId:
+                                                value[i].dataValues.courseId,
+                                        },
+                                        { userId },
+                                    ],
+                                },
+                            })
+                        }
+                        if (bookmarkDone === null || userId === undefined) {
+                            value[i].dataValues.bookmark = false
+                        } else {
+                            value[i].dataValues.bookmark = true
+                        }
                     }
                     return value
                 })
@@ -521,8 +721,8 @@ module.exports = {
                             {
                                 model: Bookmarks,
                                 as: 'Bookmarks',
-                                foreignKey: 'courseId'
-                            }
+                                foreignKey: 'courseId',
+                            },
                         ],
                         order: [['createdAt', 'desc']],
                     }).then(async (value) => {
@@ -579,7 +779,8 @@ module.exports = {
                                 value[i].dataValues.commentCnt +
                                 value[i].dataValues.starPoint +
                                 value[i].dataValues.clickCnt
-                            value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                            value[i].dataValues.bookmarkCnt =
+                                value[i].dataValues.Bookmarks.length
                             delete value[i].dataValues.Bookmarks
                         }
                         return value
@@ -613,8 +814,8 @@ module.exports = {
                             {
                                 model: Bookmarks,
                                 as: 'Bookmarks',
-                                foreignKey: 'courseId'
-                            }
+                                foreignKey: 'courseId',
+                            },
                         ],
                         order: [['createdAt', 'desc']],
                     }).then(async (value) => {
@@ -671,7 +872,8 @@ module.exports = {
                                 value[i].dataValues.commentCnt +
                                 value[i].dataValues.starPoint +
                                 value[i].dataValues.clickCnt
-                            value[i].dataValues.bookmarkCnt = value[i].dataValues.Bookmarks.length
+                            value[i].dataValues.bookmarkCnt =
+                                value[i].dataValues.Bookmarks.length
                             delete value[i].dataValues.Bookmarks
                         }
                         return value
@@ -713,7 +915,9 @@ module.exports = {
                     })
                 case 'bookmark':
                     data.feed.sort((a, b) => {
-                        return b.dataValues.bookmarkCnt - a.dataValues.bookmarkCnt
+                        return (
+                            b.dataValues.bookmarkCnt - a.dataValues.bookmarkCnt
+                        )
                     })
                     break
                 default:
@@ -726,65 +930,7 @@ module.exports = {
                     break
             }
             // 랭킹 피드 기준:  조회수 + 댓글 수 + 평점
-            data.rankingFeed = await Courses.findAll({
-                attributes: [
-                    'courseId',
-                    'title',
-                    'location',
-                    'distance',
-                    'courseId',
-                    'courseImageUrl1',
-                    'clickCnt',
-                    'createdAt',
-                    'region',
-                ],
-                include: [
-                    {
-                        model: Comments,
-                        as: 'Comments',
-                        foreignKey: 'courseId',
-                    },
-                    {
-                        model: starpoint,
-                        as: 'starpoints',
-                        foreignKey: 'courseId',
-                    },
-                ],
-            }).then((value) => {
-                for (let i = 0; i < value.length; i++) {
-                    // 지역 이름 쪼개기
-                    value[i].dataValues.location =
-                        value[i].dataValues.location.split(' ')[0] +
-                        ' ' +
-                        value[i].dataValues.location.split(' ')[1]
-                    // 댓글 개수 구하기
-                    value[i].dataValues.commentCnt =
-                        value[i].dataValues.Comments.length
-                    delete value[i].dataValues.Comments
-                    // 총 평점 평균 구하기
-                    value[i].dataValues.starPoint = 0
-                    if (value[i].dataValues.starpoints.length !== 0) {
-                        for (
-                            let z = 0;
-                            z < value[i].dataValues.starpoints.length;
-                            z++
-                        ) {
-                            value[i].dataValues.starPoint +=
-                                value[i].dataValues.starpoints[z].myStarPoint
-                        }
-                        value[i].dataValues.starPoint =
-                            value[i].dataValues.starPoint /
-                            value[i].dataValues.starpoints.length
-                    }
-                    delete value[i].dataValues.starpoints
-                    // 랭킹 점수
-                    value[i].dataValues.rankPoint =
-                        value[i].dataValues.commentCnt +
-                        value[i].dataValues.starPoint +
-                        value[i].dataValues.clickCnt
-                }
-                return value
-            })
+
             data.rankingFeed.sort((a, b) => {
                 return b.dataValues.rankPoint - a.dataValues.rankPoint
             })
@@ -814,6 +960,7 @@ module.exports = {
                 'baggage',
                 'createdAt',
                 'clickCnt',
+                'thema'
             ],
             include: [
                 {
@@ -830,6 +977,7 @@ module.exports = {
                 },
             ],
         }).then(async (value) => {
+            console.log(value)
             await Courses.update(
                 { clickCnt: (value.dataValues.clickCnt += 1) },
                 { where: { courseId } }
