@@ -60,7 +60,7 @@ module.exports = {
             res.status(200).send({
                 success: true,
                 data,
-                preferdata,
+                preferData,
             })
         } catch (error) {
             return next({
