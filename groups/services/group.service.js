@@ -157,7 +157,7 @@ module.exports = {
                         size = query.size
                         page = query.page
                     }
-                    if (query.finish !== '1/') {
+                    if (query.finish !== '1') {
                         Object.assign(condition, {
                             [Op.or]: [
                                 { date: { [Op.gt]: nowDate } },
@@ -201,7 +201,7 @@ module.exports = {
                     }
 
                     //모집마감 필터
-                    if (query.finish !== '1/') {
+                    if (query.finish !== '1') {
                         Object.assign(condition, {
                             [Op.or]: [
                                 { date: { [Op.gt]: nowDate } },
