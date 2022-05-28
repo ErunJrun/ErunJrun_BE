@@ -152,6 +152,7 @@ module.exports = {
                     'courseImageUrl1',
                     'clickCnt',
                     'createdAt',
+                    'userId',
                 ],
                 include: [
                     {
@@ -213,6 +214,97 @@ module.exports = {
                 }
                 return value
             })
+        }
+        if (category === 'bookmark') {
+            if (userId !== undefined) {
+                let bookmarkCourseArray = []
+                await Bookmarks.findAll({ where: { userId } }).then((value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        bookmarkCourseArray.push(value[i].dataValues.courseId)
+                    }
+                    return value
+                })
+
+                data.feed = await Courses.findAll({
+                    where: { courseId: { [Op.in]: bookmarkCourseArray } },
+                    attributes: [
+                        'courseId',
+                        'title',
+                        'location',
+                        'distance',
+                        'courseId',
+                        'courseImageUrl1',
+                        'clickCnt',
+                        'createdAt',
+                        'userId',
+                    ],
+                    include: [
+                        {
+                            model: Comments,
+                            as: 'Comments',
+                            foreignKey: 'courseId',
+                        },
+                        {
+                            model: starpoint,
+                            as: 'starpoints',
+                            foreignKey: 'courseId',
+                        },
+                    ],
+                    order: [['createdAt', 'desc']],
+                }).then(async (value) => {
+                    for (let i = 0; i < value.length; i++) {
+                        // 지역 이름 쪼개기
+                        value[i].dataValues.location =
+                            value[i].dataValues.location.split(' ')[0] +
+                            ' ' +
+                            value[i].dataValues.location.split(' ')[1]
+                        // 댓글 수 구하기
+                        value[i].dataValues.commentCnt =
+                            value[i].dataValues.Comments.length
+                        delete value[i].dataValues.Comments
+                        // 총 평점 평균 구하기
+                        value[i].dataValues.starPoint = 0
+                        if (value[i].dataValues.starpoints.length !== 0) {
+                            for (
+                                let z = 0;
+                                z < value[i].dataValues.starpoints.length;
+                                z++
+                            ) {
+                                value[i].dataValues.starPoint +=
+                                    value[i].dataValues.starpoints[
+                                        z
+                                    ].myStarPoint
+                            }
+                            value[i].dataValues.starPoint =
+                                value[i].dataValues.starPoint /
+                                value[i].dataValues.starpoints.length
+                        }
+                        delete value[i].dataValues.starpoints
+                        // 북마크 여부 체크하기
+                        let bookmarkDone
+                        if (userId !== undefined) {
+                            bookmarkDone = await Bookmarks.findOne({
+                                where: {
+                                    [Op.and]: [
+                                        {
+                                            courseId:
+                                                value[i].dataValues.courseId,
+                                        },
+                                        { userId },
+                                    ],
+                                },
+                            })
+                        }
+                        if (bookmarkDone === null || userId === undefined) {
+                            value[i].dataValues.bookmark = false
+                        } else {
+                            value[i].dataValues.bookmark = true
+                        }
+                    }
+                    return value
+                })
+                console.log(data)
+            }
         }
         // 코스추천 리스트 페이지 표출
         if (category === 'all') {

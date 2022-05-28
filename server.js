@@ -5,6 +5,7 @@ const fs = require('fs')
 const https = require('https')
 require('dotenv').config()
 
+
 if (process.env.PORT) {
     // Certificate 인증서 경로
     const privateKey = fs.readFileSync(process.env.SSL_PRIVATEKEY, 'utf8')

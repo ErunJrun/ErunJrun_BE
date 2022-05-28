@@ -41,7 +41,12 @@ module.exports = {
     getPost: async (req, res, next) => {
         let { category } = req.params
         let query
-        const { userId } = res.locals
+        let userId = ''
+        if (req.query.userId) {
+            userId = req.query.userId
+        } else {
+            userId = res.locals.userId
+        }
 
         if (req.query) {
             query = req.query
