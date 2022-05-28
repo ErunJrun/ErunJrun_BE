@@ -1072,9 +1072,10 @@ module.exports = {
             data.starPoint = 0
             data.starPeople = 0
             data.myStarPoint = myStarPoint
-            const existPoint = starpoint.findOne({
+            const existPoint = await starpoint.findOne({
                 where: { [Op.and]: [{ courseId }, { userId }] },
             })
+            console.log(existPoint)
             if (existPoint) {
                 await starpoint
                     .update(
@@ -1122,11 +1123,13 @@ module.exports = {
         data.starPoint = 0
         data.starPeople = 0
         if (userId !== undefined) {
-            data.myStarPoint = await starpoint
+            let point = await starpoint
                 .findOne({ where: { [Op.and]: [{ courseId }, { userId }] } })
-                .then(async (value) => {
-                    return value.dataValues.myStarPoint
-                })
+            if (point === null) {
+                data.myStarPoint = 0
+            } else{
+                data.myStarPoint = point.myStarPoint
+            }
         } else {
             data.myStarPoint = 0
         }
