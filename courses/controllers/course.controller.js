@@ -18,6 +18,7 @@ module.exports = {
             baggage: req.body.baggage,
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
+            thema: req.body.thema
         }
         if (req.files.length === 0) {
             return next(new Error('이미지는 최소 1개 이상 등록해주세요'))
@@ -98,6 +99,7 @@ module.exports = {
             parking: req.body.parking,
             baggage: req.body.baggage,
             content: req.body.content,
+            thema: req.body.thema
         }
         const existPost = await courseService.checkPost(courseId)
         if (!existPost) {
