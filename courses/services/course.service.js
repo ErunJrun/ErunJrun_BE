@@ -219,7 +219,6 @@ module.exports = {
             if (userId !== undefined) {
                 let bookmarkCourseArray = []
                 await Bookmarks.findAll({ where: { userId } }).then((value) => {
-                    
                     for (let i = 0; i < value.length; i++) {
                         bookmarkCourseArray.push(value[i].dataValues.courseId)
                     }
