@@ -1,4 +1,5 @@
 const alarmService = require('../services/alarm.service')
+const schedule = require('node-schedule')
 
 module.exports = {
     getAlarm: async (req, res, next) => {
@@ -37,5 +38,5 @@ module.exports = {
                 stack: error,
             })
         }
-    },
+    }
 }

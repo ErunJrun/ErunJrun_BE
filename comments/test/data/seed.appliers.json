@@ -1,0 +1,32 @@
+[
+    {
+        "userId": "087d9c18-85d5-4c27-8115-ba9e66d21548",
+        "groupId": "23e84dd6-cc90-47e6-8b26-374491976fe5",
+        "attendance": 0,
+        "evaluation": 0
+    },
+    {
+        "userId": "087d9c18-85d5-4c27-8115-ba9e66d21548",
+        "groupId": "29c210a1-aa38-4e96-89ec-e0103683392d",
+        "attendance": 0,
+        "evaluation": 0
+    },
+    {
+        "userId": "087d9c18-85d5-4c27-8115-ba9e66d21548",
+        "groupId": "2c935603-62ba-4065-b3e6-a4137a952888",
+        "attendance": 0,
+        "evaluation": 0
+    },
+    {
+        "userId": "087d9c18-85d5-4c27-8115-ba9e66d21548",
+        "groupId": "30b49bc7-0f26-4979-86b6-332d9d546009",
+        "attendance": 0,
+        "evaluation": 0
+    },
+    {
+        "userId": "087d9c18-85d5-4c27-8115-ba9e66d21548",
+        "groupId": "3147ca43-405a-41e8-ba06-df884be22722",
+        "attendance": 0,
+        "evaluation": 0
+    }
+]

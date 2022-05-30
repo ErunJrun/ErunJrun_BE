@@ -3,7 +3,16 @@ const port = process.env.PORT || 3000
 
 const fs = require('fs')
 const https = require('https')
+const alarmController = require('./alarms/controllers/alarm.controller')
 require('dotenv').config()
+const moment = require('moment')
+
+// 알람 생성 자동화
+if (process.env.ALARMSTATE) {
+    alarmController.createDdayAlarm()
+    alarmController.createStartAlarm()
+    alarmController.createEndAlarm()
+}
 
 if (process.env.PORT) {
     // Certificate 인증서 경로
@@ -22,6 +31,8 @@ if (process.env.PORT) {
     })
 } else {
     const server = app.listen(port, () => {
+        const date = new Date(1653908580000)
+        console.log(moment(date).format('YYYY-MM-DD HH:mm:ss'))
         console.log(port, '번으로 서버가 연결되었습니다.')
         console.log(`http://localhost:${port}`)
         process.send('ready')
