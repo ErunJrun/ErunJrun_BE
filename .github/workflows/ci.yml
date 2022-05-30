@@ -61,6 +61,18 @@ jobs:
           echo LOGDIR=${{ secrets.LOGDIR }} >> .env
           echo ALARMSTATE=${{ secrets.ALARMSTATE }} >> .env
           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo DEV_USERNAME=${{ secrets.DEV_USERNAME }} >> .env
+          echo DEV_PASSWORD=${{ secrets.DEV_PASSWORD }} >> .env
+          echo DEV_DATABASE=${{ secrets.DEV_DATABASE }} >> .env
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_DIALECT=${{ secrets.DB_DIALECT }} >> .env
+          echo DB_TIMEZONE=${{ secrets.DB_TIMEZONE }} >> .env
+          echo TEST_USERNAME=${{ secrets.TEST_USERNAME }} >> .env
+          echo TEST_PASSWORD=${{ secrets.TEST_PASSWORD }} >> .env
+          echo TEST_DATABASE=${{ secrets.TEST_DATABASE }} >> .env
+          echo PRODUCT_USERNAME=${{ secrets.PRODUCT_USERNAME }} >> .env
+          echo PRODUCT_PASSWORD=${{ secrets.PRODUCT_PASSWORD }} >> .env
+          echo PRODUCT_DATABASE=${{ secrets.PRODUCT_DATABASE }} >> .env
           cat .env
     - run: npm run build --if-present
     - run: npm test
