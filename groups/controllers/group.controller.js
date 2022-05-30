@@ -12,7 +12,6 @@ module.exports = {
             maxPeople: req.body.maxPeople,
             date: req.body.date,
             standbyTime: req.body.standbyTime,
-            finishTime: req.body.finishTime,
             distance: req.body.distance,
             speed: req.body.speed,
             location: req.body.location,
@@ -46,11 +45,6 @@ module.exports = {
                     )
                 )
             }
-
-            if (req.body.standbyTime > req.body.finishTime)
-                return next(
-                    new Error('종료시간은 시작시간보다 빠를 수 없습니다')
-                )
 
             const doubleChk = await redis.get(userId + 'create')
             if (doubleChk === null) {
@@ -206,7 +200,6 @@ module.exports = {
             maxPeople: req.body.maxPeople,
             date: req.body.date,
             standbyTime: req.body.standbyTime,
-            finishTime: req.body.finishTime,
             speed: req.body.speed,
             parking: req.body.parking,
             baggage: req.body.baggage,
@@ -292,11 +285,6 @@ module.exports = {
                     )
                 )
             }
-
-            if (req.body.standbyTime > req.body.finishTime)
-                return next(
-                    new Error('종료시간은 시작시간보다 빠를 수 없습니다')
-                )
 
             await groupService.addAlarm(groupId, chkGroup.title, 'update')
             groupService.updatePost(groupId, data)
