@@ -156,9 +156,9 @@
     <td align="center">inmyblue0930@naver.com</td>
   </tr>
     <tr>
-    <td align="center"><a href="https://github.com/hyeonjun4460"><b>신동영</b></a></td>
+    <td align="center"><a href="https://github.com/DongYoung-dev"><b>신동영</b></a></td>
     <td align="center">member</td>
-    <td align="center">로그인 및 회원가입 / 휴대폰 인증 / 유저 추가정보</td>
+    <td align="center">카카오, 네이버 소셜로그인 / 휴대폰 인증 / 유저 추가정보 / JWT토큰 인증관리</td>
     <td align="center">shindy93@naver.com</td>
   </tr>
 </table>
