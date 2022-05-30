@@ -150,9 +150,9 @@
     <td align="center">hyeonjun4460@gmail.com</td>
   </tr>
     <tr>
-    <td align="center"><a href="https://github.com/hyeonjun4460"><b>오지우</b></a></td>
+    <td align="center"><a href="https://github.com/inmyblue"><b>오지우</b></a></td>
     <td align="center">member</td>
-    <td align="center">그룹러닝 모집 게시글 CRUD / 모집 신청, 취소 / 게시글 검색 필터</td>
+    <td align="center">그룹러닝 모집 게시글 CRUD / 모집 신청, 취소 / 게시글 검색 필터 / 로깅 / S3-Lambda 이미지리사이징 / 로드밸런싱 </td>
     <td align="center">inmyblue0930@naver.com</td>
   </tr>
     <tr>
