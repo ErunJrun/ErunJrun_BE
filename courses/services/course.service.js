@@ -93,7 +93,7 @@ module.exports = {
                     data = '전라도/광주광역시'
                     break
                 case '9':
-                    data = '제주특별시'
+                    data = '제주특별자치도'
                     break
             }
         }
@@ -126,7 +126,7 @@ module.exports = {
                         foreignKey: 'courseId',
                     },
                 ],
-                limit: 3,
+                limit: 6,
                 order: [['createdAt', 'desc']],
             }).then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
