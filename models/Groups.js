@@ -43,14 +43,10 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: false,
             },
             date: {
-                type: DataTypes.DATE,
+                type: DataTypes.DATEONLY,
                 allowNull: false,
             },
             standbyTime: {
-                type: DataTypes.TIME,
-                allowNull: false,
-            },
-            startTime: {
                 type: DataTypes.TIME,
                 allowNull: false,
             },

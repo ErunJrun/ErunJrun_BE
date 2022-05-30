@@ -49,7 +49,7 @@ module.exports = {
         }
 
         try {
-            let timeCode = data.startTime.split(':')[0]
+            let timeCode = data.standbyTime.split(':')[0]
             timeCode = Math.ceil(timeCode / 4)
 
             data.region = region
@@ -87,7 +87,7 @@ module.exports = {
                     Object.assign(condition, { userId: myUserId })
                     break
                 case 'main':
-                    limit = 6
+                    limit = 3
                     Object.assign(condition, {
                         [Op.or]: [
                             { date: { [Op.gt]: nowDate } },
@@ -126,154 +126,151 @@ module.exports = {
                     })
                     break
                 case 'prefer':
-                case 'all':
+                    const user = await Users.findOne({
+                        where: { userId: myUserId },
+                    })
+
+                    switch (user.likeDistance) {
+                        case '1':
+                            Object.assign(condition, {
+                                distance: { [Op.lt]: 5 },
+                            })
+                            break
+                        case '2':
+                            Object.assign(condition, {
+                                distance: { [Op.between]: [5, 9] },
+                            })
+                            break
+                        case '3':
+                            Object.assign(condition, {
+                                distance: { [Op.between]: [10, 15] },
+                            })
+                            break
+                        case '4':
+                            Object.assign(condition, {
+                                distance: { [Op.gte]: 15 },
+                            })
+                            break
+                    }
+                    Object.assign(condition, { region: user.likeLocation })
                     if (query.size && query.page) {
                         size = query.size
                         page = query.page
                     }
-
-                    if (category === 'prefer') {
-                        const user = await Users.findOne({
-                            where: { userId: myUserId },
+                    if (query.finish !== '1') {
+                        Object.assign(condition, {
+                            [Op.or]: [
+                                { date: { [Op.gt]: nowDate } },
+                                {
+                                    [Op.and]: [
+                                        { date: nowDate },
+                                        {
+                                            standbyTime: {
+                                                [Op.gte]: minusTime,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
                         })
+                    }
+                    break
+                case 'all':
+                    //러닝일자 필터
+                    if (query.date) {
+                        let startDate = query.date.split('/')[0]
+                        let endDate = query.date.split('/')[1]
 
-                        switch (user.likeDistance) {
-                            case '1':
-                                Object.assign(condition, {
-                                    distance: { [Op.lt]: 5 },
-                                })
-                                break
-                            case '2':
-                                Object.assign(condition, {
-                                    distance: { [Op.between]: [5, 9] },
-                                })
-                                break
-                            case '3':
-                                Object.assign(condition, {
-                                    distance: { [Op.between]: [10, 15] },
-                                })
-                                break
-                            case '4':
-                                Object.assign(condition, {
-                                    distance: { [Op.gte]: 15 },
-                                })
-                                break
+                        Object.assign(condition, {
+                            date: { [Op.between]: [startDate, endDate] },
+                        })
+                    }
+
+                    //러닝시간 필터
+                    if (query.time && query.time !== '0') {
+                        let timequery = query.time.split('/')
+                        if (timequery.includes('0')) {
+                            timequery = []
+                            for (let i = 1; i <= 6; i++) {
+                                timequery.push(i)
+                            }
                         }
-                        Object.assign(condition, { region: user.likeLocation })
-                        if (query.finish !== '1') {
-                            Object.assign(condition, {
-                                [Op.or]: [
-                                    { date: { [Op.gt]: nowDate } },
-                                    {
-                                        [Op.and]: [
-                                            { date: nowDate },
-                                            {
-                                                standbyTime: {
-                                                    [Op.gte]: minusTime,
-                                                },
+                        Object.assign(condition, {
+                            timecode: { [Op.in]: timequery },
+                        })
+                    }
+
+                    //모집마감 필터
+                    if (query.finish !== '1') {
+                        Object.assign(condition, {
+                            [Op.or]: [
+                                { date: { [Op.gt]: nowDate } },
+                                {
+                                    [Op.and]: [
+                                        { date: nowDate },
+                                        {
+                                            standbyTime: {
+                                                [Op.gte]: minusTime,
                                             },
-                                        ],
-                                    },
-                                ],
-                            })
+                                        },
+                                    ],
+                                },
+                            ],
+                        })
+                    }
+                    //테마 필터
+                    if (query.thema) {
+                        let themaquery = decodeURIComponent(query.thema).split(
+                            '/'
+                        )
+                        if (themaquery.includes('전체')) {
+                            themaquery = [
+                                '산',
+                                '도시',
+                                '강변',
+                                '해변',
+                                '공원',
+                                '트랙',
+                            ]
                         }
-                    } else {
-                        //러닝일자 필터
-                        if (query.date) {
-                            let startDate = query.date.split('/')[0]
-                            let endDate = query.date.split('/')[1]
+                        Object.assign(condition, {
+                            thema: { [Op.in]: themaquery },
+                        })
+                    }
 
-                            Object.assign(condition, {
-                                date: { [Op.between]: [startDate, endDate] },
-                            })
-                        }
-
-                        //러닝시간 필터
-                        if (query.time && query.time !== '0') {
-                            let timequery = query.time.split('/')
-                            if (timequery.includes('0')) {
-                                timequery = []
-                                for (let i = 1; i <= 6; i++) {
-                                    timequery.push(i)
-                                }
+                    //지역 필터입니다
+                    if (query.region) {
+                        let regionQuery = query.region.split('/')
+                        if (regionQuery.includes('0')) {
+                            regionQuery = []
+                            for (let i = 1; i <= 9; i++) {
+                                regionQuery.push(i)
                             }
-                            Object.assign(condition, {
-                                timecode: { [Op.in]: timequery },
-                            })
                         }
+                        Object.assign(condition, {
+                            region: { [Op.in]: regionQuery },
+                        })
+                    }
 
-                        //모집마감 필터
-                        if (query.finish !== '1') {
+                    //러닝거리 필터
+                    if (query.distance) {
+                        const distanceQuery = query.distance.split('/')
+
+                        if (distanceQuery.includes('0')) {
                             Object.assign(condition, {
-                                [Op.or]: [
-                                    { date: { [Op.gt]: nowDate } },
-                                    {
-                                        [Op.and]: [
-                                            { date: nowDate },
-                                            {
-                                                standbyTime: {
-                                                    [Op.gte]: minusTime,
-                                                },
-                                            },
-                                        ],
-                                    },
-                                ],
+                                distance: { [Op.gte]: 0 },
                             })
-                        }
-                        //테마 필터
-                        if (query.thema) {
-                            let themaquery = decodeURIComponent(
-                                query.thema
-                            ).split('/')
-                            if (themaquery.includes('전체')) {
-                                themaquery = [
-                                    '산',
-                                    '도시',
-                                    '강변',
-                                    '해변',
-                                    '공원',
-                                    '트랙',
-                                ]
-                            }
+                        } else if (distanceQuery.includes('')) {
+                            distanceQuery.pop()
+
                             Object.assign(condition, {
-                                thema: { [Op.in]: themaquery },
+                                distance: {
+                                    [Op.between]: [
+                                        Math.min(...distanceQuery) * 5 - 5,
+                                        Math.max(...distanceQuery) * 5,
+                                    ],
+                                },
                             })
-                        }
-
-                        //지역 필터입니다
-                        if (query.region) {
-                            let regionQuery = query.region.split('/')
-                            if (regionQuery.includes('0')) {
-                                regionQuery = []
-                                for (let i = 1; i <= 9; i++) {
-                                    regionQuery.push(i)
-                                }
-                            }
-                            Object.assign(condition, {
-                                region: { [Op.in]: regionQuery },
-                            })
-                        }
-
-                        //러닝거리 필터
-                        if (query.distance) {
-                            const distanceQuery = query.distance.split('/')
-
-                            if (distanceQuery.includes('0')) {
-                                Object.assign(condition, {
-                                    distance: { [Op.gte]: 0 },
-                                })
-                            } else if (distanceQuery.includes('')) {
-                                distanceQuery.pop()
-
-                                Object.assign(condition, {
-                                    distance: {
-                                        [Op.between]: [
-                                            Math.min(...distanceQuery) * 5 - 5,
-                                            Math.max(...distanceQuery) * 5,
-                                        ],
-                                    },
-                                })
-                            }
                         }
                     }
             }
@@ -287,7 +284,6 @@ module.exports = {
                     'groupId',
                     'date',
                     'standbyTime',
-                    'startTime',
                     'maxPeople',
                     ['thumbnailUrl1', 'thumbnailUrl'],
                     [
@@ -439,16 +435,6 @@ module.exports = {
             })
 
             if (page && size) {
-                let start, end
-
-                if (page !== '1') {
-                    start = (page - 1) * size - 1
-                    end = size * page
-                } else {
-                    start = (page - 1) * size
-                    end = size * page
-                }
-                console.log(start, end)
                 data = data.slice((page - 1) * size, size * page)
             }
 
@@ -465,7 +451,7 @@ module.exports = {
     },
     updatePost: (groupId, data) => {
         try {
-            let timeCode = data.startTime.split(':')[0]
+            let timeCode = data.standbyTime.split(':')[0]
             timeCode = Math.ceil(timeCode / 4)
 
             data.timecode = timeCode
@@ -594,6 +580,7 @@ module.exports = {
             })
             return data
         } catch (error) {
+            console.log(error)
             throw new Error(error)
         }
     },

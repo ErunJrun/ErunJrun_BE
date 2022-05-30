@@ -12,7 +12,6 @@ module.exports = {
             maxPeople: req.body.maxPeople,
             date: req.body.date,
             standbyTime: req.body.standbyTime,
-            startTime: req.body.startTime,
             finishTime: req.body.finishTime,
             distance: req.body.distance,
             speed: req.body.speed,
@@ -48,11 +47,7 @@ module.exports = {
                 )
             }
 
-            if (req.body.standbyTime > req.body.startTime)
-                return next(
-                    new Error('시작시간은 스탠바이 시간보다 빠를수 없습니다')
-                )
-            if (req.body.startTime > req.body.finishTime)
+            if (req.body.standbyTime > req.body.finishTime)
                 return next(
                     new Error('종료시간은 시작시간보다 빠를 수 없습니다')
                 )
@@ -86,28 +81,34 @@ module.exports = {
         let userId = ''
         let preferData = ''
 
-        if (
-            (category === 'mypage' || category === 'complete') &&
-            query.userId
-        ) {
-            userId = query.userId
-        } else if (res.locals.userId) {
-            userId = res.locals.userId
-        }
-
-        if (
-            category === 'all' &&
-            !query.date &&
-            !query.time &&
-            !query.thema &&
-            !query.region &&
-            !query.distance &&
-            userId !== ''
-        ) {
-            category = 'prefer'
-        }
-
         try {
+            switch (category) {
+                case 'mypage':
+                case 'complete':
+                    if (!query.userId) {
+                        return next(new Error('잘못된 유저입니다'))
+                    }
+                    userId = query.userId
+
+                    const chkUser = await groupService.getUserbyId(userId)
+                    if (!chkUser) {
+                        return next(new Error('잘못된 유저입니다'))
+                    }
+                    break
+                case 'all':
+                case 'main':
+                    if (res.locals.userId) {
+                        userId = res.locals.userId
+                    }
+                    break
+                case 'prefer':
+                    if (!res.locals.userId) {
+                        return next(new Error('로그인 후 사용할 수 있습니다'))
+                    }
+                    userId = res.locals.userId
+                    break
+            }
+
             switch (category) {
                 case 'all':
                     data = await groupService.getGroupData(userId, 'all', query)
@@ -181,17 +182,14 @@ module.exports = {
                         preferData.likeLocation = '전라남도/전라북도/광주광역시'
                         break
                     case '9':
-                        preferData.likeLocation = '제주특별시'
+                        preferData.likeLocation = '제주특별자치도'
                         break
                 }
-                preferData.dataValues.state = true
-                if (data.length === 0) {
-                    data = await groupService.getGroupData(userId, 'all', query)
-                    preferData.dataValues.state = false
-                }
+
+                return res.status(200).send({ success: true, data, preferData })
             }
 
-            res.status(200).send({ success: true, data, preferData })
+            res.status(200).send({ success: true, data })
         } catch (error) {
             return next({
                 message: '그룹러닝 게시글 불러오기를 실패하였습니다',
@@ -208,7 +206,6 @@ module.exports = {
             maxPeople: req.body.maxPeople,
             date: req.body.date,
             standbyTime: req.body.standbyTime,
-            startTime: req.body.startTime,
             finishTime: req.body.finishTime,
             speed: req.body.speed,
             parking: req.body.parking,
@@ -296,11 +293,7 @@ module.exports = {
                 )
             }
 
-            if (req.body.standbyTime > req.body.startTime)
-                return next(
-                    new Error('시작시간은 스탠바이 시간보다 빠를수 없습니다')
-                )
-            if (req.body.startTime > req.body.finishTime)
+            if (req.body.standbyTime > req.body.finishTime)
                 return next(
                     new Error('종료시간은 시작시간보다 빠를 수 없습니다')
                 )
@@ -385,7 +378,7 @@ module.exports = {
             const chkGroup = await groupService.getGroupById(groupId)
 
             const startDateTime =
-                (await chkGroup.date) + ' ' + chkGroup.startTime
+                (await chkGroup.date) + ' ' + chkGroup.standbyTime
             const nowDateTime = moment().format('YYYY-MM-DD HH:mm:ss')
 
             if (startDateTime <= nowDateTime) {

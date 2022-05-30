@@ -4,9 +4,6 @@ const groupService = require('../services/group.service')
 const moment = require('moment')
 
 jest.mock('../../models')
-const { Groups, Users } = require('../../models')
-
-const userPrefer = require('./data/user.prefer.json')
 
 let req, res, next, err
 const userId = '087d9c18-85d5-4c27-8115-ba9e66d21548'
@@ -28,38 +25,6 @@ describe('그룹러닝 테스트 코드', () => {
 
             expect(next).toBeCalledWith(err)
         })
-
-        it('로그인한 경우 다른필터가 없으면 선호필터 적용이 되는가?', async () => {
-            res.locals.userId = userId
-            req.params.category = 'all'
-
-            jest.spyOn(Groups, 'findAll').mockImplementation(() => {
-                return Promise.resolve([])
-            })
-
-            await Users.findOne.mockReturnValue(userPrefer)
-            await groupController.getGroup(req, res, next)
-            expect(res._getData()).not.toHaveProperty('preferData', '')
-            expect(res._getData().preferData.dataValues).toHaveProperty(
-                'state',
-                false
-            )
-        })
-
-        it('로그인한 경우 다른필터가 있으면 검색필터로 적용이 되는가?', async () => {
-            res.locals.userId = userId
-            req.params.category = 'all'
-            req.query.distance = '1/2'
-
-            jest.spyOn(Groups, 'findAll').mockImplementation(() => {
-                return Promise.resolve([])
-            })
-
-            await Users.findOne.mockReturnValue(userPrefer)
-            await groupController.getGroup(req, res, next)
-
-            expect(res._getData()).toHaveProperty('preferData', '')
-        })
     })
 
     describe('그룹러닝 등록하기 관련 테스트 코드', () => {
@@ -67,7 +32,6 @@ describe('그룹러닝 테스트 코드', () => {
             req.body = {
                 date: '2022-05-30',
                 standbyTime: '18:00:00',
-                startTime: '18:15:00',
                 finishTime: '21:00:00',
             }
             res.locals.userId = userId
@@ -84,18 +48,8 @@ describe('그룹러닝 테스트 코드', () => {
             expect(next).toBeCalledWith(err)
         })
 
-        it('시작시간이 스탠바이 시간보다 빠른경우 오류가 나는지 체크', async () => {
-            req.body.standbyTime = '18:00:00'
-            req.body.startTime = '17:50:00'
-
-            err = new Error('시작시간은 스탠바이 시간보다 빠를수 없습니다')
-
-            await groupController.createPost(req, res, next)
-            expect(next).toBeCalledWith(err)
-        })
-
         it('종료시간은 시작시간보다 빠른경우 오류가 나는지 체크', async () => {
-            req.body.startTime = '18:00:00'
+            req.body.standbyTime = '18:00:00'
             req.body.finishTime = '17:50:00'
 
             err = new Error('종료시간은 시작시간보다 빠를 수 없습니다')
@@ -110,14 +64,12 @@ describe('그룹러닝 테스트 코드', () => {
             req.body = {
                 date: '2022-05-30',
                 standbyTime: '18:00:00',
-                startTime: '18:15:00',
                 finishTime: '21:00:00',
             }
             groupData = {
                 userId: '087d9c18-85d5-4c27-8115-ba9e66d21548',
-                date: '2022-05-27',
+                date: '2022-05-29',
                 standbyTime: '18:18:00',
-                startTime: '18:30:00',
                 finishTime: '20:00:00',
             }
 
@@ -139,22 +91,8 @@ describe('그룹러닝 테스트 코드', () => {
             expect(next).toBeCalledWith(err)
         })
 
-        it('시작시간이 스탠바이 시간보다 빠른경우 오류가 나는지 체크', async () => {
-            req.body.standbyTime = '18:00:00'
-            req.body.startTime = '17:50:00'
-
-            err = new Error('시작시간은 스탠바이 시간보다 빠를수 없습니다')
-
-            jest.spyOn(groupService, 'getGroupById').mockImplementation(() => {
-                return groupData
-            })
-
-            await groupController.updatePost(req, res, next)
-            expect(next).toBeCalledWith(err)
-        })
-
         it('종료시간은 시작시간보다 빠른경우 오류가 나는지 체크', async () => {
-            req.body.startTime = '18:00:00'
+            req.body.standbyTime = '18:00:00'
             req.body.finishTime = '17:50:00'
 
             err = new Error('종료시간은 시작시간보다 빠를 수 없습니다')
@@ -214,6 +152,10 @@ describe('그룹러닝 테스트 코드', () => {
             res.locals.userId = userId
         })
         it('이미 지난 그룹러닝에 대해서는 신청/취소가 불가능한지 체크', async () => {
+            jest.spyOn(groupService, 'chkApplyUser').mockImplementation(() => {
+                return 1
+            })
+
             jest.spyOn(groupService, 'getGroupById').mockImplementation(() => {
                 return { date: '2022-05-23' }
             })
@@ -225,6 +167,10 @@ describe('그룹러닝 테스트 코드', () => {
         })
 
         it('개설자가 신청취소시 신청이 불가능한지 체크', async () => {
+            jest.spyOn(groupService, 'chkApplyUser').mockImplementation(() => {
+                return 1
+            })
+
             jest.spyOn(groupService, 'getGroupById').mockImplementation(() => {
                 return { userId }
             })
@@ -242,6 +188,10 @@ describe('그룹러닝 테스트 코드', () => {
 
             jest.spyOn(groupService, 'getGroupById').mockImplementation(() => {
                 return { userId: '12345' }
+            })
+
+            jest.spyOn(groupService, 'cancelGroup').mockImplementation(() => {
+                return
             })
 
             jest.spyOn(groupService, 'getApplyCount').mockImplementation(() => {
@@ -266,6 +216,10 @@ describe('그룹러닝 테스트 코드', () => {
 
             jest.spyOn(groupService, 'getGroupById').mockImplementation(() => {
                 return { userId: '12345' }
+            })
+
+            jest.spyOn(groupService, 'applyGroup').mockImplementation(() => {
+                return
             })
 
             jest.spyOn(groupService, 'getApplyCount').mockImplementation(() => {
