@@ -4,6 +4,7 @@
 
 ### Node ###
 # Logs
+
 logs
 *.log
 npm-debug.log*
@@ -150,3 +151,6 @@ appspec.yml
 stresstest.csv
 stresstest.yaml
 ecosystem.config.js
+logger.js
+middlewares/loggers/logger.js
+server.js
