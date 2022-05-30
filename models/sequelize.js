@@ -7,8 +7,6 @@ require('dotenv').config()
 const env = process.env.NODE_ENV || 'development'
 const config = require('../config/config')[env]
 
-console.log(config)
-console.log(config.database)
 // new Sequelize를 통해 MySQL 연결 객체를 생성한다.
 const sequelize = new Sequelize(
     config.database,

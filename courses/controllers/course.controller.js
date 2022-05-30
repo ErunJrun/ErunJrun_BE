@@ -107,7 +107,6 @@ module.exports = {
         if (!existPost) {
             return next(new Error('해당 게시물이 존재하지 않습니다'))
         }
-        console.log(existPost.dataValues.courseImageUrl1)
         try {
             await courseService.checkWriter(courseId, userId)
         } catch (error) {
@@ -244,7 +243,6 @@ module.exports = {
                 userId,
                 myStarPoint
             )
-            console.log(data)
             res.status(200).send({
                 success: true,
                 data,
@@ -259,14 +257,12 @@ module.exports = {
     getStarPoint: async (req, res, next) => {
         const { courseId } = req.params
         const { userId } = res.locals
-        console.log(userId)
         const existPost = await courseService.checkPost(courseId)
         if (!existPost) {
             return next(new Error('해당 게시물이 존재하지 않습니다'))
         }
         try {
             const data = await courseService.getStarPoint(courseId, userId)
-            console.log(data)
             res.status(200).send({
                 success: true,
                 data,
