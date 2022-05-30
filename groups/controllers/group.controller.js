@@ -182,7 +182,7 @@ module.exports = {
                         preferData.likeLocation = '전라남도/전라북도/광주광역시'
                         break
                     case '9':
-                        preferData.likeLocation = '제주특별시'
+                        preferData.likeLocation = '제주특별자치도'
                         break
                 }
 
