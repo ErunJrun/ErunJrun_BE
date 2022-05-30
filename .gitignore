@@ -148,3 +148,4 @@ config/
 .idea/
 orm.js
 appspec.yml
+ecosystem.config.js
