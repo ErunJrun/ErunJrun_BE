@@ -144,7 +144,6 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node
 
-config/
 .idea/
 orm.js
 appspec.yml
