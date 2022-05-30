@@ -1,6 +1,6 @@
 # 🏃‍ 서비스 소개
 
-![로고](https://www.erunjrun.com/static/media/courseFeedBanner.d47ef9d9e054266fd205.png)
+![로고](https://user-images.githubusercontent.com/100745412/170878912-8c879a79-a77b-49db-8ba5-72882d56bdea.png)
 
 </br>
 
