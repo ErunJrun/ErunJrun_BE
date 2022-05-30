@@ -50,10 +50,6 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.TIME,
                 allowNull: false,
             },
-            finishTime: {
-                type: DataTypes.TIME,
-                allowNull: false,
-            },
             timecode: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
