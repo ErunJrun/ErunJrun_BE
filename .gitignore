@@ -147,8 +147,7 @@ dist
 
 .idea/
 orm.js
+appspec.yml
 stresstest.csv
 stresstest.yaml
 ecosystem.config.js
-logger.js
-middlewares/loggers/logger.js
