@@ -113,7 +113,7 @@ module.exports = {
                                 [Op.and]: [
                                     { date: nowDate },
                                     {
-                                        finishTime: {
+                                        standbyTime: {
                                             [Op.lte]: nowTime,
                                         },
                                     },
@@ -153,10 +153,6 @@ module.exports = {
                             break
                     }
                     Object.assign(condition, { region: user.likeLocation })
-                    if (query.size && query.page) {
-                        size = query.size
-                        page = query.page
-                    }
                     if (query.finish !== '1') {
                         Object.assign(condition, {
                             [Op.or]: [
@@ -173,6 +169,10 @@ module.exports = {
                                 },
                             ],
                         })
+                    }
+                    if (query.size && query.page) {
+                        size = query.size
+                        page = query.page
                     }
                     break
                 case 'all':
@@ -273,6 +273,11 @@ module.exports = {
                             })
                         }
                     }
+
+                    if (query.size && query.page) {
+                        size = query.size
+                        page = query.page
+                    }
             }
 
             let data = await Groups.findAll({
@@ -294,12 +299,6 @@ module.exports = {
                         'applyPeople',
                     ],
                     'userId',
-                    [
-                        sequelize.literal(
-                            'timestampdiff(minute,standbyTime,finishTime)'
-                        ),
-                        'totalTime',
-                    ],
                     [sequelize.literal('datediff(date,now())'), 'applyEndTime'],
                     'thema',
                 ],
@@ -377,10 +376,6 @@ module.exports = {
                     } else {
                         result[i].dataValues.applyEndTime = '0 일'
                     }
-
-                    result[i].dataValues.totalTime = `${parseInt(
-                        result[i].dataValues.totalTime / 60
-                    )}h ${result[i].dataValues.totalTime % 60}min`
 
                     const DateTime = moment
                         .utc(startDateTime)
