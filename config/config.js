@@ -7,7 +7,7 @@ module.exports = {
         "database": process.env.DEV_DATABASE,
         "host": process.env.DB_HOST,
         "dialect": process.env.DB_DIALECT,
-        "timezone": process.env.DB_DTIMEZONE,
+        "timezone": process.env.DB_TIMEZONE,
         "dialectOptions": { "dateStrings": true, "typeCast": true },
         "define": { "timestamps": true }
     },
@@ -27,7 +27,7 @@ module.exports = {
         "database": process.env.PRODUCT_DATABASE,
         "host": process.env.DB_HOST,
         "dialect": process.env.DB_DIALECT,
-        "timezone": process.env.DB_DTIMEZONE,
+        "timezone": process.env.DB_TIMEZONE,
         "dialectOptions": { "dateStrings": true, "typeCast": true },
         "define": { "timestamps": true }
     }
