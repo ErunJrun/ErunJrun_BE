@@ -7,6 +7,8 @@ const {
 } = require('../../models/index')
 const sequelize = require('sequelize')
 
+
+
 module.exports = {
     // 유저에게 생성되어있는 알람을 최신순으로 조회
     getAlarm: async (userId) => {
