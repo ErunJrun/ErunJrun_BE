@@ -93,7 +93,7 @@ module.exports = {
                     data = '전라도/광주광역시'
                     break
                 case '9':
-                    data = '제주특별시'
+                    data = '제주특별자치도'
                     break
             }
         }
