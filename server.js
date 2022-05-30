@@ -23,6 +23,7 @@ if (process.env.PORT) {
     const httpsServer = https.createServer(credentials, app)
     httpsServer.listen(port, () => {
         console.log(`HTTPS Server running on port ${port}`)
+        process.send('ready')
     })
 } else {
     const server = app.listen(port, () => {
@@ -30,6 +31,5 @@ if (process.env.PORT) {
         console.log(moment(date).format('YYYY-MM-DD HH:mm:ss'))
         console.log(port, '번으로 서버가 연결되었습니다.')
         console.log(`http://localhost:${port}`)
-        process.send('ready')
     })
 }
