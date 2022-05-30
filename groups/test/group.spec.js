@@ -25,38 +25,6 @@ describe('그룹러닝 테스트 코드', () => {
 
             expect(next).toBeCalledWith(err)
         })
-
-        // it('로그인한 경우 다른필터가 없으면 선호필터 적용이 되는가?', async () => {
-        //     res.locals.userId = userId
-        //     req.params.category = 'all'
-
-        //     jest.spyOn(Groups, 'findAll').mockImplementation(() => {
-        //         return Promise.resolve([])
-        //     })
-
-        //     await Users.findOne.mockReturnValue(userPrefer)
-        //     await groupController.getGroup(req, res, next)
-        //     expect(res._getData()).not.toHaveProperty('preferData', '')
-        //     expect(res._getData().preferData.dataValues).toHaveProperty(
-        //         'state',
-        //         false
-        //     )
-        // })
-
-        // it('로그인한 경우 다른필터가 있으면 검색필터로 적용이 되는가?', async () => {
-        //     res.locals.userId = userId
-        //     req.params.category = 'all'
-        //     req.query.distance = '1/2'
-
-        //     jest.spyOn(Groups, 'findAll').mockImplementation(() => {
-        //         return Promise.resolve([])
-        //     })
-
-        //     await Users.findOne.mockReturnValue(userPrefer)
-        //     await groupController.getGroup(req, res, next)
-
-        //     expect(res._getData()).toHaveProperty('preferData', '')
-        // })
     })
 
     describe('그룹러닝 등록하기 관련 테스트 코드', () => {
