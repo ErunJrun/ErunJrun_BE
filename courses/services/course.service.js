@@ -232,7 +232,7 @@ module.exports = {
                             value[i].dataValues.starPoint /
                             value[i].dataValues.starpoints.length
                     }
-                    value[i].dataValues.starpoints = Number(value[i].dataValues.starpoints).toFixed(1)
+                    value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
                     delete value[i].dataValues.starpoints
                     // 북마크 여부 체크하기
                     let bookmarkDone
