@@ -1,11 +1,11 @@
 # 🏃‍ 서비스 소개
 
-![로고](https://www.erunjrun.com/static/media/headerLogo.7fd69c4c85d66834036d.png](https://www.erunjrun.com/static/media/courseFeedBanner.d47ef9d9e054266fd205.png)
+![로고](https://www.erunjrun.com/static/media/courseFeedBanner.d47ef9d9e054266fd205.png)
 
 </br>
 
 ❓ 러닝의 즐거움을 여럿이서 함께 나누고 싶으신 분
-❓ 나만 알고 있던 코스를 다른 사람들과 러닝하고 싶으신 분  
+❓ 나만 알고 있던 코스를 다른 사람들과 러닝하고 싶으신 분
 ❓ 러닝을 시작하고 싶은데 혼자여서 망설이고 계신 분
 
 #### 이런저런을 통해 다른 사람들과 함께 달리는 즐거움을 느껴보세요
