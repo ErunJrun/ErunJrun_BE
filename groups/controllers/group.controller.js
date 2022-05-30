@@ -26,7 +26,7 @@ module.exports = {
         try {
             if (req.files) {
                 for (let i = 0; i < req.files.length; i++) {
-                    data[`thumbnailUrl${i + 1}`] = req.files[i].location
+                    data[`thumbnailUrl${i + 1}`] = req.files[i].key
                 }
             }
 
@@ -227,19 +227,21 @@ module.exports = {
             if (req.body.thumbnailUrl) {
                 let thumbnailUrl = []
                 if (typeof req.body.thumbnailUrl === 'string') {
-                    thumbnailUrl.push(req.body.thumbnailUrl)
+                    const key = req.body.thumbnailUrl.split('/')
+                    thumbnailUrl.push(key[key.length - 1])
                 } else {
                     thumbnailUrl = req.body.thumbnailUrl
                 }
 
                 for (let i = 0; i < thumbnailUrl.length; i++) {
-                    data[`thumbnailUrl${i + 1}`] = thumbnailUrl[i]
+                    const key = thumbnailUrl[i].split('/')
+                    data[`thumbnailUrl${i + 1}`] = key[key.length - 1]
                 }
 
                 for (let i = 0; i < 3 - thumbnailUrl.length; i++) {
                     if (req.files[i]) {
                         data[`thumbnailUrl${thumbnailUrl.length + i + 1}`] =
-                            req.files[i].location
+                            req.files[i].key
                     } else {
                         data[`thumbnailUrl${thumbnailUrl.length + i + 1}`] =
                             null
@@ -255,7 +257,7 @@ module.exports = {
             } else {
                 if (req.files) {
                     for (let i = 0; i < req.files.length; i++) {
-                        data[`thumbnailUrl${i + 1}`] = req.files[i].location
+                        data[`thumbnailUrl${i + 1}`] = req.files[i].key
                         if (chkGroup[`thumbnailUrl${i + 1}`] !== null) {
                             multer.deleteImg(chkGroup[`thumbnailUrl${i + 1}`])
                         }
@@ -320,7 +322,14 @@ module.exports = {
                 let url = chkGroup[`thumbnailUrl${i}`]
 
                 if (url !== null) {
-                    multer.deleteImg(url)
+                    let deleteUrl =
+                        'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_384/' +
+                        url
+                    let deleteUrlBig =
+                        'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_758/' +
+                        url
+                    multer.deleteImg(deleteUrl)
+                    multer.deleteImg(deleteUrlBig)
                 }
             }
 
