@@ -126,7 +126,7 @@ module.exports = {
                         foreignKey: 'courseId',
                     },
                 ],
-                limit: 3,
+                limit: 6,
                 order: [['createdAt', 'desc']],
             }).then(async (value) => {
                 for (let i = 0; i < value.length; i++) {
