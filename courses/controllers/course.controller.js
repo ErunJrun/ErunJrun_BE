@@ -18,6 +18,7 @@ module.exports = {
             baggage: req.body.baggage,
             content: req.body.content,
             mapLatLng: req.body.mapLatLng,
+            thema: req.body.thema,
         }
         if (req.files.length === 0) {
             return next(new Error('이미지는 최소 1개 이상 등록해주세요'))
@@ -41,7 +42,12 @@ module.exports = {
     getPost: async (req, res, next) => {
         let { category } = req.params
         let query
-        const { userId } = res.locals
+        let userId = ''
+        if (req.query.userId) {
+            userId = req.query.userId
+        } else {
+            userId = res.locals.userId
+        }
 
         if (req.query) {
             query = req.query
@@ -50,9 +56,11 @@ module.exports = {
         }
         try {
             const data = await courseService.getPost(category, query, userId)
+            const preferData = await courseService.getPreferData(userId)
             res.status(200).send({
                 success: true,
                 data,
+                preferData,
             })
         } catch (error) {
             return next({
@@ -93,6 +101,7 @@ module.exports = {
             parking: req.body.parking,
             baggage: req.body.baggage,
             content: req.body.content,
+            thema: req.body.thema,
         }
         const existPost = await courseService.checkPost(courseId)
         if (!existPost) {

@@ -39,6 +39,7 @@
         "winston-daily-rotate-file": "^4.6.1"
     },
     "devDependencies": {
+        "artillery": "^2.0.0-17",
         "cross-env": "^7.0.3",
         "node-mocks-http": "^1.11.0",
         "nodemon": "^2.0.15",

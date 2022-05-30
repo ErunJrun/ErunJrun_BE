@@ -42,10 +42,10 @@ module.exports = {
                             })
                         }
                     })
-                } else if (value.dataValues.courseId !== undefined) {
+                } else if (result.dataValues.courseId !== undefined) {
                     // 코스추천 게시판 알람 케이스
                     await Courses.findOne({
-                        where: { courseId: value.dataValues.courseId },
+                        where: { courseId: result.dataValues.courseId },
                     }).then(async (value) => {
                         // 닉네임 가져오기
                         const nickname = await Users.findOne({
