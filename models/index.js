@@ -1,6 +1,7 @@
 const initModels = require('./init-models') // init-models.js에서 메서드를 가져온다.
 const { Sequelize } = require('sequelize')
 require('dotenv').config()
+
 // config/config.json 파일에 있는 설정값들을 불러온다.
 // config객체의 env변수(development)키 의 객체값들을 불러온다.
 // 즉, 데이터베이스 설정을 불러온다고 말할 수 있다.
