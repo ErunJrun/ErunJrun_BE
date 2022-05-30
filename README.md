@@ -4,9 +4,9 @@
 
 </br>
 
-❓ 러닝의 즐거움을 여럿이서 함께 나누고 싶으신 분
-❓ 나만 알고 있던 코스를 다른 사람들과 러닝하고 싶으신 분
-❓ 러닝을 시작하고 싶은데 혼자여서 망설이고 계신 분
+❓ 러닝의 즐거움을 여럿이서 함께 나누고 싶으신 분  
+❓ 나만 알고 있던 코스를 다른 사람들과 러닝하고 싶으신 분  
+❓ 러닝을 시작하고 싶은데 혼자여서 망설이고 계신 분  
 
 #### 이런저런을 통해 다른 사람들과 함께 달리는 즐거움을 느껴보세요
 
@@ -46,9 +46,7 @@
 
 # 🌸 More Info
 
-[🌿 프로젝트 소개 문서]
-<br/>
-[💾 와이어프레임](https://www.figma.com/file/KHfXRCNHENbZ7PBS1DYT7O/%EC%9D%B4RUN%EC%A0%80RUN?node-id=0%3A1)
-<br/>
-[🔐 ErunJrun Front-End Repository](https://github.com/ErunJrun/ErunJrun_FE)
-<br/>
+[🌿 프로젝트 소개 문서]  
+[💾 와이어프레임](https://www.figma.com/file/KHfXRCNHENbZ7PBS1DYT7O/%EC%9D%B4RUN%EC%A0%80RUN?node-id=0%3A1)  
+[🔐 ErunJrun Front-End Repository](https://github.com/ErunJrun/ErunJrun_FE)  
+
