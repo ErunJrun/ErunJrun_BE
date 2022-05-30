@@ -34,11 +34,9 @@
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 
-### Framework & library
+### Framework
 ![NPM](https://img.shields.io/badge/NPM-%23000000.svg?style=for-the-badge&logo=npm&logoColor=white)
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
-<img src="https://img.shields.io/badge/Passport-34E27A?style=for-the-badge&logo=Passport&logoColor=white">
 
 ### Infrastructure
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
@@ -51,7 +49,35 @@
 ### Dev tools
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+<img src="https://img.shields.io/badge/VSCode-007ACC?style=for-the-badge&logo=Visual Studio Code&logoColor=white"/>
 
+### Library
+| Name                | Appliance               | Version  |
+| :-----------------: | :---------------------: | :------: |
+| crypto              | 핸드폰 암호화         |4.1.1|
+| cors                | CORS 핸들링             |2.8.5|
+| dotenv              | 환경변수 설정           |16.0.0|
+| helmet              | HTTP header 보안        |5.0.2|
+| express-validator   | validator               |17.6.0|
+| mysql2            | DB                        |2.3.3|
+| sequelize            | mySQL ORM              |6.19.0|
+| redis            | 토큰용 DB                  |4.0.6|
+| jsonwebtoken        | JWT토큰 발급            |8.5.1|
+| passport            | node.js authentication  |0.5.2|
+| passport-kakao      | 카카오 소셜 로그인 모듈      |1.0.1|
+| passport-naver-v2      | 네이버 소셜 로그인 모듈      |2.0.8|
+| multer              | 파일 업로드             |1.4.4|
+| multer-s3           | AWS S3 파일 업로드      |2.10.0|
+| morgan              | HTTP 요청 로그 관리     |1.10.0|
+| winston             | 전체 서비스 로그 관리   |3.7.2|
+| node-schedule	          |  알림/문자전송 자동화     |2.1.0|
+| jest                |  테스트코드             |28.1.0|
+| supertest                |  테스트코드             |6.2.3|
+| artillery	          |  스트레스 테스트 툴     |2.0.0-17|
+| axios          |  API 통신(네이버 sens)     |0.27.2|
+
+
+<br>
 <br/>
 
 
@@ -68,7 +94,7 @@
 
 <br/>
 
-## 6. Trouble shooting
+## 🚨 6. Trouble shooting
 - ISSUE 1
 => 문제 상황
 => 원인
@@ -86,7 +112,7 @@
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/hyeonjun4460"><b>유현준</b></a></td>
-    <td align="center">Leader</td>
+    <td align="center">leader</td>
     <td align="center">댓글 대댓글 /출석체크 및 호스트평가 / 추천 코스 게시글 CRUD / 알림 및 SMS,LMS 발송</td>
     <td align="center">hyeonjun4460@gmail.com</td>
   </tr>
@@ -94,20 +120,18 @@
     <td align="center"><a href="https://github.com/hyeonjun4460"><b>오지우</b></a></td>
     <td align="center">member</td>
     <td align="center">그룹러닝 모집 게시글 CRUD / 모집 신청, 취소 / 게시글 검색 필터</td>
-    <td align="center">hyeonjun4460@gmail.com</td>
+    <td align="center">inmyblue0930@naver.com</td>
   </tr>
     <tr>
     <td align="center"><a href="https://github.com/hyeonjun4460"><b>신동영</b></a></td>
     <td align="center">member</td>
     <td align="center">로그인 및 회원가입/ 휴대폰 인증</td>
-    <td align="center">hyeonjun4460@gmail.com</td>
+    <td align="center">shindy93@naver.com</td>
   </tr>
-  <!-- 사진 넣기! -->
 </table>
 <br/>
 
 ## 🌸 More Info
-
 [🌿 프로젝트 소개 문서]  
 [💾 와이어프레임](https://www.figma.com/file/KHfXRCNHENbZ7PBS1DYT7O/%EC%9D%B4RUN%EC%A0%80RUN?node-id=0%3A1)  
 [🔐 ErunJrun Front-End Repository](https://github.com/ErunJrun/ErunJrun_FE)  
