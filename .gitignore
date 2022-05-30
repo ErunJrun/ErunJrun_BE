@@ -148,4 +148,5 @@ config/
 .idea/
 orm.js
 appspec.yml
+stresstest.csv
 ecosystem.config.js
