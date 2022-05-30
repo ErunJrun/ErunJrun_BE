@@ -1,6 +1,6 @@
 # 🏃‍ 서비스 소개
 
-![로고](https://www.erunjrun.com/static/media/headerLogo.7fd69c4c85d66834036d.png)
+![로고]([https://www.erunjrun.com/static/media/headerLogo.7fd69c4c85d66834036d.png](https://www.erunjrun.com/static/media/courseFeedBanner.d47ef9d9e054266fd205.png))
 
 </br>
 
@@ -47,5 +47,8 @@
 # 🌸 More Info
 
 [🌿 프로젝트 소개 문서]
+<br/>
 [💾 와이어프레임](https://www.figma.com/file/KHfXRCNHENbZ7PBS1DYT7O/%EC%9D%B4RUN%EC%A0%80RUN?node-id=0%3A1)
+<br/>
 [🔐 ErunJrun Front-End Repository](https://github.com/ErunJrun/ErunJrun_FE)
+<br/>
