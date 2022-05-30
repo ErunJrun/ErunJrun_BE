@@ -2,6 +2,7 @@ const alarmService = require('../services/alarm.service')
 const schedule = require('node-schedule')
 
 module.exports = {
+    // 테스트
     getAlarm: async (req, res, next) => {
         const { userId } = res.locals
         // 유저의 정보 가져오기
