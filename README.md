@@ -146,7 +146,7 @@
   <tr>
     <td align="center"><a href="https://github.com/hyeonjun4460"><b>유현준</b></a></td>
     <td align="center">leader</td>
-    <td align="center">댓글 대댓글 / 출석체크 및 호스트평가 / 추천 코스 게시글 CRUD / 알림 및 SMS,LMS 발송</td>
+    <td align="center">추천 코스 게시글 CRUD / 댓글 대댓글 / 출석체크 및 호스트평가 / 알림 및 SMS,LMS 발송</td>
     <td align="center">hyeonjun4460@gmail.com</td>
   </tr>
     <tr>
