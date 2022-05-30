@@ -45,8 +45,6 @@ module.exports = {
                     conut++
                 }
             }
-            console.log(value.length)
-            console.log(count)
             if (count !== value.length) {
                 return
             } else {
@@ -156,7 +154,6 @@ module.exports = {
                 await Users.findAll({
                     where: { userId: { [Op.in]: userId } },
                 }).then(async (value) => {
-                    console.log(value)
                     for (let i = 0; i < value.length; i++) {
                         const newPoint = value[i].dataValues.mannerPoint + 1
                         await Users.update(

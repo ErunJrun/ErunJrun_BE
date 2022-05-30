@@ -356,7 +356,6 @@ module.exports = {
                     }
                     return value
                 })
-                console.log(data)
             }
         }
         // 코스추천 리스트 페이지 표출
@@ -782,8 +781,6 @@ module.exports = {
             // 지역 필터로 검색한 경우
             if (query.region !== undefined) {
                 // 전국 필터의 경우
-                console.log(query.region)
-                console.log(typeof query.region)
                 if (query.region === '0') {
                     data.feed = await Courses.findAll({
                         attributes: [
@@ -1106,7 +1103,6 @@ module.exports = {
                 },
             ],
         }).then(async (value) => {
-            console.log(value)
             await Courses.update(
                 { clickCnt: (value.dataValues.clickCnt += 1) },
                 { where: { courseId } }
@@ -1155,7 +1151,6 @@ module.exports = {
         }
     },
     updatePost: async (courseId, data) => {
-        console.log(data)
         try {
             Courses.update(data, { where: { courseId } })
             return
@@ -1212,7 +1207,6 @@ module.exports = {
             const existPoint = await starpoint.findOne({
                 where: { [Op.and]: [{ courseId }, { userId }] },
             })
-            console.log(existPoint)
             if (existPoint) {
                 await starpoint
                     .update(
@@ -1263,7 +1257,6 @@ module.exports = {
                         return value
                     })
             }
-            console.log(data)
             return data
         } catch (error) {
             throw new Error(error)

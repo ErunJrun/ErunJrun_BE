@@ -185,7 +185,6 @@ module.exports = {
                             },
                         ],
                     }).then(async (value) => {
-                        console.log(value.dataValues.Comments.length)
                         for (
                             let i = 0;
                             i < value.dataValues.Comments.length;

@@ -52,7 +52,6 @@ module.exports = {
                 .then((value) => {
                     return value.dataValues
                 })
-            console.log(data)
             res.status(200).send({
                 success: true,
                 data,

@@ -36,7 +36,6 @@ router.post('/testlogin', async (req, res) => {
     }).then((value) => {
         return value.dataValues.userId
     })
-    console.log(data)
     if (data !== null) {
         const token = jwt.sign({ userId: data }, process.env.TOKENKEY)
         res.status(200).send({
