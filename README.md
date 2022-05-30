@@ -113,7 +113,7 @@
   <tr>
     <td align="center"><a href="https://github.com/hyeonjun4460"><b>유현준</b></a></td>
     <td align="center">leader</td>
-    <td align="center">댓글 대댓글 /출석체크 및 호스트평가 / 추천 코스 게시글 CRUD / 알림 및 SMS,LMS 발송</td>
+    <td align="center">댓글 대댓글 / 출석체크 및 호스트평가 / 추천 코스 게시글 CRUD / 알림 및 SMS,LMS 발송</td>
     <td align="center">hyeonjun4460@gmail.com</td>
   </tr>
     <tr>
@@ -125,7 +125,7 @@
     <tr>
     <td align="center"><a href="https://github.com/hyeonjun4460"><b>신동영</b></a></td>
     <td align="center">member</td>
-    <td align="center">로그인 및 회원가입/ 휴대폰 인증</td>
+    <td align="center">로그인 및 회원가입 / 휴대폰 인증 / 유저 추가정보 </td>
     <td align="center">shindy93@naver.com</td>
   </tr>
 </table>
