@@ -3,14 +3,7 @@ const port = process.env.PORT || 3000
 
 const fs = require('fs')
 const https = require('https')
-const alarmController = require('./alarms/controllers/alarm.controller')
 require('dotenv').config()
-
-if (process.env.ALARMSTATE) {
-    alarmController.createDdayAlarm()
-    alarmController.createStartAlarm()
-    alarmController.createEndAlarm()
-}
 
 if (process.env.PORT) {
     // Certificate 인증서 경로
