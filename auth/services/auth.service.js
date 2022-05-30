@@ -47,7 +47,7 @@ module.exports = {
                     userInfo.likeLocation = '전라도/광주광역시'
                     break
                 case '9':
-                    userInfo.likeLocation = '제주특별시'
+                    userInfo.likeLocation = '제주특별자치도'
                     break
             }
 
