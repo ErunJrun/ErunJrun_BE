@@ -153,4 +153,3 @@ stresstest.yaml
 ecosystem.config.js
 logger.js
 middlewares/loggers/logger.js
-server.js
