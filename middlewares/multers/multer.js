@@ -10,9 +10,9 @@ const s3 = new aws.S3({
 
 const limits = {
     fieldNameSize: 200, // 필드명 사이즈 최대값 (기본값 100bytes)
-    filedSize: 1024 * 1024, // 필드 사이즈 값 설정 (기본값 1MB)
+    filedSize: 5 * 1024 * 1024, // 필드 사이즈 값 설정 (기본값 1MB)
     // fields: 2, // 파일 형식이 아닌 필드의 최대 개수 (기본 값 무제한)
-    fileSize: 3 * 1024 * 1024, //multipart 형식 폼에서 최대 파일 사이즈(bytes) "16MB 설정" (기본 값 무제한)
+    fileSize: 15 * 1024 * 1024, //multipart 형식 폼에서 최대 파일 사이즈(bytes) "16MB 설정" (기본 값 무제한)
     files: 3, //multipart 형식 폼에서 파일 필드 최대 개수 (기본 값 무제한)
 }
 const fileFilter = (req, file, callback) => {
