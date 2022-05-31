@@ -176,6 +176,9 @@ module.exports = {
                     } else {
                         value[i].dataValues.bookmark = true
                     }
+                    value[
+                        i
+                    ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
                 }
                 return value
             })
