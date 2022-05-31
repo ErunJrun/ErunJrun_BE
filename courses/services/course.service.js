@@ -178,7 +178,7 @@ module.exports = {
                     }
                     value[
                         i
-                    ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                    ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                 }
                 return value
             })
@@ -260,7 +260,7 @@ module.exports = {
                     }
                     value[
                         i
-                    ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                    ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                 }
                 return value
             })
@@ -355,7 +355,7 @@ module.exports = {
                         }
                         value[
                             i
-                        ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                        ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                     }
                     return value
                 })
@@ -462,11 +462,11 @@ module.exports = {
                         if (value[i].dataValues.updateTime <= 10) {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/courseImage/${value[i].courseImageUrl1}`
                         } else {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                         }
                     }
                     return value
@@ -562,11 +562,11 @@ module.exports = {
                         if (value[i].dataValues.updateTime <= 10) {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/courseImage/${value[i].courseImageUrl1}`
                         } else {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                         }
                     }
                     return value
@@ -672,11 +672,11 @@ module.exports = {
                         if (value[i].dataValues.updateTime <= 10) {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/courseImage/${value[i].courseImageUrl1}`
                         } else {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                         }
                     }
                     return value
@@ -771,11 +771,11 @@ module.exports = {
                         if (value[i].dataValues.updateTime <= 10) {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/courseImage/${value[i].courseImageUrl1}`
                         } else {
                             value[
                                 i
-                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                            ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                         }
                     }
                     return value
@@ -886,11 +886,11 @@ module.exports = {
                             if (value[i].dataValues.updateTime <= 10) {
                                 value[
                                     i
-                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                                ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/courseImage/${value[i].courseImageUrl1}`
                             } else {
                                 value[
                                     i
-                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                                ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                             }
                         }
                         return value
@@ -998,11 +998,11 @@ module.exports = {
                             if (value[i].dataValues.updateTime <= 10) {
                                 value[
                                     i
-                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                                ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/courseImage/${value[i].courseImageUrl1}`
                             } else {
                                 value[
                                     i
-                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                                ].dataValues.courseImageUrl1 = `https://dpnlaom97ul1b.cloudfront.net/w_384/${value[i].courseImageUrl1}`
                             }
                         }
                         return value
@@ -1129,7 +1129,7 @@ module.exports = {
                 if (value[`courseImageUrl${i}`] !== null) {
                     value.dataValues[
                         `courseImageUrl${i}`
-                    ] = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_758/${
+                    ] = `https://dpnlaom97ul1b.cloudfront.net/w_758/${
                         value[`courseImageUrl${i}`]
                     }`
                 }
