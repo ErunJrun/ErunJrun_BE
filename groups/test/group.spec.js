@@ -32,7 +32,6 @@ describe('그룹러닝 테스트 코드', () => {
             req.body = {
                 date: '2022-05-30',
                 standbyTime: '18:00:00',
-                finishTime: '21:00:00',
             }
             res.locals.userId = userId
         })
@@ -47,30 +46,20 @@ describe('그룹러닝 테스트 코드', () => {
             await groupController.createPost(req, res, next)
             expect(next).toBeCalledWith(err)
         })
-
-        it('종료시간은 시작시간보다 빠른경우 오류가 나는지 체크', async () => {
-            req.body.standbyTime = '18:00:00'
-            req.body.finishTime = '17:50:00'
-
-            err = new Error('종료시간은 시작시간보다 빠를 수 없습니다')
-
-            await groupController.createPost(req, res, next)
-            expect(next).toBeCalledWith(err)
-        })
     })
 
     describe('그룹러닝 수정하기 관련 테스트 코드', () => {
         beforeEach(() => {
+            let nowDate = moment().format('YYYY-MM-DD')
+            let nowTime = moment().format('HH:mm:ss')
             req.body = {
                 date: '2022-05-30',
                 standbyTime: '18:00:00',
-                finishTime: '21:00:00',
             }
             groupData = {
                 userId: '087d9c18-85d5-4c27-8115-ba9e66d21548',
-                date: '2022-05-29',
-                standbyTime: '18:18:00',
-                finishTime: '20:00:00',
+                date: nowDate,
+                standbyTime: nowTime,
             }
 
             res.locals.userId = userId
@@ -88,20 +77,6 @@ describe('그룹러닝 테스트 코드', () => {
             })
             await groupController.updatePost(req, res, next)
 
-            expect(next).toBeCalledWith(err)
-        })
-
-        it('종료시간은 시작시간보다 빠른경우 오류가 나는지 체크', async () => {
-            req.body.standbyTime = '18:00:00'
-            req.body.finishTime = '17:50:00'
-
-            err = new Error('종료시간은 시작시간보다 빠를 수 없습니다')
-
-            jest.spyOn(groupService, 'getGroupById').mockImplementation(() => {
-                return groupData
-            })
-
-            await groupController.updatePost(req, res, next)
             expect(next).toBeCalledWith(err)
         })
 

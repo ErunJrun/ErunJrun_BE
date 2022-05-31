@@ -154,7 +154,9 @@ module.exports = {
                             value[i].dataValues.starPoint /
                             value[i].dataValues.starpoints.length
                     }
-                    value[i].dataValues.starpoints = Number(value[i].dataValues.starpoints).toFixed(1)
+                    value[i].dataValues.starpoints = Number(
+                        value[i].dataValues.starpoints
+                    ).toFixed(1)
                     delete value[i].dataValues.starpoints
 
                     // 북마크 여부 체크하기
@@ -232,7 +234,9 @@ module.exports = {
                             value[i].dataValues.starPoint /
                             value[i].dataValues.starpoints.length
                     }
-                    value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
+                    value[i].dataValues.starPoint = Number(
+                        value[i].dataValues.starPoint
+                    ).toFixed(1)
                     delete value[i].dataValues.starpoints
                     // 북마크 여부 체크하기
                     let bookmarkDone
@@ -251,6 +255,9 @@ module.exports = {
                     } else {
                         value[i].dataValues.bookmark = true
                     }
+                    value[
+                        i
+                    ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
                 }
                 return value
             })
@@ -319,7 +326,9 @@ module.exports = {
                                 value[i].dataValues.starPoint /
                                 value[i].dataValues.starpoints.length
                         }
-                        value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
+                        value[i].dataValues.starPoint = Number(
+                            value[i].dataValues.starPoint
+                        ).toFixed(1)
                         delete value[i].dataValues.starpoints
                         // 북마크 여부 체크하기
                         let bookmarkDone
@@ -341,16 +350,17 @@ module.exports = {
                         } else {
                             value[i].dataValues.bookmark = true
                         }
+                        value[
+                            i
+                        ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
                     }
                     return value
                 })
-                console.log(data)
             }
         }
         // 코스추천 리스트 페이지 표출
         if (category === 'all') {
             // 가입한 유저의 경우
-            console.log(userId)
             if (userId !== undefined) {
                 const preferRegion = await Users.findOne({
                     where: { userId },
@@ -368,6 +378,12 @@ module.exports = {
                         'clickCnt',
                         'createdAt',
                         'region',
+                        [
+                            sequelize.literal(
+                                'TIMESTAMPDIFF(second,Courses.updatedAt,now())'
+                            ),
+                            'updateTime',
+                        ],
                     ],
                     include: [
                         {
@@ -414,7 +430,9 @@ module.exports = {
                                 value[i].dataValues.starPoint /
                                 value[i].dataValues.starpoints.length
                         }
-                        value[i].dataValues.starpoints = Number(value[i].dataValues.starpoints).toFixed(1)
+                        value[i].dataValues.starpoints = Number(
+                            value[i].dataValues.starpoints
+                        ).toFixed(1)
                         delete value[i].dataValues.starpoints
                         // 북마크 여부 체크하기
                         const bookmarkDone = await Bookmarks.findOne({
@@ -437,6 +455,16 @@ module.exports = {
                         value[i].dataValues.bookmarkCnt =
                             value[i].dataValues.Bookmarks.length
                         delete value[i].dataValues.Bookmarks
+
+                        if (value[i].dataValues.updateTime <= 10) {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                        } else {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                        }
                     }
                     return value
                 })
@@ -451,6 +479,12 @@ module.exports = {
                         'clickCnt',
                         'createdAt',
                         'region',
+                        [
+                            sequelize.literal(
+                                'TIMESTAMPDIFF(second,Courses.updatedAt,now())'
+                            ),
+                            'updateTime',
+                        ],
                     ],
                     where: { [Op.or]: [{ region: preferRegion }] },
                     include: [
@@ -492,9 +526,11 @@ module.exports = {
                             value[i].dataValues.starPoint =
                                 value[i].dataValues.starPoint /
                                 value[i].dataValues.starpoints.length
-                            value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
+                            value[i].dataValues.starPoint = Number(
+                                value[i].dataValues.starPoint
+                            ).toFixed(1)
                         }
-                        
+
                         delete value[i].dataValues.starpoints
                         // 랭킹 점수
                         value[i].dataValues.rankPoint =
@@ -520,6 +556,15 @@ module.exports = {
                         } else {
                             value[i].dataValues.bookmark = true
                         }
+                        if (value[i].dataValues.updateTime <= 10) {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                        } else {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                        }
                     }
                     return value
                 })
@@ -537,6 +582,12 @@ module.exports = {
                         'clickCnt',
                         'createdAt',
                         'region',
+                        [
+                            sequelize.literal(
+                                'TIMESTAMPDIFF(second,Courses.updatedAt,now())'
+                            ),
+                            'updateTime',
+                        ],
                     ],
                     include: [
                         {
@@ -583,7 +634,9 @@ module.exports = {
                                 value[i].dataValues.starPoint /
                                 value[i].dataValues.starpoints.length
                         }
-                        value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
+                        value[i].dataValues.starPoint = Number(
+                            value[i].dataValues.starPoint
+                        ).toFixed(1)
                         delete value[i].dataValues.starpoints
                         // 북마크 여부 체크하기\
                         let bookmarkDone
@@ -612,6 +665,16 @@ module.exports = {
                         value[i].dataValues.bookmarkCnt =
                             value[i].dataValues.Bookmarks.length
                         delete value[i].dataValues.Bookmarks
+
+                        if (value[i].dataValues.updateTime <= 10) {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                        } else {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                        }
                     }
                     return value
                 })
@@ -626,6 +689,12 @@ module.exports = {
                         'clickCnt',
                         'createdAt',
                         'region',
+                        [
+                            sequelize.literal(
+                                'TIMESTAMPDIFF(second,Courses.updatedAt,now())'
+                            ),
+                            'updateTime',
+                        ],
                     ],
                     include: [
                         {
@@ -666,7 +735,9 @@ module.exports = {
                             value[i].dataValues.starPoint =
                                 value[i].dataValues.starPoint /
                                 value[i].dataValues.starpoints.length
-                            value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
+                            value[i].dataValues.starPoint = Number(
+                                value[i].dataValues.starPoint
+                            ).toFixed(1)
                         }
                         delete value[i].dataValues.starpoints
                         // 랭킹 점수
@@ -693,6 +764,16 @@ module.exports = {
                         } else {
                             value[i].dataValues.bookmark = true
                         }
+
+                        if (value[i].dataValues.updateTime <= 10) {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                        } else {
+                            value[
+                                i
+                            ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                        }
                     }
                     return value
                 })
@@ -700,8 +781,6 @@ module.exports = {
             // 지역 필터로 검색한 경우
             if (query.region !== undefined) {
                 // 전국 필터의 경우
-                console.log(query.region)
-                console.log(typeof query.region)
                 if (query.region === '0') {
                     data.feed = await Courses.findAll({
                         attributes: [
@@ -714,6 +793,12 @@ module.exports = {
                             'clickCnt',
                             'createdAt',
                             'region',
+                            [
+                                sequelize.literal(
+                                    'TIMESTAMPDIFF(second,Courses.updatedAt,now())'
+                                ),
+                                'updateTime',
+                            ],
                         ],
                         include: [
                             {
@@ -760,9 +845,11 @@ module.exports = {
                                 value[i].dataValues.starPoint =
                                     value[i].dataValues.starPoint /
                                     value[i].dataValues.starpoints.length
-                                value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
-                                }
-                            
+                                value[i].dataValues.starPoint = Number(
+                                    value[i].dataValues.starPoint
+                                ).toFixed(1)
+                            }
+
                             delete value[i].dataValues.starpoints
                             // 북마크 여부 체크하기
                             let bookmarkDone
@@ -792,6 +879,16 @@ module.exports = {
                             value[i].dataValues.bookmarkCnt =
                                 value[i].dataValues.Bookmarks.length
                             delete value[i].dataValues.Bookmarks
+
+                            if (value[i].dataValues.updateTime <= 10) {
+                                value[
+                                    i
+                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                            } else {
+                                value[
+                                    i
+                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                            }
                         }
                         return value
                     })
@@ -808,6 +905,12 @@ module.exports = {
                             'clickCnt',
                             'createdAt',
                             'region',
+                            [
+                                sequelize.literal(
+                                    'TIMESTAMPDIFF(second,Courses.updatedAt,now())'
+                                ),
+                                'updateTime',
+                            ],
                         ],
                         where: { [Op.or]: [{ region: query.region }] },
                         include: [
@@ -855,7 +958,9 @@ module.exports = {
                                 value[i].dataValues.starPoint =
                                     value[i].dataValues.starPoint /
                                     value[i].dataValues.starpoints.length
-                                value[i].dataValues.starPoint = Number(value[i].dataValues.starPoint).toFixed(1)
+                                value[i].dataValues.starPoint = Number(
+                                    value[i].dataValues.starPoint
+                                ).toFixed(1)
                             }
                             delete value[i].dataValues.starpoints
                             // 북마크 여부 체크하기
@@ -886,6 +991,16 @@ module.exports = {
                             value[i].dataValues.bookmarkCnt =
                                 value[i].dataValues.Bookmarks.length
                             delete value[i].dataValues.Bookmarks
+
+                            if (value[i].dataValues.updateTime <= 10) {
+                                value[
+                                    i
+                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/courseImage/${value[i].courseImageUrl1}`
+                            } else {
+                                value[
+                                    i
+                                ].dataValues.courseImageUrl1 = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_288/${value[i].courseImageUrl1}`
+                            }
                         }
                         return value
                     })
@@ -988,7 +1103,6 @@ module.exports = {
                 },
             ],
         }).then(async (value) => {
-            console.log(value)
             await Courses.update(
                 { clickCnt: (value.dataValues.clickCnt += 1) },
                 { where: { courseId } }
@@ -1008,6 +1122,15 @@ module.exports = {
                 value.dataValues.bookmark = true
             }
             delete value.dataValues.Bookmarks
+            for (let i = 1; i <= 3; i++) {
+                if (value[`courseImageUrl${i}`] !== null) {
+                    value.dataValues[
+                        `courseImageUrl${i}`
+                    ] = `https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/w_758/${
+                        value[`courseImageUrl${i}`]
+                    }`
+                }
+            }
             return value
         })
         return data
@@ -1028,7 +1151,6 @@ module.exports = {
         }
     },
     updatePost: async (courseId, data) => {
-        console.log(data)
         try {
             Courses.update(data, { where: { courseId } })
             return
@@ -1085,7 +1207,6 @@ module.exports = {
             const existPoint = await starpoint.findOne({
                 where: { [Op.and]: [{ courseId }, { userId }] },
             })
-            console.log(existPoint)
             if (existPoint) {
                 await starpoint
                     .update(
@@ -1105,7 +1226,9 @@ module.exports = {
                                 }
                                 data.starPoint =
                                     data.starPoint / data.starPeople
-                                data.starPoint = Number(data.starPoint).toFixed(1)
+                                data.starPoint = Number(data.starPoint).toFixed(
+                                    1
+                                )
                                 return value
                             })
                         return value
@@ -1126,13 +1249,14 @@ module.exports = {
                                 }
                                 data.starPoint =
                                     data.starPoint / data.starPeople
-                                data.starPoint = Number(data.starPoint).toFixed(1)
+                                data.starPoint = Number(data.starPoint).toFixed(
+                                    1
+                                )
                                 return value
                             })
                         return value
                     })
             }
-            console.log(data)
             return data
         } catch (error) {
             throw new Error(error)

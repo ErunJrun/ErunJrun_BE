@@ -301,6 +301,12 @@ module.exports = {
                     'userId',
                     [sequelize.literal('datediff(date,now())'), 'applyEndTime'],
                     'thema',
+                    [
+                        sequelize.literal(
+                            'TIMESTAMPDIFF(second,updatedAt,now())'
+                        ),
+                        'updateTime',
+                    ],
                 ],
                 include: [
                     {
@@ -414,6 +420,16 @@ module.exports = {
                                 result[i].dataValues.thumbnailUrl =
                                     'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%90%E1%85%B3%E1%84%85%E1%85%A2%E1%86%A8.png'
                                 break
+                        }
+                    } else {
+                        if (result[i].dataValues.updateTime <= 10) {
+                            result[i].dataValues.thumbnailUrl =
+                                'https://dpnlaom97ul1b.cloudfront.net/groupthumbnail/' +
+                                result[i].dataValues.thumbnailUrl
+                        } else {
+                            result[i].dataValues.thumbnailUrl =
+                                'https://dpnlaom97ul1b.cloudfront.net/w_384/' +
+                                result[i].dataValues.thumbnailUrl
                         }
                     }
                 }
@@ -569,6 +585,14 @@ module.exports = {
                             result.dataValues.thumbnailUrl1 =
                                 'https://erunjrungroup.s3.ap-northeast-2.amazonaws.com/groupthumbnail/%E1%84%80%E1%85%B5%E1%84%87%E1%85%A9%E1%86%AB%EC%8D%B8%EB%84%A4%EC%9D%BC_%E1%84%90%E1%85%B3%E1%84%85%E1%85%A2%E1%86%A8.png'
                             break
+                    }
+                } else {
+                    for (let i = 1; i <= 3; i++) {
+                        if (result[`thumbnailUrl${i}`] !== null) {
+                            result.dataValues[`thumbnailUrl${i}`] =
+                                'https://dpnlaom97ul1b.cloudfront.net/w_758/' +
+                                result[`thumbnailUrl${i}`]
+                        }
                     }
                 }
                 return result

@@ -25,7 +25,7 @@ module.exports = {
         }
         try {
             for (let i = 0; i < req.files.length; i++) {
-                data[`courseImageUrl${i + 1}`] = req.files[i].location
+                data[`courseImageUrl${i + 1}`] = req.files[i].key
             }
             await courseService.createPost(data)
             res.status(200).send({
@@ -107,7 +107,6 @@ module.exports = {
         if (!existPost) {
             return next(new Error('해당 게시물이 존재하지 않습니다'))
         }
-        console.log(existPost.dataValues.courseImageUrl1)
         try {
             await courseService.checkWriter(courseId, userId)
         } catch (error) {
@@ -131,7 +130,7 @@ module.exports = {
             for (let i = 0; i < 3 - courseImageUrl.length; i++) {
                 if (req.files[i]) {
                     data[`courseImageUrl${courseImageUrl.length + i + 1}`] =
-                        req.files[i].location
+                        req.files[i].key
                 }
                 // 새로 업로드할 파일이 없는 경우에는 남은 부분은 null로 처리하기
                 else {
@@ -161,7 +160,7 @@ module.exports = {
             // 새로 업로드 된 이미지가 있는 경우, 기존 이미지는 삭제하고, 새 이미지는 data에 포함
             else {
                 for (let i = 0; i < req.files.length; i++) {
-                    data[`courseImageUrl${i + 1}`] = req.files[i].location
+                    data[`courseImageUrl${i + 1}`] = req.files[i].key
                     if (existPost[`courseImageUrl${i + 1}`] !== null) {
                         multer.deleteCourseImg(
                             existPost[`courseImageUrl${i + 1}`]
@@ -244,7 +243,6 @@ module.exports = {
                 userId,
                 myStarPoint
             )
-            console.log(data)
             res.status(200).send({
                 success: true,
                 data,
@@ -259,14 +257,12 @@ module.exports = {
     getStarPoint: async (req, res, next) => {
         const { courseId } = req.params
         const { userId } = res.locals
-        console.log(userId)
         const existPost = await courseService.checkPost(courseId)
         if (!existPost) {
             return next(new Error('해당 게시물이 존재하지 않습니다'))
         }
         try {
             const data = await courseService.getStarPoint(courseId, userId)
-            console.log(data)
             res.status(200).send({
                 success: true,
                 data,

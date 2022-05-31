@@ -7,17 +7,29 @@ const seedApplierData = require('./data/seed.appliers.json')
 const createUserData = require('./data/create.user.json')
 const createGroupData = require('./data/create.group.json')
 
-const accessToken =
-    'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIwODdkOWMxOC04NWQ1LTRjMjctODExNS1iYTllNjZkMjE1NDgiLCJpYXQiOjE2NTM2NDE3ODcsImV4cCI6MTY1MzkwMDk4N30.cn8LskoxwQt0HqCzidg6V4p-XR4VMUDqtW3rdakEkZI'
+jest.setTimeout(50000)
 
+
+let accessToken
 beforeAll(async () => {
-    await sequelize.sync({ force: true })
+    await sequelize.sync({force: true})
     await Users.create(createUserData)
+    
 
     for (let i = 0; i < seedGroupData.length; i++) {
         await Groups.create(seedGroupData[i])
         await Appliers.create(seedApplierData[i])
     }
+    await Users.findOne({
+        where: { userId: createUserData.userId },
+    }).then(async (value) => {
+        const data = await request(app).post('/testlogin').send({
+            nickname: value.dataValues.nickname,
+            password: value.dataValues.social,
+        })
+        accessToken = 'Bearer' + ' ' + data._body.token
+        return value.dataValues.userId
+    })
 })
 describe('/group', () => {
     it('POST /group', async () => {
@@ -63,7 +75,7 @@ describe('/group', () => {
         console.log(response.body.data)
         expect(response.status).toEqual(200)
         expect(response.body.success).toEqual(true)
-        expect(response.body.data.length).toEqual(6)
+        expect(response.body.data.length).toEqual(5)
     })
 
     it('GET /group/all date 필터', async () => {
@@ -239,3 +251,7 @@ describe('/group', () => {
         expect(response.body.message).toEqual('게시글이 삭제되었습니다')
     })
 })
+
+// afterAll(async () => {
+//     await sequelize.sync({ force: true })
+// })

@@ -1,0 +1,78 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Node.js CI
+
+on:
+  pull_request:
+    branches: [ development, master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-18.04
+
+    strategy:
+      matrix:
+        node-version: [v16.15.0]
+        redis-version: [6.2.5]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Start Redis
+      uses: supercharge/redis-github-action@1.4.0
+      with:
+        redis-version: ${{ matrix.redis-version }}
+
+    - run: npm ci
+    - name: Create .env file
+      run: |
+          touch .env
+          echo COOKIE_SECRET=${{ secrets.COOKIE_SECRET }} >> .env
+          echo TOKENKEY=${{ secrets.TOKENKEY }} >> .env
+          echo VALID_ACCESS_TOKEN_TIME=${{ secrets.VALID_ACCESS_TOKEN_TIME }} >> .env
+          echo VALID_REFRESH_TOKEN_TIME=${{ secrets.VALID_REFRESH_TOKEN_TIME }} >> .env
+          echo KAKAO_ID=${{ secrets.KAKAO_ID }} >> .env
+          echo KAKAO_URL=${{ secrets.KAKAO_URL }} >> .env
+          echo NAVER_ID=${{ secrets.NAVER_ID }} >> .env
+          echo NAVER_SECRET=${{ secrets.NAVER_SECRET }} >> .env
+          echo AWS_S3_ID=${{ secrets.AWS_S3_ID }} >> .env
+          echo AWS_S3_SECRET=${{ secrets.AWS_S3_SECRET }} >> .env
+          echo AWS_S3_BUCKET=${{ secrets.AWS_S3_BUCKET }} >> .env
+          echo AWS_S3_BUCKET2=${{ secrets.AWS_S3_BUCKET2 }} >> .env
+          echo AWS_S3_BUCKET3=${{ secrets.AWS_S3_BUCKET3 }} >> .env
+          echo REDIS_URI=${{ secrets.REDIS_URI }} >> .env
+          echo SSL_PRIVATEKEY=${{ secrets.SSL_PRIVATEKEY }} >> .env
+          echo SSL_CERTIFICATE=${{ secrets.SSL_CERTIFICATE }} >> .env
+          echo SSL_CA=${{ secrets.SSL_CA }} >> .env
+          echo PORT=${{ secrets.PORT }} >> .env
+          echo NCP_SENS_ACCESS=${{ secrets.NCP_SENS_ACCESS }} >> .env
+          echo NCP_SENS_SECRET=${{ secrets.NCP_SENS_SECRET }} >> .env
+          echo NCP_SENS_ID=${{ secrets.NCP_SENS_ID }} >> .env
+          echo MyPhoneNumber=${{ secrets.MyPhoneNumber }} >> .env
+          echo CRYPTO_KEY=${{ secrets.CRYPTO_KEY }} >> .env
+          echo LOGDIR=${{ secrets.LOGDIR }} >> .env
+          echo ALARMSTATE=${{ secrets.ALARMSTATE }} >> .env
+          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env
+          echo DEV_USERNAME=${{ secrets.DEV_USERNAME }} >> .env
+          echo DEV_PASSWORD=${{ secrets.DEV_PASSWORD }} >> .env
+          echo DEV_DATABASE=${{ secrets.DEV_DATABASE }} >> .env
+          echo DB_HOST=${{ secrets.DB_HOST }} >> .env
+          echo DB_DIALECT=${{ secrets.DB_DIALECT }} >> .env
+          echo DB_TIMEZONE=${{ secrets.DB_TIMEZONE }} >> .env
+          echo TEST_USERNAME=${{ secrets.TEST_USERNAME }} >> .env
+          echo TEST_PASSWORD=${{ secrets.TEST_PASSWORD }} >> .env
+          echo TEST_DATABASE=${{ secrets.TEST_DATABASE }} >> .env
+          echo PRODUCT_USERNAME=${{ secrets.PRODUCT_USERNAME }} >> .env
+          echo PRODUCT_PASSWORD=${{ secrets.PRODUCT_PASSWORD }} >> .env
+          echo PRODUCT_DATABASE=${{ secrets.PRODUCT_DATABASE }} >> .env
+          cat .env
+    - run: npm run build --if-present
+    - run: npm test

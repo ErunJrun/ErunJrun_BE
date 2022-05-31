@@ -34,7 +34,6 @@ module.exports = {
         }).then((value) => {
             return value.dataValues.evaluation
         })
-        console.log(checkDone)
 
         if (checkDone !== 0) {
             throw new Error('이미 크루장 평가에 참여했습니다')
@@ -77,7 +76,6 @@ module.exports = {
         evaluationCategory
     ) => {
         try {
-            console.log(evaluationCategory)
             // 크루장 평가 카테고리 업데이트
             await Appliers.update(
                 { evaluation: evaluationCategory },
@@ -88,7 +86,6 @@ module.exports = {
                 }
                 // 크루장의 매너점수 업데이트
             ).then(async (value) => {
-                console.log(value)
                 await Users.findOne({ where: { userId: hostId } })
                     .then(async (value) => {
                         const newPoint = value.dataValues.mannerPoint + point

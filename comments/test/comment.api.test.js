@@ -2,23 +2,49 @@ const request = require('supertest')
 const app = require('../../app')
 const category = 'group'
 const errorCategory = 'ererer'
-const groupId = '23e84dd6-cc90-47e6-8b26-374491976fe5'
+const { sequelize } = require('../../models/sequelize')
+const seedGroupData = require('./data/seed.group.json')
+const seedApplierData = require('./data/seed.appliers.json')
+const createUserData = require('./data/create.user.json')
+const createUser2Data = require('./data/create.user2.json')
+const { Users, Comments, Groups } = require('../../models')
 
-describe('댓글 테스트', () => {
-    let token, commentId, otherToken
-    beforeAll(async () => {
+let token, commentId, otherToken, groupId
+
+jest.setTimeout(50000)
+
+beforeAll(async () => {
+    await sequelize.sync({force: true})
+    await Users.create(createUserData)
+
+    userId = await Users.findOne({
+        where: { userId: createUserData.userId },
+    }).then(async (value) => {
         const data = await request(app).post('/testlogin').send({
-            nickname: '오지우',
-            password: 'kakao',
+            nickname: value.dataValues.nickname,
+            password: value.dataValues.social,
         })
         token = 'Bearer' + ' ' + data._body.token
-
-        const otherdata = await request(app).post('/testlogin').send({
-            nickname: '유현준',
-            password: 'kakao',
-        })
-        otherToken = 'Bearer' + ' ' + otherdata._body.token
+        return value.dataValues.userId
     })
+    await Users.create(createUser2Data)
+    await Users.findOne({
+        where: { userId: createUser2Data.userId },
+    }).then(async (value) => {
+        const data = await request(app).post('/testlogin').send({
+            nickname: value.dataValues.nickname,
+            password: value.dataValues.social,
+        })
+        otherToken = 'Bearer' + ' ' + data._body.token
+        return value.dataValues.userId
+    })
+
+    for (let i = 0; i < seedGroupData.length; i++) {
+        await Groups.create(seedGroupData[i]).then((value) => {
+            groupId = value.dataValues.groupId
+        })
+    }
+})
 
     describe('1. 댓글 작성 테스트', () => {
         test('1) 카테고리가 잘못된 경우 에러', async () => {
@@ -154,4 +180,7 @@ describe('댓글 테스트', () => {
             expect(output._body.success).toEqual(true)
         })
     })
-})
+
+// afterAll(async () => {
+//     await sequelize.sync({ force: true })
+// })
