@@ -1,5 +1,4 @@
 const alarmService = require('../services/alarm.service')
-const schedule = require('node-schedule')
 
 module.exports = {
     // 테스트
@@ -36,38 +35,6 @@ module.exports = {
         } catch (error) {
             return next({
                 message: '새 알람 모두 읽기에 실패했습니다',
-                stack: error,
-            })
-        }
-    },
-    createDdayAlarm: (req, res, next) => {
-        try {
-            schedule.scheduleJob('0 0 4 * * *', alarmService.createDdayAlarm)
-        } catch (error) {
-            return next({
-                message: '문자전송 실패',
-                stack: error,
-            })
-        }
-    },
-    // 매 1분마다 createEndAlarm(실제시간 기준 30분, 00분)
-    createStartAlarm: (req, res, next) => {
-        try {
-            schedule.scheduleJob(' */1 * * * *', alarmService.createStartAlarm)
-        } catch (error) {
-            return next({
-                message: '문자전송 실패',
-                stack: error,
-            })
-        }
-    },
-    // 매 1분 마다 createEndAlarm 실행
-    createEndAlarm: (req, res, next) => {
-        try {
-            schedule.scheduleJob(' */1 * * * *', alarmService.createEndAlarm)
-        } catch (error) {
-            return next({
-                message: '문자전송 실패',
                 stack: error,
             })
         }
