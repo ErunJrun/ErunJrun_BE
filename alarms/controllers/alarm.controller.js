@@ -1,5 +1,4 @@
 const alarmService = require('../services/alarm.service')
-const schedule = require('node-schedule')
 
 module.exports = {
     // 테스트
@@ -39,5 +38,5 @@ module.exports = {
                 stack: error,
             })
         }
-    }
+    },
 }

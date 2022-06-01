@@ -12,7 +12,7 @@ jest.setTimeout(50000)
 let token, courseId, userId
 
 beforeAll(async () => {
-    await sequelize.sync({force: true})
+    await sequelize.sync({ force: true })
     await Users.create(createUserData)
     await Courses.create(createCourseData)
 

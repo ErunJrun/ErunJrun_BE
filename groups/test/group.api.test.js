@@ -9,12 +9,10 @@ const createGroupData = require('./data/create.group.json')
 
 jest.setTimeout(50000)
 
-
 let accessToken
 beforeAll(async () => {
-    await sequelize.sync({force: true})
+    await sequelize.sync({ force: true })
     await Users.create(createUserData)
-    
 
     for (let i = 0; i < seedGroupData.length; i++) {
         await Groups.create(seedGroupData[i])
