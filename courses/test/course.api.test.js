@@ -13,10 +13,11 @@ let token, courseId, userId
 
 beforeAll(async () => {
     await sequelize.sync({ force: true })
-    await Users.create(createUserData)
-    await Courses.create(createCourseData)
+    const makeUser = Users.create(createUserData)
+    const makerCourse = Courses.create(createCourseData)
+    await Promise.all([makeUser, makerCourse])
 
-    userId = await Users.findOne({
+    const returnUserId = Users.findOne({
         where: { userId: createUserData.userId },
     }).then(async (value) => {
         const data = await request(app).post('/testlogin').send({
@@ -24,13 +25,15 @@ beforeAll(async () => {
             password: value.dataValues.social,
         })
         token = 'Bearer' + ' ' + data._body.token
-        return value.dataValues.userId
+        userId = value.dataValues.userId
     })
-    courseId = await Courses.findOne({
+    const returnCourseId = Courses.findOne({
         where: { courseId: createCourseData.courseId },
-    }).then(async (value) => {
-        return value.dataValues.courseId
+    }).then((value) => {
+        courseId = value.dataValues.courseId
     })
+    
+    await Promise.all([returnUserId, returnCourseId])
     await Bookmarks.create({ courseId, userId })
 })
 
