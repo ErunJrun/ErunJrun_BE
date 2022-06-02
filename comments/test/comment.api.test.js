@@ -15,9 +15,12 @@ jest.setTimeout(50000)
 
 beforeAll(async () => {
     await sequelize.sync({ force: true })
-    await Users.create(createUserData)
+    const makeUser1 =  Users.create(createUserData)
+    const makeUser2 = Users.create(createUser2Data)
 
-    userId = await Users.findOne({
+    await Promise.all([makeUser1, makeUser2])
+
+    const returnUser1Info = await Users.findOne({
         where: { userId: createUserData.userId },
     }).then(async (value) => {
         const data = await request(app).post('/testlogin').send({
@@ -25,10 +28,11 @@ beforeAll(async () => {
             password: value.dataValues.social,
         })
         token = 'Bearer' + ' ' + data._body.token
-        return value.dataValues.userId
+        userId = value.dataValues.userId 
     })
-    await Users.create(createUser2Data)
-    await Users.findOne({
+    
+
+    const returnUser2Info = Users.findOne({
         where: { userId: createUser2Data.userId },
     }).then(async (value) => {
         const data = await request(app).post('/testlogin').send({
@@ -36,9 +40,9 @@ beforeAll(async () => {
             password: value.dataValues.social,
         })
         otherToken = 'Bearer' + ' ' + data._body.token
-        return value.dataValues.userId
     })
 
+    await Promise.all([returnUser1Info, returnUser2Info])
     for (let i = 0; i < seedGroupData.length; i++) {
         await Groups.create(seedGroupData[i]).then((value) => {
             groupId = value.dataValues.groupId
