@@ -17,6 +17,9 @@
 
 <br/>
 
+### ⏱ 프로젝트 기간
+
+> 2022.04.22 ~ 2022.06.03 (6주)
 
 ## 🛠 2. Service Architecture
 ![서비스아키텍처](https://user-images.githubusercontent.com/49478770/171983712-d218deef-d305-43a0-b64a-f64d5263c8ef.png)
