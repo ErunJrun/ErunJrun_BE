@@ -19,7 +19,8 @@
 
 
 ## 🛠 2. Service Architecture
-![stack_diagram](https://user-images.githubusercontent.com/49478770/170918000-77b830ed-5988-4c8e-b5fa-57e778639c66.png)
+![서비스아키텍처](https://user-images.githubusercontent.com/49478770/171983712-d218deef-d305-43a0-b64a-f64d5263c8ef.png)
+
 
 
 ## 📉 3. ERD
