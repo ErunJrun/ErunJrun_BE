@@ -228,7 +228,7 @@ module.exports = {
             data.totalEvaluationCount = totalEvaluationCount
             data.evaluation = evaluation
             data.userInfo = userInfo
-            data.waitingGroup = waitingGroup
+            data.waiting = waitingGroup
             // user가 Applier로 포함된 Group의 정보를 가져오기
             // const waitInfo = await Groups.findAll({
             //     where: {
