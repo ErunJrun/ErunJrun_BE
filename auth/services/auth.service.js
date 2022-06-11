@@ -260,6 +260,7 @@ module.exports = {
                 ],
             }).then((value) => {
                 if (value.dataValues.phone !== null) {
+                    if (value.dataValues.phone !== 'null'){
                     const key = process.env.CRYPTO_KEY
                     const decode = crypto.createDecipher('des', key)
                     value.dataValues.phone =
@@ -268,6 +269,7 @@ module.exports = {
                             'base64',
                             'utf8'
                         ) + decode.final('utf8')
+                    }
                 }
                 switch (value.dataValues.userLevel) {
                     case '오렌지':
