@@ -1,0 +1,20 @@
+[
+    {
+        "userId": "bdd9e6db-cea9-4828-92b0-d7ac46633a2f",
+        "groupId": "23e84dd6-cc90-47e6-8b26-374491976fe5",
+        "attendance": 0,
+        "evaluation": 0
+    },
+    {
+        "userId": "bdd9e6db-cea9-4828-92b0-d7ac46633a2f",
+        "groupId": "29c210a1-aa38-4e96-89ec-e0103683392d",
+        "attendance": 0,
+        "evaluation": 0
+    },
+    {
+        "userId": "bdd9e6db-cea9-4828-92b0-d7ac46633a2f",
+        "groupId": "e26b61a5-e856-466c-8a2e-baa871264e8a",
+        "attendance": 0,
+        "evaluation": 0
+    }
+]
