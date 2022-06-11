@@ -84,7 +84,7 @@ module.exports = {
                     [Op.and]: [
                         { groupId: { [Op.in]: appliedGroupId } },
                         { date: { [Op.gte]: nowDate } },
-                        { standbyTime: { [Op.gte]: nowTime } },
+                        // { standbyTime: { [Op.gte]: nowTime } },
                     ],
                 },
                 attributes: [
