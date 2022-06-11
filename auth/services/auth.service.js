@@ -76,13 +76,15 @@ module.exports = {
             })
             let nowTime = moment().format('HH:mm:ss')
             let nowDate = moment().format('YYYY-MM-DD')
+
+            let waitingGroup = []
             // applier 숫자 세서 보여주기( applier에서 groupId의 개수 세면 됨)
-            const waitingGroup = await Groups.findAll({
+            const waitingGroupOriginData = await Groups.findAll({
                 where: {
                     [Op.and]: [
                         { groupId: { [Op.in]: appliedGroupId } },
                         { date: { [Op.gte]: nowDate } },
-                        { finishTime: { [Op.gte]: nowTime } },
+                        // { standbyTime: { [Op.gte]: nowTime } },
                     ],
                 },
                 attributes: [
@@ -95,12 +97,6 @@ module.exports = {
                     'groupId',
                     ['thumbnailUrl1', 'thumbnailUrl'],
                     'standbyTime',
-                    [
-                        sequelize.literal(
-                            'timestampdiff(minute,standbyTime, finishTime)'
-                        ),
-                        'totalTime',
-                    ],
                 ],
                 include: [
                     {
@@ -111,7 +107,13 @@ module.exports = {
                     },
                 ],
             }).then((value) => {
+                // nowDate랑 date랑 같은데, standbyTime은 과거인 경우에는 삭제시키기
+                
                 for (let i = 0; i < value.length; i++) {
+                    if ((nowDate === value[i].dataValues.date) && (nowTime >= value[i].dataValues.standbyTime)){
+                        delete value[i]
+                        break
+                    }
                     value[i].dataValues.location =
                         value[i].dataValues.location.split(' ')[0] +
                         ' ' +
@@ -126,12 +128,6 @@ module.exports = {
                         .format('YYYY.MM.DD (dd) HH:mm')
                     value[i].dataValues.distance =
                         value[i].dataValues.distance + 'km'
-                    value[i].dataValues.totalTime =
-                        parseInt(value[i].dataValues.totalTime / 60) +
-                        'h' +
-                        ' ' +
-                        (value[i].dataValues.totalTime % 60) +
-                        'min'
                     value[i].dataValues.appliedPeople =
                         value[i].dataValues.Appliers.length
 
@@ -171,6 +167,12 @@ module.exports = {
                 }
                 return value
             })
+            for (let i =0; i< waitingGroupOriginData.length; i++){
+                if (waitingGroupOriginData[i] !== undefined){
+                    waitingGroup.push(waitingGroupOriginData[i])
+                }
+            }
+            console.log(waitingGroup)
             waitingGroup.sort((a, b) => {
                 return a.dataValues.dDay - b.dataValues.dDay
             })
@@ -226,7 +228,7 @@ module.exports = {
             data.totalEvaluationCount = totalEvaluationCount
             data.evaluation = evaluation
             data.userInfo = userInfo
-            data.waiting = waitingGroup
+            data.waitingGroup = waitingGroup
             // user가 Applier로 포함된 Group의 정보를 가져오기
             // const waitInfo = await Groups.findAll({
             //     where: {
