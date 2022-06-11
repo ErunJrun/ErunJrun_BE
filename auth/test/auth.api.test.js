@@ -44,7 +44,7 @@ describe('유저정보 테스트', () => {
             console.log(data._body.data.waitingGroup)
 
             expect(data._body.data.userInfo.userId).toEqual(userId)
-            expect(data._body.data.waitingGroup.length).toEqual(3)
+            expect(data._body.data.waiting.length).toEqual(3)
         })
     })
 })
