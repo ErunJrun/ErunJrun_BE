@@ -1,12 +1,10 @@
 const Sequelize = require('sequelize')
-const { UUIDV4 } = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define(
         'Users',
         {
             userId: {
                 type: DataTypes.STRING(150),
-                defaultValue: UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },
@@ -52,9 +50,9 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             agreeSMS: {
-                type: DataTypes.BOOLEAN,
+                type: DataTypes.TINYINT,
                 allowNull: false,
-                defaultValue: false,
+                defaultValue: 0,
             },
         },
         {

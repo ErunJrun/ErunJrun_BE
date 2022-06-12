@@ -1,50 +1,53 @@
 const Sequelize = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define(
-        'Bookmarks',
+        'Chats',
         {
-            bookmarkId: {
-                type: DataTypes.STRING(150),
+            chatId: {
+                type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,
             },
-            courseId: {
+            groupId: {
                 type: DataTypes.STRING(150),
                 allowNull: false,
                 references: {
-                    model: 'Courses',
-                    key: 'courseId',
+                    model: 'Groups',
+                    key: 'groupId',
                 },
             },
             userId: {
                 type: DataTypes.STRING(150),
                 allowNull: false,
-                references: {
-                    model: 'Users',
-                    key: 'userId',
-                },
+            },
+            nickname: {
+                type: DataTypes.STRING(45),
+                allowNull: false,
+            },
+            profileUrl: {
+                type: DataTypes.STRING(45),
+                allowNull: false,
+            },
+            message: {
+                type: DataTypes.STRING(255),
+                allowNull: false,
             },
         },
         {
             sequelize,
-            tableName: 'Bookmarks',
+            tableName: 'Chats',
             timestamps: false,
             indexes: [
                 {
                     name: 'PRIMARY',
                     unique: true,
                     using: 'BTREE',
-                    fields: [{ name: 'bookmarkId' }],
+                    fields: [{ name: 'chatId' }],
                 },
                 {
-                    name: 'FK_Courses_TO_Bookmarks_1',
+                    name: 'FK_Groups_TO_Chats_1_idx',
                     using: 'BTREE',
-                    fields: [{ name: 'courseId' }],
-                },
-                {
-                    name: 'FK_Users_TO_Bookmarks_1',
-                    using: 'BTREE',
-                    fields: [{ name: 'userId' }],
+                    fields: [{ name: 'groupId' }],
                 },
             ],
         }

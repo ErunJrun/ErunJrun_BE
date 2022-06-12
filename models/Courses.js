@@ -1,12 +1,10 @@
 const Sequelize = require('sequelize')
-const { UUIDV4 } = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define(
         'Courses',
         {
             courseId: {
                 type: DataTypes.STRING(150),
-                defaultValue: UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },
@@ -30,6 +28,10 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(255),
                 allowNull: false,
             },
+            mapLatLng: {
+                type: DataTypes.TEXT,
+                allowNull: false,
+            },
             distance: {
                 type: DataTypes.FLOAT,
                 allowNull: false,
@@ -50,19 +52,15 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },
-            mapLatLng: {
-                type: DataTypes.TEXT,
-                allowNull: false,
-            },
             starPoint: {
                 type: DataTypes.FLOAT,
                 allowNull: true,
             },
-            parking: {
+            baggage: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },
-            baggage: {
+            parking: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },

@@ -1,12 +1,10 @@
 const Sequelize = require('sequelize')
-const { UUIDV4 } = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define(
         'Groups',
         {
             groupId: {
                 type: DataTypes.STRING(150),
-                defaultValue: UUIDV4,
                 allowNull: false,
                 primaryKey: true,
             },
@@ -26,14 +24,6 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(255),
                 allowNull: true,
             },
-            thumbnailUrl2: {
-                type: DataTypes.STRING(255),
-                allowNull: true,
-            },
-            thumbnailUrl3: {
-                type: DataTypes.STRING(255),
-                allowNull: true,
-            },
             title: {
                 type: DataTypes.STRING(150),
                 allowNull: false,
@@ -50,8 +40,8 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.TIME,
                 allowNull: false,
             },
-            timecode: {
-                type: DataTypes.INTEGER,
+            finishTime: {
+                type: DataTypes.TIME,
                 allowNull: false,
             },
             distance: {
@@ -66,10 +56,6 @@ module.exports = function (sequelize, DataTypes) {
                 type: DataTypes.STRING(200),
                 allowNull: false,
             },
-            region: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
             parking: {
                 type: DataTypes.STRING(255),
                 allowNull: true,
@@ -81,6 +67,22 @@ module.exports = function (sequelize, DataTypes) {
             content: {
                 type: DataTypes.TEXT,
                 allowNull: true,
+            },
+            thumbnailUrl2: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            thumbnailUrl3: {
+                type: DataTypes.STRING(255),
+                allowNull: true,
+            },
+            region: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+            timecode: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
             },
             thema: {
                 type: DataTypes.STRING(20),
