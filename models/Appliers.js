@@ -1,64 +1,62 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('Appliers', {
-    applyId: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-      primaryKey: true
-    },
-    userId: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-      references: {
-        model: 'Users',
-        key: 'userId'
-      }
-    },
-    groupId: {
-      type: DataTypes.STRING(150),
-      allowNull: false,
-      references: {
-        model: 'Groups',
-        key: 'groupId'
-      }
-    },
-    attendance: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: 0
-    },
-    evaluation: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 0
-    }
-  }, {
-    sequelize,
-    tableName: 'Appliers',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "applyId" },
-        ]
-      },
-      {
-        name: "FK_Groups_TO_Appliers_1",
-        using: "BTREE",
-        fields: [
-          { name: "groupId" },
-        ]
-      },
-      {
-        name: "FK_Users_TO_Appliers_1",
-        using: "BTREE",
-        fields: [
-          { name: "userId" },
-        ]
-      },
-    ]
-  });
-};
+const Sequelize = require('sequelize')
+module.exports = function (sequelize, DataTypes) {
+    return sequelize.define(
+        'Appliers',
+        {
+            applyId: {
+                type: DataTypes.STRING(150),
+                allowNull: false,
+                primaryKey: true,
+            },
+            userId: {
+                type: DataTypes.STRING(150),
+                allowNull: false,
+                references: {
+                    model: 'Users',
+                    key: 'userId',
+                },
+            },
+            groupId: {
+                type: DataTypes.STRING(150),
+                allowNull: false,
+                references: {
+                    model: 'Groups',
+                    key: 'groupId',
+                },
+            },
+            attendance: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: 0,
+            },
+            evaluation: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+                defaultValue: 0,
+            },
+        },
+        {
+            sequelize,
+            tableName: 'Appliers',
+            timestamps: false,
+            indexes: [
+                {
+                    name: 'PRIMARY',
+                    unique: true,
+                    using: 'BTREE',
+                    fields: [{ name: 'applyId' }],
+                },
+                {
+                    name: 'FK_Groups_TO_Appliers_1',
+                    using: 'BTREE',
+                    fields: [{ name: 'groupId' }],
+                },
+                {
+                    name: 'FK_Users_TO_Appliers_1',
+                    using: 'BTREE',
+                    fields: [{ name: 'userId' }],
+                },
+            ],
+        }
+    )
+}
