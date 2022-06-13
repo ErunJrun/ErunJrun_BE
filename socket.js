@@ -38,8 +38,9 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chatRoom', async (groupId, userId) => {
+        socket.join('group', groupId)
         const chatList = await Chats.findAll({ where: { groupId } })
-        io.emit('chatList', chatList)
+        io.to('group', groupId).emit('chatList', chatList)
     })
 
     socket.on('reqMessage', async (groupId, userId, message) => {
@@ -67,7 +68,7 @@ io.on('connection', (socket) => {
                     message,
                 }
 
-                io.emit('chatMessage', chatMessage)
+                io.to('group', groupId).emit('chatMessage', chatMessage)
                 await Chats.create({
                     userId,
                     groupId,
