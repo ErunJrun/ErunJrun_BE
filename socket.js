@@ -42,7 +42,7 @@ io.on('connection', (socket) => {
         io.emit('chatList', chatList)
     })
 
-    socket.on('chat message', async (groupId, userId, message) => {
+    socket.on('chatMessage', async (groupId, userId, message) => {
         try {
             console.log(
                 'groupId: ',
