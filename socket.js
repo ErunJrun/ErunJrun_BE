@@ -37,7 +37,7 @@ io.on('connection', (socket) => {
         console.log('disconnect socketId : ', socket.id)
     })
 
-    socket.on('chat room', async () => {
+    socket.on('chatRoom', async () => {
         const chatList = await Chats.findAll({ where: groupId })
         io.emit('chatList', chatList)
     })
