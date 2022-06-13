@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize')
+// const { UUIDV4 } = require('sequelize')
 module.exports = function (sequelize, DataTypes) {
     return sequelize.define(
         'Chats',
