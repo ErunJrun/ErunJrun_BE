@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chatRoom', async (groupId, userId) => {
-        const chatList = await Chats.findAll({ where: groupId })
+        const chatList = await Chats.findAll({ where: { groupId }})
         io.emit('chatList', chatList)
     })
 
