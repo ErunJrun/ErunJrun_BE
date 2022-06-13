@@ -16,13 +16,13 @@ let token, userId, groupId
 
 beforeAll(async () => {
     await sequelize.sync({ force: true })
-    const makeUser = Users.create(createUserData).then(async (value) =>{
+    const makeUser = Users.create(createUserData).then(async (value) => {
         userId = value.dataValues.userId
         const data = await request(app).post('/testlogin').send({
             nickname: value.dataValues.nickname,
             password: value.dataValues.social,
         })
-        token = 'Bearer' + ' ' + data._body.token 
+        token = 'Bearer' + ' ' + data._body.token
     })
     const makeUser2 = Users.create(createUser2Data)
     const makeGroup = Groups.create(createGroupData)
@@ -30,7 +30,7 @@ beforeAll(async () => {
     for (let i = 0; i < seedGroupData.length; i++) {
         await Groups.create(seedGroupData[i])
     }
-    for (let i =0; i < seedApplierData.length; i++){
+    for (let i = 0; i < seedApplierData.length; i++) {
         await Appliers.create(seedApplierData[i])
     }
 })
@@ -44,9 +44,11 @@ describe('유저정보 테스트', () => {
             expect(data._body.data.userInfo.userId).toEqual(userId)
             expect(data._body.data.waiting.length).toEqual(3)
         })
-  
-        test('2) 계정 설정 페이지 조회', async () =>{
-            const data = await request(app).get(`/auth/updateUser`).set({authorization: token})
+
+        test('2) 계정 설정 페이지 조회', async () => {
+            const data = await request(app)
+                .get(`/auth/updateUser`)
+                .set({ authorization: token })
             console.log(data._body.data)
             expect(data._body.data.userId).toEqual(userId)
         })
@@ -56,24 +58,30 @@ describe('유저정보 테스트', () => {
             const input = {
                 likeLocation: '1',
                 likeDistance: '2',
-                userLevel: '퍼플'
+                userLevel: '퍼플',
             }
-            const data = await request(app).patch(`/auth/userLike`).set({authorization: token}).send({
-                input
-            })
+            const data = await request(app)
+                .patch(`/auth/userLike`)
+                .set({ authorization: token })
+                .send({
+                    input,
+                })
             expect(data._body.message).toEqual('프로필 수정에 성공하였습니다.')
         })
-        test('2) 유저 정보 변경', async() => {
+        test('2) 유저 정보 변경', async () => {
             const input = {
                 nickname: '야야야',
                 bio: '자기소개',
                 likeLocation: '3',
                 likeDistance: '3',
-                userLevel: '1'
+                userLevel: '1',
             }
-            const data = await request(app).patch(`/auth/updateUser`).set({authorization: token}).send({
-                input
-            })
+            const data = await request(app)
+                .patch(`/auth/updateUser`)
+                .set({ authorization: token })
+                .send({
+                    input,
+                })
             expect(data._body.message).toEqual('프로필 수정에 성공하였습니다.')
         })
     })

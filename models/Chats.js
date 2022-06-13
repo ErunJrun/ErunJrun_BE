@@ -4,6 +4,7 @@ module.exports = function (sequelize, DataTypes) {
         'Chats',
         {
             chatId: {
+                autoIncrement: true,
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 primaryKey: true,

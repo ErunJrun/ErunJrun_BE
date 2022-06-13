@@ -108,9 +108,12 @@ module.exports = {
                 ],
             }).then((value) => {
                 // nowDate랑 date랑 같은데, standbyTime은 과거인 경우에는 삭제시키기
-                
+
                 for (let i = 0; i < value.length; i++) {
-                    if ((nowDate === value[i].dataValues.date) && (nowTime >= value[i].dataValues.standbyTime)){
+                    if (
+                        nowDate === value[i].dataValues.date &&
+                        nowTime >= value[i].dataValues.standbyTime
+                    ) {
                         delete value[i]
                         break
                     }
@@ -167,8 +170,8 @@ module.exports = {
                 }
                 return value
             })
-            for (let i =0; i< waitingGroupOriginData.length; i++){
-                if (waitingGroupOriginData[i] !== undefined){
+            for (let i = 0; i < waitingGroupOriginData.length; i++) {
+                if (waitingGroupOriginData[i] !== undefined) {
                     waitingGroup.push(waitingGroupOriginData[i])
                 }
             }
@@ -260,15 +263,15 @@ module.exports = {
                 ],
             }).then((value) => {
                 if (value.dataValues.phone !== null) {
-                    if (value.dataValues.phone !== 'null'){
-                    const key = process.env.CRYPTO_KEY
-                    const decode = crypto.createDecipher('des', key)
-                    value.dataValues.phone =
-                        decode.update(
-                            value.dataValues.phone,
-                            'base64',
-                            'utf8'
-                        ) + decode.final('utf8')
+                    if (value.dataValues.phone !== 'null') {
+                        const key = process.env.CRYPTO_KEY
+                        const decode = crypto.createDecipher('des', key)
+                        value.dataValues.phone =
+                            decode.update(
+                                value.dataValues.phone,
+                                'base64',
+                                'utf8'
+                            ) + decode.final('utf8')
                     }
                 }
                 switch (value.dataValues.userLevel) {
