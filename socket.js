@@ -3,6 +3,7 @@ const fs = require('fs')
 const http = require('http')
 const https = require('https')
 const { Groups, Users, Appliers, Chats } = require('./models')
+const { use } = require('passport')
 
 let server = ''
 if (process.env.PORT) {
@@ -39,6 +40,7 @@ io.on('connection', (socket) => {
 
     socket.on('chatRoom', async (groupId, userId) => {
         socket.join('group', groupId)
+        console.log(groupId, userId)
         const chatList = await Chats.findAll({ where: { groupId } })
         io.to('group', groupId).emit('chatList', chatList)
     })
