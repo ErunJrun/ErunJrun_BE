@@ -15,7 +15,7 @@ jest.setTimeout(50000)
 
 beforeAll(async () => {
     await sequelize.sync({ force: true })
-    const makeUser1 =  Users.create(createUserData)
+    const makeUser1 = Users.create(createUserData)
     const makeUser2 = Users.create(createUser2Data)
 
     await Promise.all([makeUser1, makeUser2])
@@ -28,9 +28,8 @@ beforeAll(async () => {
             password: value.dataValues.social,
         })
         token = 'Bearer' + ' ' + data._body.token
-        userId = value.dataValues.userId 
+        userId = value.dataValues.userId
     })
-    
 
     const returnUser2Info = Users.findOne({
         where: { userId: createUser2Data.userId },

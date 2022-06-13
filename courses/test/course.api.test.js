@@ -32,7 +32,7 @@ beforeAll(async () => {
     }).then((value) => {
         courseId = value.dataValues.courseId
     })
-    
+
     await Promise.all([returnUserId, returnCourseId])
     await Bookmarks.create({ courseId, userId })
 })

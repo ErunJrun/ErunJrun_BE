@@ -3,6 +3,7 @@ var _Alarms = require('./Alarms')
 var _Appliers = require('./Appliers')
 var _Badges = require('./Badges')
 var _Bookmarks = require('./Bookmarks')
+var _Chats = require('./Chats')
 var _Comments = require('./Comments')
 var _Courses = require('./Courses')
 var _Groups = require('./Groups')
@@ -15,6 +16,7 @@ function initModels(sequelize) {
     var Appliers = _Appliers(sequelize, DataTypes)
     var Badges = _Badges(sequelize, DataTypes)
     var Bookmarks = _Bookmarks(sequelize, DataTypes)
+    var Chats = _Chats(sequelize, DataTypes)
     var Comments = _Comments(sequelize, DataTypes)
     var Courses = _Courses(sequelize, DataTypes)
     var Groups = _Groups(sequelize, DataTypes)
@@ -30,12 +32,10 @@ function initModels(sequelize) {
     Courses.hasMany(Comments, { as: 'Comments', foreignKey: 'courseId' })
     starpoint.belongsTo(Courses, { as: 'course', foreignKey: 'courseId' })
     Courses.hasMany(starpoint, { as: 'starpoints', foreignKey: 'courseId' })
-    Appliers.belongsTo(Groups, {
-        as: 'group',
-        foreignKey: 'groupId',
-        onDelete: 'CASCADE',
-    })
+    Appliers.belongsTo(Groups, { as: 'group', foreignKey: 'groupId' })
     Groups.hasMany(Appliers, { as: 'Appliers', foreignKey: 'groupId' })
+    Chats.belongsTo(Groups, { as: 'group', foreignKey: 'groupId' })
+    Groups.hasMany(Chats, { as: 'Chats', foreignKey: 'groupId' })
     Comments.belongsTo(Groups, { as: 'group', foreignKey: 'groupId' })
     Groups.hasMany(Comments, { as: 'Comments', foreignKey: 'groupId' })
     Alarms.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
@@ -50,11 +50,7 @@ function initModels(sequelize) {
     Users.hasMany(Comments, { as: 'Comments', foreignKey: 'userId' })
     Courses.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
     Users.hasMany(Courses, { as: 'Courses', foreignKey: 'userId' })
-    Groups.belongsTo(Users, {
-        as: 'user',
-        foreignKey: 'userId',
-        onDelete: 'CASCADE',
-    })
+    Groups.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
     Users.hasMany(Groups, { as: 'Groups', foreignKey: 'userId' })
     Recomments.belongsTo(Users, { as: 'user', foreignKey: 'userId' })
     Users.hasMany(Recomments, { as: 'Recomments', foreignKey: 'userId' })
@@ -66,6 +62,7 @@ function initModels(sequelize) {
         Appliers,
         Badges,
         Bookmarks,
+        Chats,
         Comments,
         Courses,
         Groups,

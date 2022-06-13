@@ -52,9 +52,9 @@ module.exports = function (sequelize, DataTypes) {
                 allowNull: true,
             },
             agreeSMS: {
-                type: DataTypes.BOOLEAN,
+                type: DataTypes.TINYINT,
                 allowNull: false,
-                defaultValue: false,
+                defaultValue: 0,
             },
         },
         {
