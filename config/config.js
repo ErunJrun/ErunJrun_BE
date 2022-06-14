@@ -10,6 +10,7 @@ module.exports = {
         timezone: process.env.DB_TIMEZONE,
         dialectOptions: { dateStrings: true, typeCast: true },
         define: { timestamps: true },
+        logging: false
     },
     test: {
         username: process.env.TEST_USERNAME,
