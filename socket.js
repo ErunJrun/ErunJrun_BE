@@ -39,10 +39,10 @@ io.on('connection', (socket) => {
     })
 
     socket.on('chatRoom', async (groupId, userId) => {
-        socket.join('group', groupId)
+        socket.join(groupId)
         console.log(groupId, userId)
         const chatList = await Chats.findAll({ where: { groupId } })
-        io.to('group', groupId).emit('chatList', chatList)
+        io.to(groupId).emit('chatList', chatList)
     })
 
     socket.on('reqMessage', async (groupId, userId, message) => {
@@ -70,7 +70,7 @@ io.on('connection', (socket) => {
                     message,
                 }
 
-                io.to('group', groupId).emit('chatMessage', chatMessage)
+                io.to(groupId).emit('chatMessage', chatMessage)
                 await Chats.create({
                     userId,
                     groupId,
