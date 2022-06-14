@@ -40,7 +40,6 @@ io.on('connection', (socket) => {
 
     socket.on('chatRoom', async (groupId, userId) => {
         socket.join(groupId)
-        console.log(groupId, userId)
         const chatList = await Chats.findAll({ where: { groupId } })
         io.to(groupId).emit('chatList', chatList)
     })
